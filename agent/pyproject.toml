@@ -1,0 +1,17 @@
+[project]
+name = "lms-agent"
+version = "0.1.0"
+description = "AI Agent service with persistent memory for the LMS."
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+ignore = ["E501"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

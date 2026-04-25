@@ -1,6 +1,10 @@
 # Environment
 .env
 .env.production
+.env.local
+backend/.env
+agent/.env
+frontend/.env*.local
 
 # Python
 __pycache__/
@@ -12,9 +16,34 @@ build/
 *.egg-info/
 .pytest_cache/
 .mypy_cache/
+.ruff_cache/
+
+# Node / Next.js
+node_modules/
+.next/
+out/
+.turbo/
+dist/
+
+# Docker
+docker-compose.override.yml
+
+# IDE
+.idea/
+.vscode/
+*.swp
 
 # OS
 .DS_Store
+Thumbs.db
 
 # AI logs — tracked structure, ignored content
 .ai-log/*.jsonl
+
+# Coverage
+.coverage
+coverage/
+htmlcov/
+
+# Generated docs (keep ke_hoach_LMS_AI_Agent.docx tracked though)
+*.docx.tmp
