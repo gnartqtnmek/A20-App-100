@@ -6,58 +6,6 @@ Ghi lại các quyết định kỹ thuật, phân công, và brainstorming củ
 
 ---
 
-## Quyết định thực tế của nhóm
-
-### [ADR-0001] Tổ chức code dạng monorepo — 25/04/2026
-
-**Bối cảnh:** Repo khởi đầu chỉ là template Python `/src` với agent loop cơ bản.
-Theo kế hoạch (`ke_hoach_LMS_AI_Agent.docx`), hệ thống cần 3 service: Backend
-FastAPI, AI Agent (LangGraph), Frontend Next.js. Cần thống nhất cách tổ chức
-code trước Sprint 1.
-
-**Các lựa chọn đã xem xét:**
-- **Monorepo (1 repo, nhiều thư mục con):** atomic commit cross-service, một CI, dễ cho nhóm nhỏ.
-- **Polyrepo (mỗi service một repo):** quá nặng với nhóm 3 người, khó sync version.
-- **Giữ nguyên `/src` Python thuần:** không có chỗ cho frontend Next.js.
-
-**Quyết định:** Monorepo với cấu trúc `backend/ agent/ frontend/ infra/ docs/`.
-Mỗi service có `requirements.txt`/`package.json` và `Dockerfile` riêng. Một
-`Makefile` ở root bao bọc các lệnh phổ biến. `/src` cũ → `/agent`, code logic
-giữ nguyên.
-
-**Hệ quả:**
-- Đổi import `from src.X` → `from agent.X` (script `submit_log.py` không bị ảnh hưởng).
-- CLI: `python -m src.agent` → `python -m agent.agent` hoặc `make agent-attach`.
-- Chi tiết đầy đủ ở `docs/adr/0001-monorepo-structure.md`.
-
----
-
-### Sprint 0 — 25/04 → 02/05/2026 (1 tuần)
-
-**Mục tiêu:** Setup môi trường chung, ai pull cũng chạy được trong < 30 phút.
-
-| Task | Người làm | Deadline | Trạng thái |
-|---|---|---|---|
-| Tổ chức monorepo (`backend/agent/frontend/infra/docs`) | Trang | 25/04 | ✅ Xong |
-| docker-compose: Postgres+pgvector, Redis, MinIO, backend, agent | Trang | 25/04 | ✅ Xong |
-| FastAPI skeleton + `/healthz` + `/readyz` | Trang | 25/04 | ✅ Xong |
-| Move `/src` → `/agent` + Dockerfile + requirements | Trang | 25/04 | ✅ Xong |
-| Makefile (`make help/dev/down/psql/...`) | Trang | 25/04 | ✅ Xong |
-| ADR-0001 + cập nhật README | Trang | 25/04 | ✅ Xong |
-| Đăng ký free tier: Anthropic, OpenAI, Resend, Railway, Vercel, Sentry | Khải | 28/04 | ⏳ Chờ |
-| Wireframe Figma (Login, Dashboard, Course, Chat) | Tuyển SV3 | 30/04 | ⏳ Chờ |
-| GitHub Actions skeleton (lint + test) | Khải | 02/05 | ⏳ Chờ |
-| Họp kick-off + Definition of Done | Cả nhóm | 26/04 | ⏳ Chờ |
-
-**Definition of Done của Sprint 0:**
-- [ ] `make dev` bật full stack thành công trên máy của cả 2 thành viên.
-- [ ] `curl http://localhost:8000/healthz` trả 200.
-- [ ] `pytest` trong `backend/` chạy xanh ít nhất 1 test (`test_health.py`).
-- [ ] CI chạy xanh trên `master`.
-- [ ] Có file `.env.example` đầy đủ biến.
-
----
-
 ## Template
 
 ### Quyết định kỹ thuật
@@ -102,7 +50,71 @@ giữ nguyên.
 
 ---
 
-## Ví dụ
+## Quyết định thực tế của nhóm
+
+### [ADR-0002] Đổi sang `apps/<service>/` layout — 25/04/2026
+
+**Bối cảnh:** Sau Sprint 1 chuẩn bị có 4 service (lms-api, lms-web, agent-api,
+agent-web). Cấu trúc flat `backend/agent/frontend/` ở root khó scale + tên
+không rõ.
+
+**Quyết định:** Move vào `apps/`:
+- `backend/` → `apps/lms-api/`
+- `frontend/` → `apps/lms-web/`
+- `agent/` → `apps/agent-api/` (đã được team Agent mở rộng)
+- (mới) `apps/agent-web/` placeholder
+
+`infra/`, `docs/`, `scripts/` giữ nguyên ở root.
+
+**Hệ quả:** docker-compose, Makefile đã update. Cần `git rm -r backend agent
+frontend` sau pull. Plan docx đề cập cấu trúc cũ — sẽ update Sprint 2.
+Chi tiết: `docs/adr/0002-apps-monorepo-layout.md`.
+
+---
+
+### [ADR-0001] Tổ chức code dạng monorepo — 25/04/2026
+
+**Bối cảnh:** Repo khởi đầu chỉ là template Python `/src` với agent loop cơ bản.
+Theo plan, hệ thống cần 3 service: Backend FastAPI, AI Agent (LangGraph),
+Frontend Next.js.
+
+**Các lựa chọn đã xem xét:**
+- **Monorepo:** atomic commit cross-service, một CI, dễ cho nhóm nhỏ.
+- **Polyrepo:** quá nặng với nhóm 3 người.
+- **Giữ nguyên `/src`:** không có chỗ cho frontend.
+
+**Quyết định:** Monorepo, sau đó refine sang `apps/<service>/` (xem ADR-0002).
+
+**Hệ quả:** Đổi import `from src.X` → `from agent.X`. Chi tiết:
+`docs/adr/0001-monorepo-structure.md`.
+
+---
+
+### Sprint 0 — 25/04 → 02/05/2026 (1 tuần)
+
+**Mục tiêu:** Setup môi trường chung, ai pull cũng chạy được trong < 30 phút.
+
+| Task | Người làm | Trạng thái |
+|---|---|---|
+| Tổ chức monorepo (`apps/lms-api/lms-web/agent-api`) | Trang | ✅ Xong |
+| docker-compose dev (Postgres+pgvector, Redis, MinIO, backend, agent) | Trang | ✅ Xong |
+| FastAPI skeleton + `/healthz` + `/readyz` (DB ping) | Trang | ✅ Xong |
+| 19 SQLAlchemy models + Alembic migration đầu tiên | Trang | ✅ Xong |
+| Auth (JWT register/login/refresh/logout) + RBAC | Trang | ✅ Xong |
+| Course/Module/Lesson/Assignment/Submission/Grade APIs | Trang | ✅ Xong |
+| Frontend Next.js scaffold + 7 pages (login, register, dashboard, courses, course detail, assignment, grades) | Trang | ✅ Xong |
+| 4 Agent tool endpoints + service-token auth + docs | Trang | ✅ Xong |
+| Đăng ký free tier: Anthropic/OpenAI/Resend/Railway/Vercel/Sentry | Khải | ⏳ Chờ |
+
+**Definition of Done:**
+- [x] `make dev` bật full stack thành công
+- [x] `pytest` lms-api: 16/16 PASS
+- [x] `tsc --noEmit` lms-web: PASS
+- [x] `docs/agent-integration.md` cho team Agent
+
+---
+
+## Ví dụ (template)
 
 ### [ADR-1] Dùng TypeScript thay vì Python — 30/03/2026
 
@@ -188,6 +200,4 @@ giữ nguyên.
 1. `max_iterations = 10` — hard stop sau 10 vòng
 2. Nếu tool trả về lỗi 3 lần liên tiếp → dừng và báo user
 
-**Code thay đổi:** `src/agent.ts` lines 45-67
-
-**Học được:** Luôn thiết kế stop condition trước khi implement retry logic.
+**

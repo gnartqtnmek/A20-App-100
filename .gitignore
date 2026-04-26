@@ -39,11 +39,11 @@ Thumbs.db
 
 # AI logs — tracked structure, ignored content
 .ai-log/*.jsonl
+_bmad/
+_bmad-output/
 
-# Coverage
-.coverage
-coverage/
-htmlcov/
+*.pyc
+.codegraph
+.kiro
 
-# Generated docs (keep ke_hoach_LMS_AI_Agent.docx tracked though)
-*.docx.tmp
+pytest-cache-files-oq6tnzzw

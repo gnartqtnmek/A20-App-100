@@ -1,0 +1,13 @@
+# python 3.12
+
+anthropic
+openai
+python-dotenv
+pydantic
+fastapi
+uvicorn
+langchain
+langgraph
+langchain-anthropic
+langchain-openai
+psycopg[binary,pool]

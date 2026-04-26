@@ -10,14 +10,56 @@ import subprocess
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+except ImportError:  # pragma: no cover - optional dependency in hooks
+    load_dotenv = None
+
 VN_TZ = timezone(timedelta(hours=7))
 
 
-def git(cmd):
+def git(*args: str, cwd=None) -> str:
     try:
-        return subprocess.check_output(cmd, shell=True, text=True, stderr=subprocess.DEVNULL).strip()
+        return subprocess.check_output(
+            list(args),
+            shell=False,
+            text=True,
+            stderr=subprocess.DEVNULL,
+            cwd=cwd,
+        ).strip()
     except Exception:
         return ""
+
+
+def detect_repo_name(repo_root: Path) -> str:
+    remote_url = git("git", "remote", "get-url", "origin", cwd=repo_root).strip()
+    if remote_url:
+        normalized = remote_url.rstrip("/").replace("\\", "/")
+        if "://" not in normalized and ":" in normalized:
+            normalized = normalized.split(":", 1)[1]
+        repo_name = normalized.rsplit("/", 1)[-1]
+        if repo_name:
+            return repo_name.removesuffix(".git")
+    return repo_root.name
+
+
+def detect_repo_root(data: dict) -> Path:
+    session_cwd = data.get("cwd") or os.getcwd()
+    repo_root = git("git", "rev-parse", "--show-toplevel", cwd=session_cwd)
+    if repo_root:
+        return Path(repo_root)
+    return Path(__file__).resolve().parent.parent
+
+
+def resolve_log_dir(repo_root: Path) -> Path:
+    if load_dotenv is not None:
+        load_dotenv(repo_root / ".env", override=False)
+
+    log_dir_value = os.environ.get("AI_LOG_DIR", ".ai-log")
+    log_dir = Path(log_dir_value)
+    if not log_dir.is_absolute():
+        log_dir = repo_root / log_dir
+    return log_dir
 
 
 def detect_tool(data: dict) -> str:
@@ -45,6 +87,7 @@ def normalize(data: dict, tool: str) -> dict | None:
     """Normalize tool-specific payload to common log entry."""
     event = data.get("hook_event_name") or data.get("event", "")
     ts = datetime.now(VN_TZ).isoformat()
+    repo_root = detect_repo_root(data)
 
     base = {
         "ts": ts,
@@ -56,10 +99,10 @@ def normalize(data: dict, tool: str) -> dict | None:
             data.get("generation_id") or ""
         ),
         "model": data.get("model", ""),
-        "repo": git("git remote get-url origin").split("/")[-1].replace(".git", ""),
-        "branch": git("git rev-parse --abbrev-ref HEAD"),
-        "commit": git("git rev-parse --short HEAD"),
-        "student": git("git config user.email"),
+        "repo": detect_repo_name(repo_root),
+        "branch": git("git", "rev-parse", "--abbrev-ref", "HEAD", cwd=repo_root),
+        "commit": git("git", "rev-parse", "--short", "HEAD", cwd=repo_root),
+        "student": git("git", "config", "user.email", cwd=repo_root),
     }
 
     if tool == "claude":
@@ -142,7 +185,8 @@ def main():
     if not entry:
         sys.exit(0)
 
-    log_dir = Path(os.environ.get("AI_LOG_DIR", ".ai-log"))
+    repo_root = detect_repo_root(data)
+    log_dir = resolve_log_dir(repo_root)
     log_dir.mkdir(exist_ok=True)
     log_file = log_dir / "session.jsonl"
 

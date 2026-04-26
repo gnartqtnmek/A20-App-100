@@ -1,0 +1,7 @@
+lmscanvasagents.tech {
+    reverse_proxy agent-web:80
+}
+
+www.lmscanvasagents.tech {
+    redir https://lmscanvasagents.tech{uri} permanent
+}
