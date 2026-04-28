@@ -11,6 +11,7 @@ from ..agent.runtime import AgentRuntimeService
 from ..infra.db import Database
 from ..services.conversation import ConversationService
 from ..services.lms import LMSService
+from ..services.memory import MemoryService
 from ..services.personalization import PersonalizationService
 from ..services.rag import RAGService
 from ..services.summary import SummaryService
@@ -24,6 +25,7 @@ class AppContainer:
     summaries: SummaryService
     rag: RAGService
     lms: LMSService
+    memories: MemoryService
     agent_runtime: AgentRuntimeService
 
 

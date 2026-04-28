@@ -1,7 +1,7 @@
 """Schemas for auth and session APIs."""
 from __future__ import annotations
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from app.models.base import UserRole
 from app.schemas.user import LecturerProfileCreate, StudentProfileCreate, UserRead
@@ -15,6 +15,13 @@ class RegisterRequest(BaseModel):
     avatar_url: str | None = Field(default=None, max_length=500)
     student_profile: StudentProfileCreate | None = None
     lecturer_profile: LecturerProfileCreate | None = None
+
+    @field_validator("role", mode="before")
+    @classmethod
+    def _normalize_legacy_role(cls, value: object) -> object:
+        if isinstance(value, str) and value.strip().lower() == "lecturer":
+            return UserRole.INSTRUCTOR.value
+        return value
 
 
 class RefreshRequest(BaseModel):

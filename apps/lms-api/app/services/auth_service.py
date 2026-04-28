@@ -94,7 +94,7 @@ async def register(
             )
         )
 
-    if payload.role == UserRole.LECTURER and payload.lecturer_profile is not None:
+    if payload.role == UserRole.INSTRUCTOR and payload.lecturer_profile is not None:
         db.add(
             LecturerProfile(
                 user_id=user.id,

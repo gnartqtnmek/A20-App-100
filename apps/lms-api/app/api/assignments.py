@@ -25,7 +25,7 @@ router = APIRouter(prefix="/assignments", tags=["assignments"])
 async def create_assignment(
     payload: AssignmentCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> AssignmentRead:
     await course_service.ensure_course_owner(db, payload.course_id, current_user)
     assignment = await assignment_service.create_assignment(db, payload)

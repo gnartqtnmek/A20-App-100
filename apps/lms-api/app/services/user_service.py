@@ -43,7 +43,7 @@ async def create_user(db: AsyncSession, payload: UserCreate) -> User:
         )
         db.add(profile)
 
-    if payload.role == UserRole.LECTURER and payload.lecturer_profile is not None:
+    if payload.role == UserRole.INSTRUCTOR and payload.lecturer_profile is not None:
         profile = LecturerProfile(
             user_id=user.id,
             employee_code=payload.lecturer_profile.employee_code.strip(),

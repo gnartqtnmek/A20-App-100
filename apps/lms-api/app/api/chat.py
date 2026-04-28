@@ -1,4 +1,4 @@
-"""Chat API — REST + Server-Sent Events streaming."""
+"""Chat API: REST + SSE proxy for agent stream contract."""
 from __future__ import annotations
 
 import json
@@ -10,14 +10,10 @@ from fastapi.responses import StreamingResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_user
+from app.core.security import create_access_token
 from app.db.database import get_db
 from app.models.user import User
-from app.schemas.chat import (
-    ChatMessageCreate,
-    ChatMessageRead,
-    ChatSessionCreate,
-    ChatSessionRead,
-)
+from app.schemas.chat import ChatMessageCreate, ChatMessageRead, ChatSessionCreate, ChatSessionRead
 from app.services import chat_service
 
 logger = logging.getLogger(__name__)
@@ -58,9 +54,7 @@ async def get_messages(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> list[ChatMessageRead]:
-    messages = await chat_service.get_session_messages(
-        db, session_id, current_user.id, limit=limit
-    )
+    messages = await chat_service.get_session_messages(db, session_id, current_user.id, limit=limit)
     return [ChatMessageRead.model_validate(m) for m in messages]
 
 
@@ -72,28 +66,30 @@ async def stream_message(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> StreamingResponse:
-    """Stream an assistant response via Server-Sent Events.
-
-    Client should consume the event stream:
-      event: delta   → partial text chunk
-      event: done    → stream finished (data contains message_id)
-      event: error   → something went wrong
-    """
+    """Stream assistant response using the same SSE event contract as agent-api."""
 
     async def _event_stream():
+        access_token = create_access_token(current_user.id, current_user.role)
         try:
-            async for delta in chat_service.stream_chat(
+            async for event in chat_service.stream_chat(
                 db,
                 current_user.id,
+                access_token,
                 session_id,
                 payload.content,
                 course_id=course_id,
             ):
-                yield f"event: delta\ndata: {json.dumps({'delta': delta})}\n\n"
-            yield "event: done\ndata: {}\n\n"
+                yield f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+            yield "data: [DONE]\n\n"
         except Exception as exc:
             logger.exception("stream_chat error for user %s", current_user.id)
-            yield f"event: error\ndata: {json.dumps({'error': str(exc)})}\n\n"
+            error_payload = {
+                "type": "error",
+                "error_code": "AI_UNAVAILABLE",
+                "message": str(exc),
+            }
+            yield f"data: {json.dumps(error_payload, ensure_ascii=False)}\n\n"
+            yield "data: [DONE]\n\n"
 
     return StreamingResponse(
         _event_stream(),
@@ -101,6 +97,7 @@ async def stream_message(
         headers={
             "Cache-Control": "no-cache",
             "X-Accel-Buffering": "no",
+            "Connection": "keep-alive",
         },
     )
 
@@ -113,20 +110,23 @@ async def send_message(
     current_user: User = Depends(get_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> ChatMessageRead:
-    """Non-streaming endpoint — accumulates the full response before returning."""
-    full_text = ""
-    async for chunk in chat_service.stream_chat(
+    """Non-streaming endpoint: aggregate token events then return latest assistant message."""
+    access_token = create_access_token(current_user.id, current_user.role)
+    async for _event in chat_service.stream_chat(
         db,
         current_user.id,
+        access_token,
         session_id,
         payload.content,
         course_id=course_id,
     ):
-        full_text += chunk
+        # Streaming service already persists final assistant message; ignore intermediate events here.
+        pass
+
+    from sqlalchemy import select
 
     from app.models.base import ChatMessageRole
     from app.models.chat import ChatMessage
-    from sqlalchemy import select
 
     stmt = (
         select(ChatMessage)

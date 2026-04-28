@@ -128,16 +128,20 @@ services:
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
       OPENAI_API_KEY: ${OPENAI_API_KEY:-}
       DEFAULT_MODEL: ${DEFAULT_MODEL:-claude-sonnet-4-20250514}
+      API_PORT: 8001
       DATABASE_URL: postgresql+psycopg://lms:lms@postgres:5432/lms
       REDIS_URL: redis://redis:6379/0
       LMS_API_URL: http://backend:8000
       AGENT_SERVICE_TOKEN: ${AGENT_SERVICE_TOKEN:-dev-agent-token-please-change}
+      JWT_SECRET: ${JWT_SECRET:-dev-secret-do-not-use-in-prod}
+      JWT_ISSUER: ${JWT_ISSUER:-lms-backend}
+      JWT_AUDIENCE: ${JWT_AUDIENCE:-lms-clients}
       LOG_LEVEL: INFO
     ports:
       - "8001:8001"
     volumes:
       - ../apps/agent-api:/app
-    command: ["python", "-m", "agent.agent"]
+    command: ["python", "-m", "src"]
     stdin_open: true
     tty: true
 

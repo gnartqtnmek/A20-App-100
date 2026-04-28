@@ -1,16 +1,14 @@
-"""CRUD for UserMemory (structured DB layer) and Mem0 sync helpers."""
+"""CRUD for Memory (ERD-compatible) and Mem0 sync helpers."""
 from __future__ import annotations
 
-import logging
+from datetime import datetime, timezone
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import or_, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.base import MemoryType
-from app.models.memory import UserMemory
-
-logger = logging.getLogger(__name__)
+from app.models.memory import Memory
 
 
 async def list_memories(
@@ -19,11 +17,12 @@ async def list_memories(
     *,
     active_only: bool = True,
     limit: int = 50,
-) -> list[UserMemory]:
-    stmt = select(UserMemory).where(UserMemory.user_id == user_id)
+) -> list[Memory]:
+    stmt = select(Memory).where(Memory.user_id == user_id)
     if active_only:
-        stmt = stmt.where(UserMemory.is_active == True)  # noqa: E712
-    stmt = stmt.order_by(UserMemory.importance.desc(), UserMemory.created_at.desc()).limit(limit)
+        now = datetime.now(timezone.utc)
+        stmt = stmt.where(or_(Memory.expires_at.is_(None), Memory.expires_at > now))
+    stmt = stmt.order_by(Memory.updated_at.desc()).limit(limit)
     result = await db.execute(stmt)
     return list(result.scalars().all())
 
@@ -32,16 +31,25 @@ async def create_memory(
     db: AsyncSession,
     user_id: UUID,
     content: str,
-    memory_type: MemoryType = MemoryType.FACT,
-    importance: float = 0.5,
-    extra: dict | None = None,
-) -> UserMemory:
-    mem = UserMemory(
+    memory_type: MemoryType = MemoryType.OTHER,
+    relevance_score: float | None = None,
+    *,
+    mem0_memory_id: str | None = None,
+    course_id: UUID | None = None,
+    topic: str | None = None,
+    source: str = "manual",
+    expires_at: datetime | None = None,
+) -> Memory:
+    mem = Memory(
         user_id=user_id,
-        type=memory_type,
+        mem0_memory_id=mem0_memory_id,
+        memory_type=memory_type,
         content=content,
-        importance=importance,
-        extra=extra,
+        course_id=course_id,
+        topic=topic,
+        source=source,
+        relevance_score=relevance_score,
+        expires_at=expires_at,
     )
     db.add(mem)
     await db.commit()
@@ -49,11 +57,11 @@ async def create_memory(
     return mem
 
 
-async def deactivate_memory(db: AsyncSession, memory_id: UUID, user_id: UUID) -> UserMemory | None:
-    mem = await db.get(UserMemory, memory_id)
+async def deactivate_memory(db: AsyncSession, memory_id: UUID, user_id: UUID) -> Memory | None:
+    mem = await db.get(Memory, memory_id)
     if mem is None or mem.user_id != user_id:
         return None
-    mem.is_active = False
+    mem.expires_at = datetime.now(timezone.utc)
     await db.commit()
     await db.refresh(mem)
     return mem
@@ -69,21 +77,39 @@ async def sync_mem0_to_db(
         content = item.get("memory", "")
         if not content:
             continue
-        existing = await db.execute(
-            select(UserMemory).where(
-                UserMemory.user_id == user_id,
-                UserMemory.content == content,
+
+        mem0_id = item.get("id")
+        if mem0_id:
+            existing = await db.execute(
+                select(Memory).where(
+                    Memory.user_id == user_id,
+                    Memory.mem0_memory_id == str(mem0_id),
+                )
+            )
+            row = existing.scalar_one_or_none()
+            if row is not None:
+                row.content = content
+                row.relevance_score = float(item.get("score", 0.5))
+                row.source = "mem0"
+                continue
+
+        existing_by_content = await db.execute(
+            select(Memory).where(
+                Memory.user_id == user_id,
+                Memory.content == content,
             )
         )
-        if existing.scalar_one_or_none() is not None:
+        if existing_by_content.scalar_one_or_none() is not None:
             continue
+
         db.add(
-            UserMemory(
+            Memory(
                 user_id=user_id,
-                type=MemoryType.FACT,
+                mem0_memory_id=str(mem0_id) if mem0_id else None,
+                memory_type=MemoryType.OTHER,
                 content=content,
-                importance=float(item.get("score", 0.5)),
-                extra={"mem0_id": item.get("id"), "source": "mem0_sync"},
+                source="mem0",
+                relevance_score=float(item.get("score", 0.5)),
             )
         )
     await db.commit()

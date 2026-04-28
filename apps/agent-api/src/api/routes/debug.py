@@ -4,7 +4,7 @@ from fastapi import APIRouter, Request, Query
 
 from ..deps import get_container
 
-router = APIRouter(prefix="/v1/debug")
+router = APIRouter(prefix="/debug")
 
 
 @router.get("/conversations/{conversation_id}/raw")
@@ -17,7 +17,7 @@ async def get_raw_messages(
     container = get_container(request)
     
     # Get raw conversation data
-    row = await container.db.fetch_one(
+    row = await container.database.fetch_one(
         "SELECT messages FROM conversations WHERE id = %s AND user_id = %s",
         (conversation_id, user_id)
     )

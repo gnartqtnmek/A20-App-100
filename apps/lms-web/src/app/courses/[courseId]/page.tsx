@@ -100,7 +100,7 @@ export default function CourseDetailPage() {
       subtitle={`${course.code}${course.semester ? " · " + course.semester : ""}`}
       actions={
         <div className="flex flex-wrap gap-2">
-          {(role === "lecturer" || role === "admin") && (
+          {(role === "instructor" || role === "admin") && (
             <>
               <Link
                 href={`/courses/${courseId}/manage`}
@@ -157,7 +157,7 @@ export default function CourseDetailPage() {
                           className="flex items-center justify-between text-sm"
                         >
                           <span className="text-neutral-700">{lesson.title}</span>
-                          {(role === "lecturer" || role === "admin") && (
+                          {(role === "instructor" || role === "admin") && (
                             <Link
                               href={`/lessons/${lesson.id}/chunks`}
                               className="text-xs text-blue-600 hover:underline"

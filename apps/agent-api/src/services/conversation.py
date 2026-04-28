@@ -170,6 +170,64 @@ class ConversationService:
             normalized_rows.append(record)
         return normalized_rows
 
+    async def list_conversations_paginated(
+        self,
+        user_id: str,
+        *,
+        page: int = 1,
+        limit: int = 20,
+    ) -> tuple[int, list[dict[str, Any]]]:
+        offset = (page - 1) * limit
+        total_row = await self.db.fetch_one(
+            """
+            SELECT COUNT(*) AS total
+            FROM conversations
+            WHERE user_id = %s AND is_active = TRUE
+            """,
+            (user_id,),
+        )
+        total = int((total_row or {}).get("total", 0))
+
+        rows = await self.db.fetch_all(
+            """
+            SELECT id, user_id, title, messages, is_active, created_at, updated_at
+            FROM conversations
+            WHERE user_id = %s AND is_active = TRUE
+            ORDER BY updated_at DESC
+            LIMIT %s OFFSET %s
+            """,
+            (user_id, limit, offset),
+        )
+        normalized_rows: list[dict[str, Any]] = []
+        for row in rows:
+            record = dict(row)
+            record["messages"] = _normalize_messages(record.get("messages"))
+            normalized_rows.append(record)
+        return total, normalized_rows
+
+    async def get_conversation_detail(self, conversation_id: str, user_id: str) -> dict[str, Any]:
+        conversation = await self.get_conversation(conversation_id, user_id)
+        messages = conversation.get("messages") or []
+        conversation["message_count"] = len(messages)
+        conversation["last_message_at"] = conversation.get("updated_at")
+        conversation["course_id"] = None
+        return conversation
+
+    async def soft_delete_conversation(self, conversation_id: str, user_id: str) -> bool:
+        row = await self.db.fetch_one(
+            """
+            UPDATE conversations
+            SET is_active = FALSE,
+                updated_at = NOW()
+            WHERE id = %s
+              AND user_id = %s
+              AND is_active = TRUE
+            RETURNING id
+            """,
+            (conversation_id, user_id),
+        )
+        return row is not None
+
     async def list_messages(
         self,
         conversation_id: str,
@@ -182,6 +240,21 @@ class ConversationService:
         messages = conversation.get("messages") or []
         sliced_messages = messages[offset: offset + limit]
         return sliced_messages
+
+    async def list_messages_paginated(
+        self,
+        conversation_id: str,
+        user_id: str,
+        *,
+        page: int = 1,
+        limit: int = 50,
+    ) -> tuple[dict[str, Any], int, list[dict[str, Any]]]:
+        conversation = await self.get_conversation(conversation_id, user_id)
+        messages = conversation.get("messages") or []
+        total = len(messages)
+        offset = (page - 1) * limit
+        sliced_messages = messages[offset: offset + limit]
+        return conversation, total, sliced_messages
 
     async def create_user_turn(
         self,

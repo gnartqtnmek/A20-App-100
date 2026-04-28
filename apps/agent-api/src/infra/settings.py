@@ -41,6 +41,10 @@ class Settings:
     short_term_max_input_tokens: int
     lms_api_url: str
     agent_service_token: str
+    jwt_secret: str
+    jwt_algorithm: str
+    jwt_issuer: str
+    jwt_audience: str
 
 
 _INSECURE_TOKEN = "dev-agent-token-please-change"
@@ -51,7 +55,7 @@ def get_settings() -> Settings:
     s = Settings(
         app_name=os.getenv("APP_NAME", "A20 LMS Agent"),
         api_host=os.getenv("API_HOST", "0.0.0.0"),
-        api_port=_get_int("API_PORT", 8000),
+        api_port=_get_int("API_PORT", 8001),
         log_level=os.getenv("LOG_LEVEL", "INFO"),
         database_url=os.getenv("DATABASE_URL", ""),
         llm_provider=os.getenv("LLM_PROVIDER", "openai_compatible"),
@@ -68,8 +72,12 @@ def get_settings() -> Settings:
         short_term_max_turns=_get_int("SHORT_TERM_MAX_TURNS", 10),
         short_term_recent_turns=_get_int("SHORT_TERM_RECENT_TURNS", 8),
         short_term_max_input_tokens=_get_int("SHORT_TERM_MAX_INPUT_TOKENS", 12000),
-        lms_api_url=os.getenv("LMS_API_URL", "http://localhost:8001"),
+        lms_api_url=os.getenv("LMS_API_URL", "http://localhost:8000"),
         agent_service_token=os.getenv("AGENT_SERVICE_TOKEN", _INSECURE_TOKEN),
+        jwt_secret=os.getenv("JWT_SECRET", "change-me-in-production"),
+        jwt_algorithm=os.getenv("JWT_ALGORITHM", "HS256"),
+        jwt_issuer=os.getenv("JWT_ISSUER", "lms-backend"),
+        jwt_audience=os.getenv("JWT_AUDIENCE", "lms-clients"),
     )
     if os.getenv("ENVIRONMENT", "development") == "production":
         if s.agent_service_token == _INSECURE_TOKEN:

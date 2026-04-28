@@ -13,7 +13,7 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [role, setRole] = useState<"student" | "lecturer">("student");
+  const [role, setRole] = useState<"student" | "instructor">("student");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -99,7 +99,7 @@ export default function RegisterPage() {
           <fieldset className="space-y-1">
             <legend className="text-sm font-medium text-neutral-800">Bạn là</legend>
             <div className="grid grid-cols-2 gap-2">
-              {(["student", "lecturer"] as const).map((r) => (
+              {(["student", "instructor"] as const).map((r) => (
                 <label
                   key={r}
                   className={`cursor-pointer rounded-lg border px-3 py-2 text-center text-sm ${

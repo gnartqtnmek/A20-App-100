@@ -30,7 +30,7 @@ async def create_question(
     assignment_id: UUID,
     payload: QuizQuestionCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> QuizQuestionRead:
     assignment = await assignment_service.get_assignment_or_404(db, assignment_id)
     await course_service.ensure_course_owner(db, assignment.course_id, current_user)
@@ -57,7 +57,7 @@ async def update_question(
     question_id: UUID,
     payload: QuizQuestionUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> QuizQuestionRead:
     assignment = await assignment_service.get_assignment_or_404(db, assignment_id)
     await course_service.ensure_course_owner(db, assignment.course_id, current_user)
@@ -73,7 +73,7 @@ async def delete_question(
     assignment_id: UUID,
     question_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> None:
     assignment = await assignment_service.get_assignment_or_404(db, assignment_id)
     await course_service.ensure_course_owner(db, assignment.course_id, current_user)

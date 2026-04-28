@@ -4,15 +4,20 @@ from __future__ import annotations
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 from app.models.base import EnrollmentStatus
 
 
 class CourseCreate(BaseModel):
+    model_config = ConfigDict(populate_by_name=True)
+
     code: str = Field(min_length=2, max_length=32)
     name: str = Field(min_length=3, max_length=255)
-    lecturer_id: UUID | None = None
+    instructor_id: UUID | None = Field(
+        default=None,
+        validation_alias=AliasChoices("instructor_id", "lecturer_id"),
+    )
     description: str | None = None
     syllabus_md: str | None = None
     semester: str | None = Field(default=None, max_length=32)
@@ -29,7 +34,9 @@ class CourseRead(BaseModel):
     name: str
     description: str | None
     syllabus_md: str | None
-    lecturer_id: UUID
+    instructor_id: UUID = Field(
+        validation_alias=AliasChoices("instructor_id", "lecturer_id"),
+    )
     semester: str | None
     is_published: bool
     invite_code: str | None

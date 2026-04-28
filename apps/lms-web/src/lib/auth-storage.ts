@@ -42,5 +42,9 @@ export function getUserRole(): string | null {
   if (!hasWindow()) {
     return null;
   }
-  return localStorage.getItem(USER_ROLE_KEY);
+  const role = localStorage.getItem(USER_ROLE_KEY);
+  if (role === "lecturer") {
+    return "instructor";
+  }
+  return role;
 }

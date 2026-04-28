@@ -11,6 +11,7 @@ from app.models import (  # noqa: F401  (intentional side-effect import)
     KnowledgeChunk,
     LecturerProfile,
     Lesson,
+    Memory,
     MemoryEmbedding,
     Module,
     Notification,

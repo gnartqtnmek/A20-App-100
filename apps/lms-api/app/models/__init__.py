@@ -20,7 +20,7 @@ from app.models.base import (
 )
 from app.models.chat import AgentRun, ChatMessage, ChatSession
 from app.models.course import Course, CourseEnrollment, Lesson, Module
-from app.models.memory import EMBEDDING_DIM, KnowledgeChunk, MemoryEmbedding, UserMemory
+from app.models.memory import EMBEDDING_DIM, KnowledgeChunk, Memory, MemoryEmbedding, UserMemory
 from app.models.notification import Notification
 from app.models.user import LecturerProfile, RefreshToken, StudentProfile, User
 
@@ -52,6 +52,7 @@ __all__ = [
     "ChatSession",
     "ChatMessage",
     "AgentRun",
+    "Memory",
     "UserMemory",
     "MemoryEmbedding",
     "KnowledgeChunk",

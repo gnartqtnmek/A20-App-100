@@ -25,7 +25,7 @@ async def create_module(
     course_id: UUID,
     payload: ModuleCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> ModuleRead:
     await course_service.ensure_course_owner(db, course_id, current_user)
     module = await course_service.create_module(db, course_id, payload)
@@ -51,7 +51,7 @@ async def create_lesson(
     module_id: UUID,
     payload: LessonCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> LessonRead:
     module = await course_service.get_module_or_404(db, module_id)
     await course_service.ensure_course_owner(db, module.course_id, current_user)

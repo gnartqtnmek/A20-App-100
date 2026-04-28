@@ -6,17 +6,7 @@ from datetime import datetime
 from typing import TYPE_CHECKING
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import (
-    Boolean,
-    DateTime,
-    Enum as SAEnum,
-    Float,
-    ForeignKey,
-    Index,
-    Integer,
-    String,
-    Text,
-)
+from sqlalchemy import DateTime, Enum as SAEnum, Float, ForeignKey, Index, Integer, String, Text
 from sqlalchemy.dialects.postgresql import JSONB, UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,8 +20,8 @@ if TYPE_CHECKING:
 EMBEDDING_DIM = 1536
 
 
-class UserMemory(Base, UUIDMixin, TimestampMixin):
-    __tablename__ = "user_memories"
+class Memory(Base, UUIDMixin, TimestampMixin):
+    __tablename__ = "memories"
 
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -39,15 +29,22 @@ class UserMemory(Base, UUIDMixin, TimestampMixin):
         nullable=False,
         index=True,
     )
-    type: Mapped[MemoryType] = mapped_column(
+    mem0_memory_id: Mapped[str | None] = mapped_column(String(255), unique=True, nullable=True)
+    memory_type: Mapped[MemoryType] = mapped_column(
         SAEnum(MemoryType, name="memory_type", native_enum=False, length=32),
         nullable=False,
     )
     content: Mapped[str] = mapped_column(Text, nullable=False)
-    importance: Mapped[float] = mapped_column(Float, nullable=False, default=0.5)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    course_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("courses.id", ondelete="SET NULL"),
+        nullable=True,
+        index=True,
+    )
+    topic: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    source: Mapped[str] = mapped_column(String(20), nullable=False, default="mem0")
+    relevance_score: Mapped[float | None] = mapped_column(Float, nullable=True)
     expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-    extra: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
 
     user: Mapped["User"] = relationship(back_populates="memories")
     embedding: Mapped["MemoryEmbedding | None"] = relationship(
@@ -60,13 +57,13 @@ class MemoryEmbedding(Base, TimestampMixin):
 
     memory_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
-        ForeignKey("user_memories.id", ondelete="CASCADE"),
+        ForeignKey("memories.id", ondelete="CASCADE"),
         primary_key=True,
     )
     embedding: Mapped[list[float]] = mapped_column(Vector(EMBEDDING_DIM), nullable=False)
     model_name: Mapped[str] = mapped_column(String(128), nullable=False)
 
-    memory: Mapped[UserMemory] = relationship(back_populates="embedding")
+    memory: Mapped[Memory] = relationship(back_populates="embedding")
 
 
 class KnowledgeChunk(Base, UUIDMixin, TimestampMixin):
@@ -101,3 +98,6 @@ Index(
     postgresql_with={"lists": 100},
     postgresql_ops={"embedding": "vector_cosine_ops"},
 )
+
+# Backward-compatible aliases
+UserMemory = Memory

@@ -47,7 +47,9 @@ class TimestampMixin:
 
 class UserRole(str, enum.Enum):
     STUDENT = "student"
-    LECTURER = "lecturer"
+    INSTRUCTOR = "instructor"
+    # Backward-compatible alias. Keep old symbol to avoid breaking imports.
+    LECTURER = "instructor"
     ADMIN = "admin"
 
 
@@ -93,11 +95,15 @@ class ChatMessageRole(str, enum.Enum):
 
 
 class MemoryType(str, enum.Enum):
-    PROFILE = "profile"
-    PREFERENCE = "preference"
     WEAKNESS = "weakness"
+    PREFERENCE = "preference"
+    QUESTION = "question"
+    PROGRESS = "progress"
     ACHIEVEMENT = "achievement"
-    FACT = "fact"
+    OTHER = "other"
+    # Backward-compatible aliases.
+    PROFILE = "progress"
+    FACT = "other"
 
 
 __all__ = [

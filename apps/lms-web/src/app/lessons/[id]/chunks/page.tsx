@@ -75,7 +75,7 @@ export default function LessonChunksPage() {
     setExpanded((prev) => ({ ...prev, [id]: !prev[id] }));
   }
 
-  const canDelete = role === "lecturer" || role === "admin";
+  const canDelete = role === "instructor" || role === "admin";
 
   if (loading) {
     return (

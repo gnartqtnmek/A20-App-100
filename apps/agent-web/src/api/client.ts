@@ -1,65 +1,91 @@
+import { ACCESS_TOKEN_STORAGE_KEY } from "../lib/constants";
 import type {
   Conversation,
   ConversationMessageResponse,
-  MessageRow,
+  MessagesEnvelope,
+  PaginatedResponse,
   StreamEvent,
 } from "./types";
+
+const API_BASE = "/api/v1";
+
+function getAccessToken(): string | null {
+  if (typeof window === "undefined") return null;
+  return window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+}
+
+function buildHeaders(init?: HeadersInit): Headers {
+  const headers = new Headers(init ?? {});
+  headers.set("Content-Type", "application/json");
+  const token = getAccessToken();
+  if (token) {
+    headers.set("Authorization", `Bearer ${token}`);
+  }
+  return headers;
+}
 
 async function jsonRequest<T>(url: string, init?: RequestInit): Promise<T> {
   const response = await fetch(url, {
     ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(init?.headers ?? {}),
-    },
+    headers: buildHeaders(init?.headers),
   });
   if (!response.ok) {
-    const body = await response.text();
+    const body = await response.text().catch(() => "");
     throw new Error(`${response.status} ${response.statusText}: ${body}`);
+  }
+  if (response.status === 204) {
+    return undefined as T;
   }
   return (await response.json()) as T;
 }
 
 export function createConversation(input: {
-  user_id: string;
   title?: string | null;
+  course_id?: string | null;
 }): Promise<Conversation> {
-  return jsonRequest<Conversation>("/v1/conversations", {
+  return jsonRequest<Conversation>(`${API_BASE}/conversations`, {
     method: "POST",
     body: JSON.stringify({
-      user_id: input.user_id,
       title: input.title ?? null,
+      course_id: input.course_id ?? null,
     }),
   });
 }
 
-export function listConversations(userId: string): Promise<Conversation[]> {
-  return jsonRequest<Conversation[]>(
-    `/v1/users/${encodeURIComponent(userId)}/conversations`,
+export async function listConversations(params?: {
+  page?: number;
+  limit?: number;
+}): Promise<Conversation[]> {
+  const qs = new URLSearchParams();
+  qs.set("page", String(params?.page ?? 1));
+  qs.set("limit", String(params?.limit ?? 50));
+  const result = await jsonRequest<PaginatedResponse<Conversation>>(
+    `${API_BASE}/conversations?${qs.toString()}`,
   );
+  return result.items;
 }
 
-export function listMessages(
+export async function listMessages(
   conversationId: string,
-  userId: string,
-): Promise<MessageRow[]> {
-  const qs = new URLSearchParams({ user_id: userId, limit: "200" });
-  return jsonRequest<MessageRow[]>(
-    `/v1/conversations/${encodeURIComponent(conversationId)}/messages?${qs}`,
+  params?: { page?: number; limit?: number },
+): Promise<MessagesEnvelope> {
+  const qs = new URLSearchParams();
+  qs.set("page", String(params?.page ?? 1));
+  qs.set("limit", String(params?.limit ?? 200));
+  return jsonRequest<MessagesEnvelope>(
+    `${API_BASE}/conversations/${encodeURIComponent(conversationId)}/messages?${qs.toString()}`,
   );
 }
 
 export function sendMessage(input: {
   conversation_id: string;
-  user_id: string;
   content: string;
 }): Promise<ConversationMessageResponse> {
   return jsonRequest<ConversationMessageResponse>(
-    `/v1/conversations/${encodeURIComponent(input.conversation_id)}/messages`,
+    `${API_BASE}/conversations/${encodeURIComponent(input.conversation_id)}/messages`,
     {
       method: "POST",
       body: JSON.stringify({
-        user_id: input.user_id,
         content: input.content,
       }),
     },
@@ -68,28 +94,22 @@ export function sendMessage(input: {
 
 export async function* streamMessage(input: {
   conversation_id: string;
-  user_id: string;
   content: string;
   signal?: AbortSignal;
 }): AsyncGenerator<StreamEvent, void, unknown> {
   const response = await fetch(
-    `/v1/conversations/${encodeURIComponent(input.conversation_id)}/messages/stream`,
+    `${API_BASE}/conversations/${encodeURIComponent(input.conversation_id)}/messages/stream`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        user_id: input.user_id,
-        content: input.content,
-      }),
+      headers: buildHeaders(),
+      body: JSON.stringify({ content: input.content }),
       signal: input.signal,
     },
   );
 
   if (!response.ok || !response.body) {
     const body = await response.text().catch(() => "");
-    throw new Error(
-      `Stream failed: ${response.status} ${response.statusText} ${body}`,
-    );
+    throw new Error(`Stream failed: ${response.status} ${response.statusText} ${body}`);
   }
 
   const reader = response.body.getReader();
@@ -112,21 +132,20 @@ export async function* streamMessage(input: {
 }
 
 function parseSseBlock(block: string): StreamEvent | null {
-  let eventName = "message";
   const dataLines: string[] = [];
   for (const line of block.split("\n")) {
-    if (line.startsWith("event:")) {
-      eventName = line.slice(6).trim();
-    } else if (line.startsWith("data:")) {
+    if (line.startsWith("data:")) {
       dataLines.push(line.slice(5).trim());
     }
   }
   if (dataLines.length === 0) return null;
-  let payload: Record<string, unknown>;
+  const dataText = dataLines.join("\n");
+  if (dataText === "[DONE]") return null;
+
   try {
-    payload = JSON.parse(dataLines.join("\n"));
+    return JSON.parse(dataText) as StreamEvent;
   } catch {
     return null;
   }
-  return { type: eventName, ...payload } as StreamEvent;
 }
+

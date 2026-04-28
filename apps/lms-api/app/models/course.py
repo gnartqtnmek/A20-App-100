@@ -34,7 +34,7 @@ class Course(Base, UUIDMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
     syllabus_md: Mapped[str | None] = mapped_column(Text, nullable=True)
-    lecturer_id: Mapped[uuid.UUID] = mapped_column(
+    instructor_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="RESTRICT"),
         nullable=False,
@@ -47,8 +47,8 @@ class Course(Base, UUIDMixin, TimestampMixin):
     )
     cover_image_url: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
-    lecturer: Mapped["User"] = relationship(
-        back_populates="courses_taught", foreign_keys=[lecturer_id]
+    instructor: Mapped["User"] = relationship(
+        back_populates="courses_taught", foreign_keys=[instructor_id]
     )
     modules: Mapped[list["Module"]] = relationship(
         back_populates="course",
@@ -61,6 +61,22 @@ class Course(Base, UUIDMixin, TimestampMixin):
     assignments: Mapped[list["Assignment"]] = relationship(
         back_populates="course", cascade="all, delete-orphan"
     )
+
+    @property
+    def lecturer_id(self) -> uuid.UUID:
+        return self.instructor_id
+
+    @lecturer_id.setter
+    def lecturer_id(self, value: uuid.UUID) -> None:
+        self.instructor_id = value
+
+    @property
+    def lecturer(self) -> "User":
+        return self.instructor
+
+    @lecturer.setter
+    def lecturer(self, value: "User") -> None:
+        self.instructor = value
 
     def __repr__(self) -> str:
         return f"<Course {self.code} {self.name!r}>"

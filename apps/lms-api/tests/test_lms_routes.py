@@ -66,9 +66,9 @@ def test_create_user_route_returns_user(monkeypatch) -> None:
     app.dependency_overrides.clear()
 
 
-def test_create_course_route_lecturer_uses_current_user_as_owner(monkeypatch) -> None:
+def test_create_course_route_instructor_uses_current_user_as_owner(monkeypatch) -> None:
     now = datetime.now(timezone.utc)
-    lecturer_id = uuid4()
+    instructor_id = uuid4()
 
     async def fake_create_course(db, payload):
         return SimpleNamespace(
@@ -77,7 +77,7 @@ def test_create_course_route_lecturer_uses_current_user_as_owner(monkeypatch) ->
             name=payload.name,
             description=payload.description,
             syllabus_md=payload.syllabus_md,
-            lecturer_id=payload.lecturer_id,
+            instructor_id=payload.instructor_id,
             semester=payload.semester,
             is_published=payload.is_published,
             invite_code=payload.invite_code,
@@ -88,7 +88,7 @@ def test_create_course_route_lecturer_uses_current_user_as_owner(monkeypatch) ->
 
     monkeypatch.setattr("app.api.courses.course_service.create_course", fake_create_course)
 
-    app.dependency_overrides[get_current_user] = _override_user(UserRole.LECTURER, lecturer_id)
+    app.dependency_overrides[get_current_user] = _override_user(UserRole.INSTRUCTOR, instructor_id)
     client = TestClient(app)
     response = client.post(
         "/courses",
@@ -102,7 +102,7 @@ def test_create_course_route_lecturer_uses_current_user_as_owner(monkeypatch) ->
 
     assert response.status_code == 201
     body = response.json()
-    assert body["lecturer_id"] == str(lecturer_id)
+    assert body["instructor_id"] == str(instructor_id)
     app.dependency_overrides.clear()
 
 
@@ -131,7 +131,7 @@ def test_enroll_student_route_returns_enrollment(monkeypatch) -> None:
         fake_ensure_course_owner,
     )
 
-    client = _client_with_role(UserRole.LECTURER)
+    client = _client_with_role(UserRole.INSTRUCTOR)
     response = client.post(
         f"/courses/{course_id}/enrollments",
         json={"student_id": str(student_id), "status": "active"},

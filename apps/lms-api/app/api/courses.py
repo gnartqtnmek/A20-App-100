@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Body, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_user, require_roles
@@ -20,14 +20,14 @@ router = APIRouter(prefix="/courses", tags=["courses"])
 async def create_course(
     payload: CourseCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> CourseRead:
-    if current_user.role == UserRole.LECTURER:
-        payload.lecturer_id = current_user.id
-    elif payload.lecturer_id is None:
+    if current_user.role == UserRole.INSTRUCTOR:
+        payload.instructor_id = current_user.id
+    elif payload.instructor_id is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="lecturer_id is required for admin-created courses",
+            detail="instructor_id is required for admin-created courses",
         )
     course = await course_service.create_course(db, payload)
     return CourseRead.model_validate(course)
@@ -35,12 +35,16 @@ async def create_course(
 
 @router.get("", response_model=list[CourseRead])
 async def list_courses(
-    lecturer_id: UUID | None = None,
+    instructor_id: UUID | None = Query(default=None, alias="instructor_id"),
     published_only: bool | None = None,
     db: AsyncSession = Depends(get_db),
     _: User = Depends(get_current_user),
 ) -> list[CourseRead]:
-    courses = await course_service.list_courses(db, lecturer_id=lecturer_id, published_only=published_only)
+    courses = await course_service.list_courses(
+        db,
+        instructor_id=instructor_id,
+        published_only=published_only,
+    )
     return [CourseRead.model_validate(item) for item in courses]
 
 
@@ -69,7 +73,7 @@ async def enroll_student(
     course_id: UUID,
     payload: EnrollmentCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> EnrollmentRead:
     await course_service.ensure_course_owner(db, course_id, current_user)
     enrollment = await course_service.enroll_student(db, course_id, payload)
@@ -80,7 +84,7 @@ async def enroll_student(
 async def list_course_enrollments(
     course_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> list[EnrollmentRead]:
     await course_service.ensure_course_owner(db, course_id, current_user)
     enrollments = await course_service.list_course_enrollments(db, course_id)

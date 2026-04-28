@@ -34,7 +34,7 @@ async def grade_submission(
     submission_id: UUID,
     payload: GradeCreate,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> GradeRead:
     submission = await assignment_service.get_submission_or_404(db, submission_id)
     assignment = await assignment_service.get_assignment_or_404(db, submission.assignment_id)
@@ -47,7 +47,7 @@ async def grade_submission(
 async def get_course_gradebook(
     course_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> GradebookResponse:
     """Full gradebook: all enrolled students × all published assignments."""
     await course_service.ensure_course_owner(db, course_id, current_user)

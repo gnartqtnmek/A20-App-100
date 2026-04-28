@@ -13,6 +13,32 @@ CREATE TABLE IF NOT EXISTS user_personalization (
     updated_at     TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS memories (
+    id               UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id          UUID NOT NULL,
+    mem0_memory_id   VARCHAR(255) UNIQUE,
+    memory_type      VARCHAR(30) NOT NULL
+        CHECK (memory_type IN ('weakness','preference','question','progress','achievement','other')),
+    content          TEXT NOT NULL,
+    course_id        UUID NULL,
+    topic            VARCHAR(100) NULL,
+    source           VARCHAR(20) NOT NULL DEFAULT 'mem0',
+    relevance_score  DOUBLE PRECISION NULL,
+    created_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at       TIMESTAMPTZ NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_memories_user_type
+    ON memories (user_id, memory_type);
+
+CREATE INDEX IF NOT EXISTS idx_memories_user_course
+    ON memories (user_id, course_id)
+    WHERE course_id IS NOT NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS uq_memories_user_type_topic
+    ON memories (user_id, memory_type, topic);
+
 CREATE TABLE IF NOT EXISTS conversations (
     id             UUID PRIMARY KEY,
     user_id        TEXT NOT NULL,

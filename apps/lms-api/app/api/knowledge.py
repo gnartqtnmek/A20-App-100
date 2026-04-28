@@ -39,7 +39,7 @@ class ChunkRead(BaseModel):
 async def ingest_lesson(
     lesson_id: UUID,
     db: AsyncSession = Depends(get_db),
-    current_user: User = Depends(require_roles(UserRole.LECTURER, UserRole.ADMIN)),
+    current_user: User = Depends(require_roles(UserRole.INSTRUCTOR, UserRole.ADMIN)),
 ) -> IngestResponse:
     """Re-chunk and re-embed the lesson's markdown content into knowledge_chunks.
 

@@ -23,17 +23,17 @@ async def get_course_or_404(db: AsyncSession, course_id: UUID) -> Course:
 
 
 async def create_course(db: AsyncSession, payload: CourseCreate) -> Course:
-    if payload.lecturer_id is None:
+    if payload.instructor_id is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="lecturer_id is required",
+            detail="instructor_id is required",
         )
 
-    lecturer = await get_user_or_404(db, payload.lecturer_id)
-    if lecturer.role not in {UserRole.LECTURER, UserRole.ADMIN}:
+    instructor = await get_user_or_404(db, payload.instructor_id)
+    if instructor.role not in {UserRole.INSTRUCTOR, UserRole.ADMIN}:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Only lecturer/admin can own a course",
+            detail="Only instructor/admin can own a course",
         )
 
     course = Course(
@@ -41,7 +41,7 @@ async def create_course(db: AsyncSession, payload: CourseCreate) -> Course:
         name=payload.name.strip(),
         description=payload.description,
         syllabus_md=payload.syllabus_md,
-        lecturer_id=payload.lecturer_id,
+        instructor_id=payload.instructor_id,
         semester=payload.semester,
         is_published=payload.is_published,
         invite_code=payload.invite_code,
@@ -64,13 +64,13 @@ async def create_course(db: AsyncSession, payload: CourseCreate) -> Course:
 
 async def list_courses(
     db: AsyncSession,
-    lecturer_id: UUID | None = None,
+    instructor_id: UUID | None = None,
     published_only: bool | None = None,
 ) -> list[Course]:
     statement = select(Course).order_by(Course.created_at.desc())
 
-    if lecturer_id is not None:
-        statement = statement.where(Course.lecturer_id == lecturer_id)
+    if instructor_id is not None:
+        statement = statement.where(Course.instructor_id == instructor_id)
     if published_only is True:
         statement = statement.where(Course.is_published.is_(True))
 
@@ -184,7 +184,7 @@ async def ensure_course_owner(db: AsyncSession, course_id: UUID, actor: User) ->
     course = await get_course_or_404(db, course_id)
     if actor.role == UserRole.ADMIN:
         return course
-    if actor.role == UserRole.LECTURER and course.lecturer_id == actor.id:
+    if actor.role == UserRole.INSTRUCTOR and course.instructor_id == actor.id:
         return course
 
     raise HTTPException(

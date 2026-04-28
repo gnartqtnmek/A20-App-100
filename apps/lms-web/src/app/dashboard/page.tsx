@@ -85,7 +85,7 @@ export default function DashboardPage() {
 
   const ROLE_SUBTITLE: Record<string, string> = {
     student: "Tổng quan các khóa học, bài tập sắp đến hạn và điểm gần nhất.",
-    lecturer: "Tổng quan các khóa bạn dạy và bài tập đang hoạt động.",
+    instructor: "Tổng quan các khóa bạn dạy và bài tập đang hoạt động.",
     admin: "Tổng quan hệ thống.",
   };
 
@@ -103,7 +103,7 @@ export default function DashboardPage() {
           <Card className="lg:col-span-2">
             <div className="mb-3 flex items-center justify-between">
               <h2 className="text-lg font-semibold">
-                {user?.role === "lecturer" ? "Lớp tôi đang dạy" : "Khóa học của tôi"}
+                {user?.role === "instructor" ? "Lớp tôi đang dạy" : "Khóa học của tôi"}
               </h2>
               <Link href="/courses" className="text-sm font-medium text-blue-600 hover:underline">
                 Xem tất cả →

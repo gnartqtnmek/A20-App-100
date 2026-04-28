@@ -15,7 +15,7 @@ if TYPE_CHECKING:
     from app.models.course import Course, CourseEnrollment
     from app.models.assignment import Submission, Grade
     from app.models.chat import ChatSession
-    from app.models.memory import UserMemory
+    from app.models.memory import Memory
     from app.models.notification import Notification
 
 
@@ -45,7 +45,7 @@ class User(Base, UUIDMixin, TimestampMixin):
         back_populates="user", cascade="all, delete-orphan"
     )
     courses_taught: Mapped[list["Course"]] = relationship(
-        back_populates="lecturer", foreign_keys="Course.lecturer_id"
+        back_populates="instructor", foreign_keys="Course.instructor_id"
     )
     enrollments: Mapped[list["CourseEnrollment"]] = relationship(
         back_populates="student", cascade="all, delete-orphan"
@@ -63,7 +63,7 @@ class User(Base, UUIDMixin, TimestampMixin):
     chat_sessions: Mapped[list["ChatSession"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
-    memories: Mapped[list["UserMemory"]] = relationship(
+    memories: Mapped[list["Memory"]] = relationship(
         back_populates="user", cascade="all, delete-orphan"
     )
 

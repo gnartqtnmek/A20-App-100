@@ -125,12 +125,26 @@ export function useChat(courseId?: string) {
           for (const line of lines) {
             if (!line.startsWith("data: ")) continue;
 
+            const raw = line.slice(6).trim();
+            if (raw === "[DONE]") {
+              continue;
+            }
             try {
-              const payload = JSON.parse(line.slice(6)) as { delta?: string };
-              if (!payload.delta) continue;
+              const payload = JSON.parse(raw) as
+                | { type: "token"; content?: string }
+                | { type: "tool_call_start"; tool_name?: string; display_message?: string }
+                | { type: "tool_call_end"; tool_name?: string }
+                | { type: "done" }
+                | { type: "error"; message?: string };
 
-              accumulated += payload.delta;
-              setState((current) => ({ ...current, streamingContent: accumulated }));
+              if (payload.type === "token" && payload.content) {
+                accumulated += payload.content;
+                setState((current) => ({ ...current, streamingContent: accumulated }));
+                continue;
+              }
+              if (payload.type === "error") {
+                throw new Error(payload.message || "Loi ket noi.");
+              }
             } catch {
               // Ignore malformed SSE payloads.
             }

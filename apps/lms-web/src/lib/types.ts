@@ -1,4 +1,4 @@
-export type UserRole = "student" | "lecturer" | "admin";
+export type UserRole = "student" | "instructor" | "admin";
 
 export type StudentProfileRead = {
   user_id: string;
@@ -48,7 +48,7 @@ export type CourseRead = {
   name: string;
   description: string | null;
   syllabus_md: string | null;
-  lecturer_id: string;
+  instructor_id: string;
   semester: string | null;
   is_published: boolean;
   invite_code: string | null;

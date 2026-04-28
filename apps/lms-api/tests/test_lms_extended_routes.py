@@ -45,7 +45,7 @@ def test_create_module_route(monkeypatch) -> None:
     monkeypatch.setattr("app.api.curriculum.course_service.ensure_course_owner", fake_ensure_course_owner)
     monkeypatch.setattr("app.api.curriculum.course_service.create_module", fake_create_module)
 
-    client = _client_with_role(UserRole.LECTURER)
+    client = _client_with_role(UserRole.INSTRUCTOR)
     response = client.post(
         f"/curriculum/courses/{course_id}/modules",
         json={"title": "Week 1", "description": "Intro", "order_index": 0},
@@ -96,7 +96,7 @@ def test_grade_submission_route(monkeypatch) -> None:
     monkeypatch.setattr("app.api.grades.course_service.ensure_course_owner", fake_ensure_course_owner)
     monkeypatch.setattr("app.api.grades.assignment_service.grade_submission", fake_grade_submission)
 
-    client = _client_with_role(UserRole.LECTURER)
+    client = _client_with_role(UserRole.INSTRUCTOR)
     response = client.post(
         f"/grades/submissions/{submission_id}",
         json={"score": 8.5, "feedback": "Good"},

@@ -10,21 +10,27 @@ import { ChatScreen } from "./components/ChatScreen";
 import { Sidebar } from "./components/Sidebar";
 import type { ToolEvent, UIMessage } from "./components/MessageItem";
 import { WelcomeScreen } from "./components/WelcomeScreen";
-import { USER_ID_STORAGE_KEY } from "./lib/constants";
+import { ACCESS_TOKEN_STORAGE_KEY } from "./lib/constants";
 
 const TYPEWRITER_CHARS_PER_FRAME = 2;
-const TYPEWRITER_FRAME_SKIP = 1; // render mỗi N+1 frames (~30fps)
+const TYPEWRITER_FRAME_SKIP = 1;
+
+function resolveUserLabel(): string {
+  if (typeof window === "undefined") return "Unauthenticated";
+  const token = window.localStorage.getItem(ACCESS_TOKEN_STORAGE_KEY);
+  if (!token) return "Unauthenticated";
+  try {
+    const [, payload] = token.split(".");
+    const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+    const parsed = JSON.parse(window.atob(normalized));
+    return String(parsed.sub ?? parsed.email ?? "Authenticated");
+  } catch {
+    return "Authenticated";
+  }
+}
 
 export default function App() {
-  const [userId, setUserId] = useState<string>(() => {
-    if (typeof window === "undefined") return "local-user";
-    const fromQuery = new URLSearchParams(window.location.search).get("user_id");
-    const fromStorage = window.localStorage.getItem(USER_ID_STORAGE_KEY);
-    const resolved = (fromQuery ?? fromStorage ?? `user-${crypto.randomUUID()}`).trim();
-    window.localStorage.setItem(USER_ID_STORAGE_KEY, resolved);
-    return resolved;
-  });
-  const [userIdInput, setUserIdInput] = useState(userId);
+  const [userLabel] = useState<string>(resolveUserLabel);
   const [collapsed, setCollapsed] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -62,27 +68,16 @@ export default function App() {
 
   const refreshConversations = useCallback(async () => {
     try {
-      const rows = await listConversations(userId);
+      const rows = await listConversations({ page: 1, limit: 50 });
       setConversations(rows);
     } catch (err) {
       console.error(err);
     }
-  }, [userId]);
+  }, []);
 
   useEffect(() => {
     refreshConversations();
   }, [refreshConversations]);
-
-  useEffect(() => {
-    setConversations([]);
-    setMessages([]);
-    setActiveId(null);
-    setError(null);
-    setUserIdInput(userId);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(USER_ID_STORAGE_KEY, userId);
-    }
-  }, [userId]);
 
   const handleNewChat = useCallback(() => {
     setActiveId(null);
@@ -94,54 +89,44 @@ export default function App() {
     setActiveId(id);
     setError(null);
     try {
-      const rows = await listMessages(id, userId);
+      const envelope = await listMessages(id, { page: 1, limit: 200 });
+      const rows = envelope.messages;
       const ui: UIMessage[] = [];
-      let pendingToolEvents: ToolEvent[] = [];
+      let pending: ToolEvent[] = [];
 
-      for (const r of rows) {
-        if (r.role === "user") {
-          ui.push({ id: `user-${ui.length}`, role: "user", content: r.content });
-          pendingToolEvents = [];
-        } else if (r.role === "assistant") {
-          const toolCalls = (r.metadata?.tool_calls ?? []) as Array<{
+      for (const row of rows) {
+        if (row.role === "user") {
+          ui.push({ id: `user-${ui.length}`, role: "user", content: row.content });
+          pending = [];
+        } else if (row.role === "assistant") {
+          const toolCalls = (row.metadata?.tool_calls ?? []) as Array<{
             name: string;
             args: Record<string, unknown>;
           }>;
           if (toolCalls.length > 0) {
-            // Intermediate assistant message — collect tool calls, skip empty text
             for (const tc of toolCalls) {
-              pendingToolEvents.push({ name: tc.name, args: tc.args });
+              pending.push({ name: tc.name, args: tc.args });
             }
           } else {
-            // Final assistant message with actual text content
             ui.push({
               id: `assistant-${ui.length}`,
               role: "assistant",
-              content: r.content,
-              toolEvents: pendingToolEvents.length > 0 ? [...pendingToolEvents] : undefined,
+              content: row.content,
+              toolEvents: pending.length > 0 ? [...pending] : undefined,
             });
-            pendingToolEvents = [];
+            pending = [];
           }
-        } else if (r.role === "tool") {
-          const toolName = (r.metadata?.tool_name as string) ?? "unknown";
-          const match = pendingToolEvents.find((e) => e.name === toolName && e.result === undefined);
-          if (match) {
-            match.result = r.content;
-          }
+        } else if (row.role === "tool") {
+          const toolName = (row.metadata?.tool_name as string) ?? "unknown";
+          const match = pending.find((e) => e.name === toolName && e.result === undefined);
+          if (match) match.result = row.content;
         }
       }
-
       setMessages(ui);
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     }
-  }, [userId]);
-
-  const handleApplyUserId = useCallback(() => {
-    const next = userIdInput.trim();
-    if (!next || next === userId) return;
-    setUserId(next);
-  }, [userId, userIdInput]);
+  }, []);
 
   const handleSubmit = useCallback(
     async (content: string) => {
@@ -153,10 +138,7 @@ export default function App() {
       try {
         if (!conversationId) {
           const firstLine = content.split("\n")[0].slice(0, 60);
-          const created = await createConversation({
-            user_id: userId,
-            title: firstLine,
-          });
+          const created = await createConversation({ title: firstLine });
           conversationId = created.id;
           setActiveId(created.id);
           setConversations((prev) => [created, ...prev]);
@@ -183,56 +165,51 @@ export default function App() {
       }
 
       try {
-        for await (const event of streamMessage({
-          conversation_id: conversationId!,
-          user_id: userId,
-          content,
-        })) {
-          if (event.type === "chunk") {
-            typewriterQueue.current += event.text;
+        for await (const event of streamMessage({ conversation_id: conversationId!, content })) {
+          if (event.type === "token") {
+            typewriterQueue.current += event.content;
             startTypewriter(assistantMsgId);
-          } else if (event.type === "tool_call") {
+          } else if (event.type === "tool_call_start") {
             pendingToolEvents.current.push({
-              name: event.name,
-              args: event.args,
+              name: event.tool_name,
+              result: event.display_message,
             });
             const snapshot = [...pendingToolEvents.current];
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantMsgId ? { ...m, toolEvents: snapshot } : m,
-              ),
+              prev.map((m) => (m.id === assistantMsgId ? { ...m, toolEvents: snapshot } : m)),
             );
           } else if (event.type === "tool_result") {
-            const events = pendingToolEvents.current;
-            const lastMatch = [...events]
+            const match = [...pendingToolEvents.current]
               .reverse()
-              .find((e) => e.name === event.name && e.result === undefined);
-            if (lastMatch) lastMatch.result = event.content;
-            const snapshot = [...events];
+              .find((e) => e.name === event.tool_name);
+            if (match && event.summary) match.result = event.summary;
+            const snapshot = [...pendingToolEvents.current];
             setMessages((prev) =>
-              prev.map((m) =>
-                m.id === assistantMsgId ? { ...m, toolEvents: snapshot } : m,
-              ),
+              prev.map((m) => (m.id === assistantMsgId ? { ...m, toolEvents: snapshot } : m)),
             );
-          } else if (event.type === "final") {
-            // Wait for typewriter to finish, then mark as complete
+          } else if (event.type === "tool_call_end") {
+            pendingToolEvents.current = pendingToolEvents.current.map((e) =>
+              e.name === event.tool_name ? { ...e, result: e.result ?? "Done" } : e,
+            );
+            const snapshot = [...pendingToolEvents.current];
+            setMessages((prev) =>
+              prev.map((m) => (m.id === assistantMsgId ? { ...m, toolEvents: snapshot } : m)),
+            );
+          } else if (event.type === "done") {
             const waitForTypewriter = () => {
               if (typewriterQueue.current.length > 0 || typewriterFrame.current !== null) {
                 setTimeout(waitForTypewriter, 50);
               } else {
                 setMessages((prev) =>
-                  prev.map((m) =>
-                    m.id === assistantMsgId ? { ...m, streaming: false } : m,
-                  ),
+                  prev.map((m) => (m.id === assistantMsgId ? { ...m, streaming: false } : m)),
                 );
               }
             };
             waitForTypewriter();
           } else if (event.type === "error") {
-            throw new Error(event.detail);
+            throw new Error(event.message);
           }
         }
-
         await refreshConversations();
       } catch (err) {
         if (typewriterFrame.current) {
@@ -242,21 +219,19 @@ export default function App() {
         typewriterQueue.current = "";
         setError(err instanceof Error ? err.message : String(err));
         setMessages((prev) =>
-          prev.map((m) =>
-            m.id === assistantMsgId ? { ...m, streaming: false } : m,
-          ),
+          prev.map((m) => (m.id === assistantMsgId ? { ...m, streaming: false } : m)),
         );
       } finally {
         setSending(false);
       }
     },
-    [activeId, sending, refreshConversations, startTypewriter, userId],
+    [activeId, refreshConversations, sending, startTypewriter],
   );
 
   return (
     <div className="flex h-full w-full overflow-hidden">
       <Sidebar
-        userId={userId}
+        userId={userLabel}
         conversations={conversations}
         activeConversationId={activeId}
         collapsed={collapsed}
@@ -265,30 +240,8 @@ export default function App() {
         onSelectConversation={handleSelectConversation}
       />
       <main className="flex flex-1 flex-col">
-        <div className="border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2">
-          <div className="flex flex-wrap items-center gap-2 text-sm">
-            <span className="font-medium text-[var(--color-text-dim)]">User ID</span>
-            <input
-              value={userIdInput}
-              onChange={(e) => setUserIdInput(e.target.value)}
-              onBlur={handleApplyUserId}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  e.preventDefault();
-                  handleApplyUserId();
-                }
-              }}
-              className="w-full max-w-xs rounded border border-[var(--color-border)] bg-transparent px-2 py-1 text-[var(--color-text)] outline-none focus:border-[var(--color-accent)]"
-              placeholder="Nhập user id để tách trí nhớ"
-            />
-            <button
-              onClick={handleApplyUserId}
-              className="rounded border border-[var(--color-border)] px-2 py-1 text-xs hover:bg-[var(--color-surface-soft)]"
-              type="button"
-            >
-              Áp dụng
-            </button>
-          </div>
+        <div className="border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2 text-sm text-[var(--color-text-dim)]">
+          Authenticated as: {userLabel}
         </div>
         {error && (
           <div className="border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2 text-sm text-[var(--color-accent)]">
@@ -309,3 +262,4 @@ export default function App() {
     </div>
   );
 }
+

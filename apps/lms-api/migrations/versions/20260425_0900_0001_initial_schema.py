@@ -23,7 +23,7 @@ depends_on: str | Sequence[str] | None = None
 
 
 # ---------- Enum value lists ----------
-USER_ROLES = ("student", "lecturer", "admin")
+USER_ROLES = ("student", "instructor", "admin")
 ENROLLMENT_STATUSES = ("active", "dropped", "completed")
 ASSIGNMENT_TYPES = ("essay", "file", "quiz")
 SUBMISSION_STATUSES = ("draft", "submitted", "late", "graded")
@@ -37,7 +37,7 @@ NOTIFICATION_TYPES = (
     "system",
 )
 CHAT_MESSAGE_ROLES = ("user", "assistant", "tool", "system")
-MEMORY_TYPES = ("profile", "preference", "weakness", "achievement", "fact")
+MEMORY_TYPES = ("weakness", "preference", "question", "progress", "achievement", "other")
 
 
 def upgrade() -> None:
@@ -219,7 +219,7 @@ def upgrade() -> None:
         sa.Column("description", sa.Text, nullable=True),
         sa.Column("syllabus_md", sa.Text, nullable=True),
         sa.Column(
-            "lecturer_id",
+            "instructor_id",
             postgresql.UUID(as_uuid=True),
             sa.ForeignKey("users.id", ondelete="RESTRICT"),
             nullable=False,
@@ -244,7 +244,7 @@ def upgrade() -> None:
         ),
     )
     op.create_index("ix_courses_code", "courses", ["code"], unique=True)
-    op.create_index("ix_courses_lecturer_id", "courses", ["lecturer_id"])
+    op.create_index("ix_courses_instructor_id", "courses", ["instructor_id"])
     op.create_index("ix_courses_invite_code", "courses", ["invite_code"], unique=True)
 
     # ---------------- modules ----------------
@@ -729,9 +729,9 @@ def upgrade() -> None:
     )
     op.create_index("ix_agent_runs_session_id", "agent_runs", ["session_id"])
 
-    # ---------------- user_memories ----------------
+    # ---------------- memories ----------------
     op.create_table(
-        "user_memories",
+        "memories",
         sa.Column(
             "id",
             postgresql.UUID(as_uuid=True),
@@ -744,14 +744,19 @@ def upgrade() -> None:
             sa.ForeignKey("users.id", ondelete="CASCADE"),
             nullable=False,
         ),
-        sa.Column("type", memory_type, nullable=False),
+        sa.Column("mem0_memory_id", sa.String(255), nullable=True, unique=True),
+        sa.Column("memory_type", memory_type, nullable=False),
         sa.Column("content", sa.Text, nullable=False),
-        sa.Column("importance", sa.Float, nullable=False, server_default=sa.text("0.5")),
         sa.Column(
-            "is_active", sa.Boolean, nullable=False, server_default=sa.text("true")
+            "course_id",
+            postgresql.UUID(as_uuid=True),
+            sa.ForeignKey("courses.id", ondelete="SET NULL"),
+            nullable=True,
         ),
+        sa.Column("topic", sa.String(100), nullable=True),
+        sa.Column("source", sa.String(20), nullable=False, server_default="mem0"),
+        sa.Column("relevance_score", sa.Float, nullable=True),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=True),
-        sa.Column("extra", postgresql.JSONB, nullable=True),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),
@@ -765,8 +770,9 @@ def upgrade() -> None:
             server_default=sa.text("now()"),
         ),
     )
-    op.create_index("ix_user_memories_user_id", "user_memories", ["user_id"])
-    op.create_index("ix_user_memories_type", "user_memories", ["type"])
+    op.create_index("ix_memories_user_id", "memories", ["user_id"])
+    op.create_index("ix_memories_memory_type", "memories", ["memory_type"])
+    op.create_index("ix_memories_course_id", "memories", ["course_id"])
 
     # ---------------- memory_embeddings ----------------
     op.create_table(
@@ -774,7 +780,7 @@ def upgrade() -> None:
         sa.Column(
             "memory_id",
             postgresql.UUID(as_uuid=True),
-            sa.ForeignKey("user_memories.id", ondelete="CASCADE"),
+            sa.ForeignKey("memories.id", ondelete="CASCADE"),
             primary_key=True,
         ),
         sa.Column("embedding", Vector(1536), nullable=False),
@@ -846,7 +852,7 @@ def downgrade() -> None:
     # Drop in reverse dependency order.
     op.drop_table("knowledge_chunks")
     op.drop_table("memory_embeddings")
-    op.drop_table("user_memories")
+    op.drop_table("memories")
     op.drop_table("agent_runs")
     op.drop_table("chat_messages")
     op.drop_table("chat_sessions")

@@ -1,4 +1,8 @@
-"""Per-user personalization service."""
+"""Per-user personalization service.
+
+Primary storage uses the ERD-style ``memories`` table (type=preference).
+Legacy ``user_personalization`` JSON data is still mirrored for compatibility.
+"""
 
 from __future__ import annotations
 
@@ -20,6 +24,22 @@ class PersonalizationService:
         self.db = db
 
     async def get_snapshot(self, user_id: str) -> dict[str, str]:
+        rows = await self.db.fetch_all(
+            """
+            SELECT topic, content
+            FROM memories
+            WHERE user_id = %s::uuid
+              AND memory_type = 'preference'
+              AND topic IS NOT NULL
+              AND (expires_at IS NULL OR expires_at > NOW())
+            ORDER BY updated_at DESC
+            LIMIT %s
+            """,
+            (user_id, self.MAX_KEYS),
+        )
+        if rows:
+            return {str(row["topic"]): str(row["content"]) for row in rows}
+
         row = await self.db.fetch_one(
             "SELECT data FROM user_personalization WHERE user_id = %s",
             (user_id,),
@@ -57,12 +77,26 @@ class PersonalizationService:
         result_parts: list[str] = []
 
         if to_upsert:
+            for key, value in to_upsert.items():
+                await self.db.execute(
+                    """
+                    INSERT INTO memories (user_id, memory_type, topic, content, source, updated_at)
+                    VALUES (%s::uuid, 'preference', %s, %s, 'manual', NOW())
+                    ON CONFLICT (user_id, memory_type, topic)
+                    DO UPDATE SET content = EXCLUDED.content,
+                                  source = 'manual',
+                                  updated_at = NOW()
+                    """,
+                    (user_id, key, value),
+                )
+
+            # Keep legacy snapshot in sync for older tooling.
             sql = """
-                INSERT INTO user_personalization (user_id, data, updated_at)
-                VALUES (%s, %s, NOW())
-                ON CONFLICT (user_id)
-                DO UPDATE SET data = user_personalization.data || EXCLUDED.data,
-                              updated_at = NOW()
+            INSERT INTO user_personalization (user_id, data, updated_at)
+            VALUES (%s, %s, NOW())
+            ON CONFLICT (user_id)
+            DO UPDATE SET data = user_personalization.data || EXCLUDED.data,
+                          updated_at = NOW()
             """
             await self.db.execute(sql, (user_id, Jsonb(to_upsert)))
             result_parts.append(
@@ -85,11 +119,22 @@ class PersonalizationService:
         if not normalized:
             return "No keys provided."
 
-        sql = """
+        await self.db.execute(
+            """
+            DELETE FROM memories
+            WHERE user_id = %s::uuid
+              AND memory_type = 'preference'
+              AND topic = ANY(%s::text[])
+            """,
+            (user_id, normalized),
+        )
+        await self.db.execute(
+            """
             UPDATE user_personalization
             SET data = data - %s::text[],
                 updated_at = NOW()
             WHERE user_id = %s
-        """
-        await self.db.execute(sql, (normalized, user_id))
+            """,
+            (normalized, user_id),
+        )
         return f"Deleted personalization keys: {', '.join(normalized)}"

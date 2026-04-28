@@ -66,7 +66,8 @@ async function refreshAccessToken(): Promise<string | null> {
     refresh_token: string;
   };
 
-  const currentRole = localStorage.getItem("lms_user_role") ?? "student";
+  const storedRole = localStorage.getItem("lms_user_role");
+  const currentRole = storedRole === "lecturer" ? "instructor" : (storedRole ?? "student");
   saveSession(payload.access_token, payload.refresh_token, currentRole);
   return payload.access_token;
 }
@@ -131,7 +132,7 @@ export const apiClient = {
     email: string;
     full_name: string;
     password: string;
-    role: "student" | "lecturer";
+    role: "student" | "instructor";
   }): Promise<AuthResponse> {
     const result = await request<AuthResponse>("/auth/register", {
       method: "POST",

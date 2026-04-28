@@ -49,7 +49,7 @@ export default function ManageCoursePage() {
 
   useEffect(() => {
     if (!getAccessToken()) { router.replace("/login"); return; }
-    if (role !== "lecturer" && role !== "admin") { router.replace("/courses"); return; }
+    if (role !== "instructor" && role !== "admin") { router.replace("/courses"); return; }
     if (!courseId) return;
 
     let cancelled = false;

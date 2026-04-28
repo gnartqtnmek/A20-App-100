@@ -1,17 +1,10 @@
-"""Chat service: proxy to agent-api for AI responses.
-
-Flow per user turn:
-  1. Load/create ChatSession in lms-api DB.
-  2. Persist user message.
-  3. Ensure conversation exists in agent-api (get_or_create by session UUID).
-  4. Stream response from agent-api, translate SSE format.
-  5. Persist assistant message.
-"""
+"""Chat service: proxy to agent-api for AI responses."""
 from __future__ import annotations
 
 import json
 import logging
 from collections.abc import AsyncIterator
+from typing import Any
 from uuid import UUID
 
 import httpx
@@ -77,73 +70,72 @@ async def get_session_messages(
 async def stream_chat(
     db: AsyncSession,
     user_id: UUID,
+    access_token: str,
     session_id: UUID | None,
     user_message: str,
     *,
     course_id: UUID | None = None,
-) -> AsyncIterator[str]:
-    """Proxy to agent-api: yield text chunks, persist messages to lms-api DB."""
-    s = get_settings()
+) -> AsyncIterator[dict[str, Any]]:
+    """Proxy stream from agent-api and persist user/assistant messages."""
+    settings = get_settings()
     session = await get_or_create_session(db, user_id, session_id)
 
-    # Persist user message in lms-api DB
     db.add(ChatMessage(session_id=session.id, role=ChatMessageRole.USER, content=user_message))
     await db.flush()
 
     conversation_id = str(session.id)
     full_response = ""
+    headers = {"Authorization": f"Bearer {access_token}"}
 
     async with httpx.AsyncClient(timeout=120.0) as client:
-        # Ensure a matching conversation exists in agent-api
         try:
             await client.post(
-                f"{s.agent_service_url}/v1/conversations/{conversation_id}/ensure",
-                json={"user_id": str(user_id)},
+                f"{settings.agent_service_url}/v1/conversations/{conversation_id}/ensure",
+                json={},
+                headers=headers,
                 timeout=10.0,
             )
         except Exception:
             logger.warning("Could not ensure agent conversation %s", conversation_id)
 
-        # Stream from agent-api and translate SSE format
         try:
             async with client.stream(
                 "POST",
-                f"{s.agent_service_url}/v1/conversations/{conversation_id}/messages/stream",
-                json={"user_id": str(user_id), "content": user_message},
+                f"{settings.agent_service_url}/v1/conversations/{conversation_id}/messages/stream",
+                json={"content": user_message},
+                headers=headers,
                 timeout=120.0,
             ) as response:
                 response.raise_for_status()
-                current_event = ""
                 async for line in response.aiter_lines():
-                    if line.startswith("event: "):
-                        current_event = line[7:].strip()
-                    elif line.startswith("data: ") and current_event == "chunk":
-                        try:
-                            payload = json.loads(line[6:])
-                            text = payload.get("text", "")
-                            if text:
-                                full_response += text
-                                yield text
-                        except json.JSONDecodeError:
-                            logger.warning(
-                                "Failed to parse chunk event payload for session %s: %s",
-                                conversation_id,
-                                line,
-                            )
-                        except Exception:
-                            logger.exception(
-                                "Unexpected chunk handling error for session %s",
-                                conversation_id,
-                            )
-                    elif not line:
-                        current_event = ""
+                    if not line.startswith("data: "):
+                        continue
+
+                    raw_data = line[6:].strip()
+                    if raw_data == "[DONE]":
+                        break
+
+                    try:
+                        payload = json.loads(raw_data)
+                    except json.JSONDecodeError:
+                        logger.warning("Malformed stream payload for session %s: %s", conversation_id, line)
+                        continue
+
+                    if payload.get("type") == "token":
+                        text = payload.get("content", "")
+                        if text:
+                            full_response += text
+                    yield payload
         except Exception:
             logger.exception("agent-api stream failed for session %s", conversation_id)
             if not full_response:
-                yield "Xin lỗi, đã xảy ra lỗi kết nối với trợ lý AI."
-                full_response = "Xin lỗi, đã xảy ra lỗi kết nối với trợ lý AI."
+                full_response = "Xin loi, da xay ra loi ket noi voi tro ly AI."
+            yield {
+                "type": "error",
+                "error_code": "AI_UNAVAILABLE",
+                "message": full_response,
+            }
 
-    # Persist assistant message
     from sqlalchemy import func as sqlfunc
 
     db.add(ChatMessage(session_id=session.id, role=ChatMessageRole.ASSISTANT, content=full_response))

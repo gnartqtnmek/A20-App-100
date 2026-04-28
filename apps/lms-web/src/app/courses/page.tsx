@@ -66,12 +66,12 @@ export default function CoursesPage() {
     <PageShell
       title="Khóa học"
       subtitle={
-        role === "lecturer"
+        role === "instructor"
           ? "Danh sách lớp bạn đang phụ trách."
           : "Khóa học bạn đã enroll."
       }
       actions={
-        (role === "lecturer" || role === "admin") ? (
+        (role === "instructor" || role === "admin") ? (
           <Link
             href="/courses/new"
             className="rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700"

@@ -17,11 +17,13 @@ from ..services.message_loader import MessageLoader
 from ..services.personalization import PersonalizationService
 from ..services.context_builder import PromptContextBuilder
 from ..services.rag import RAGService
+from ..services.memory import MemoryService
 from ..services.summary import SummaryService
 from .deps import AppContainer
 from .routes.conversations import router as conversations_router
 from .routes.health import router as health_router
 from .routes.debug import router as debug_router
+from .routes.memories import router as memories_router
 
 logger = logging.getLogger(__name__)
 
@@ -37,6 +39,7 @@ async def lifespan(app: FastAPI):
     personalization = PersonalizationService(database)
     summaries = SummaryService(database)
     rag = RAGService(database, settings)
+    memories = MemoryService(database)
     message_loader = MessageLoader(database)
     lms = LMSService(
         base_url=settings.lms_api_url,
@@ -64,6 +67,7 @@ async def lifespan(app: FastAPI):
         summaries=summaries,
         rag=rag,
         lms=lms,
+        memories=memories,
         agent_runtime=agent_runtime,
     )
     yield
@@ -82,9 +86,18 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+    # Base health endpoint.
     app.include_router(health_router)
-    app.include_router(conversations_router)
-    app.include_router(debug_router)
+
+    # Keep legacy /v1 routes while also exposing /api/v1 routes as documented.
+    app.include_router(health_router, prefix="/v1")
+    app.include_router(health_router, prefix="/api/v1")
+    app.include_router(conversations_router, prefix="/v1")
+    app.include_router(conversations_router, prefix="/api/v1")
+    app.include_router(memories_router, prefix="/v1")
+    app.include_router(memories_router, prefix="/api/v1")
+    app.include_router(debug_router, prefix="/v1")
+    app.include_router(debug_router, prefix="/api/v1")
     return app
 
 

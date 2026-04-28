@@ -26,7 +26,7 @@ async def get_dashboard_stats(db: AsyncSession) -> dict[str, Any]:
 
     users_total = await db.scalar(select(func.count(User.id))) or 0
     students = await db.scalar(select(func.count(User.id)).where(User.role == UserRole.STUDENT)) or 0
-    instructors = await db.scalar(select(func.count(User.id)).where(User.role == UserRole.LECTURER)) or 0
+    instructors = await db.scalar(select(func.count(User.id)).where(User.role == UserRole.INSTRUCTOR)) or 0
     admins = await db.scalar(select(func.count(User.id)).where(User.role == UserRole.ADMIN)) or 0
     active_users = await db.scalar(select(func.count(User.id)).where(User.is_active.is_(True))) or 0
 

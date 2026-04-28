@@ -37,8 +37,8 @@ async def get_or_create_user(db: AsyncSession, email: str, full_name: str, role:
 
 async def seed() -> None:
     async with AsyncSessionLocal() as db:
-        lect_a = await get_or_create_user(db, "lect.a@uni.edu", "GS. Nguyen Van A", UserRole.LECTURER)
-        lect_b = await get_or_create_user(db, "lect.b@uni.edu", "TS. Tran Thi B", UserRole.LECTURER)
+        lect_a = await get_or_create_user(db, "lect.a@uni.edu", "GS. Nguyen Van A", UserRole.INSTRUCTOR)
+        lect_b = await get_or_create_user(db, "lect.b@uni.edu", "TS. Tran Thi B", UserRole.INSTRUCTOR)
         for u, code, dept in [(lect_a, "GV001", "CNTT"), (lect_b, "GV002", "Toan")]:
             ex = (await db.execute(select(LecturerProfile).where(LecturerProfile.user_id == u.id))).scalar_one_or_none()
             if not ex:
@@ -67,7 +67,7 @@ async def seed() -> None:
             existing = (await db.execute(select(Course).where(Course.code == code))).scalar_one_or_none()
             if existing:
                 courses.append(existing); continue
-            c = Course(code=code, name=name, description=desc, lecturer_id=lect.id,
+            c = Course(code=code, name=name, description=desc, instructor_id=lect.id,
                        semester="2026.1", is_published=True,
                        invite_code=secrets.token_urlsafe(6))
             db.add(c); await db.flush()
