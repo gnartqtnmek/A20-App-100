@@ -8,7 +8,7 @@ production deploy lên Railway (backend + agent) và Vercel (frontend).
 | Service     | Port  | Mục đích |
 |-------------|-------|----------|
 | postgres    | 5432  | Relational + pgvector |
-| redis       | 6379  | Cache, working memory, Celery broker |
+| redis       | 6380  | Cache, working memory, Celery broker |
 | minio       | 9000  | S3-compatible storage (web UI: 9001) |
 | backend     | 8000  | FastAPI LMS API |
 | agent       | 8001  | AI Agent service (Sprint 4+ HTTP) |

@@ -93,45 +93,49 @@ def upgrade() -> None:
     op.execute("CREATE INDEX IF NOT EXISTS ix_memories_memory_type ON memories (memory_type)")
     op.execute("CREATE INDEX IF NOT EXISTS ix_memories_course_id ON memories (course_id)")
 
-    # Copy legacy data if present and memories is empty.
+    # Copy legacy data only when the old table is actually present.
     op.execute(
         """
-        INSERT INTO memories (
-            id,
-            user_id,
-            mem0_memory_id,
-            memory_type,
-            content,
-            topic,
-            source,
-            relevance_score,
-            created_at,
-            updated_at,
-            expires_at
-        )
-        SELECT
-            um.id,
-            um.user_id,
-            um.extra ->> 'mem0_id' AS mem0_memory_id,
-            CASE um.type::text
-                WHEN 'weakness' THEN 'weakness'
-                WHEN 'preference' THEN 'preference'
-                WHEN 'achievement' THEN 'achievement'
-                WHEN 'profile' THEN 'progress'
-                WHEN 'fact' THEN 'other'
-                ELSE 'other'
-            END AS memory_type,
-            um.content,
-            um.extra ->> 'topic' AS topic,
-            COALESCE(um.extra ->> 'source', 'manual') AS source,
-            um.importance AS relevance_score,
-            um.created_at,
-            um.updated_at,
-            um.expires_at
-        FROM user_memories um
-        WHERE EXISTS (SELECT 1 FROM information_schema.tables WHERE table_name = 'user_memories')
-          AND NOT EXISTS (SELECT 1 FROM memories LIMIT 1)
-        ON CONFLICT (id) DO NOTHING
+        DO $$
+        BEGIN
+            IF to_regclass('public.user_memories') IS NOT NULL
+               AND NOT EXISTS (SELECT 1 FROM memories LIMIT 1) THEN
+                INSERT INTO memories (
+                    id,
+                    user_id,
+                    mem0_memory_id,
+                    memory_type,
+                    content,
+                    topic,
+                    source,
+                    relevance_score,
+                    created_at,
+                    updated_at,
+                    expires_at
+                )
+                SELECT
+                    um.id,
+                    um.user_id,
+                    um.extra ->> 'mem0_id' AS mem0_memory_id,
+                    CASE um.type::text
+                        WHEN 'weakness' THEN 'weakness'
+                        WHEN 'preference' THEN 'preference'
+                        WHEN 'achievement' THEN 'achievement'
+                        WHEN 'profile' THEN 'progress'
+                        WHEN 'fact' THEN 'other'
+                        ELSE 'other'
+                    END AS memory_type,
+                    um.content,
+                    um.extra ->> 'topic' AS topic,
+                    COALESCE(um.extra ->> 'source', 'manual') AS source,
+                    um.importance AS relevance_score,
+                    um.created_at,
+                    um.updated_at,
+                    um.expires_at
+                FROM user_memories um
+                ON CONFLICT (id) DO NOTHING;
+            END IF;
+        END$$;
         """
     )
 

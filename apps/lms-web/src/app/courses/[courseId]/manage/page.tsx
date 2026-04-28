@@ -13,9 +13,9 @@ import { formatDate } from "@/lib/utils";
 type Tab = "content" | "assignments" | "submissions";
 
 export default function ManageCoursePage() {
-  const params = useParams<{ id: string }>();
+  const params = useParams<{ courseId: string }>();
   const router = useRouter();
-  const courseId = params.id;
+  const courseId = params.courseId;
   const role = getUserRole();
 
   const [tab, setTab] = useState<Tab>("content");
@@ -268,20 +268,19 @@ export default function ManageCoursePage() {
 
           {/* Add module form */}
           <Card>
-            <p className="mb-2 text-sm font-medium text-neutral-700">Thêm module mới</p>
             <form onSubmit={addModule} className="flex gap-2">
               <input
+                placeholder="Tên module mới"
                 value={moduleTitle}
                 onChange={(e) => setModuleTitle(e.target.value)}
-                placeholder="Tên module..."
-                className="flex-1 rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
+                className="block w-full rounded border border-neutral-200 px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
               />
               <button
                 type="submit"
                 disabled={addingModule || !moduleTitle.trim()}
-                className="rounded-full bg-neutral-900 px-4 py-2 text-sm font-medium text-white hover:bg-neutral-700 disabled:opacity-50"
+                className="rounded-full bg-black px-4 py-2 text-sm text-white hover:bg-neutral-800 disabled:opacity-50"
               >
-                {addingModule ? "Đang thêm..." : "Thêm"}
+                {addingModule ? "Đang thêm..." : "Thêm module"}
               </button>
             </form>
           </Card>
@@ -291,109 +290,41 @@ export default function ManageCoursePage() {
       {/* ── Tab: Assignments ── */}
       {tab === "assignments" && (
         <div className="space-y-4">
-          {assignments.length === 0 ? (
-            <EmptyState message="Chưa có bài tập nào." />
-          ) : (
-            <Card>
-              <ul className="divide-y divide-neutral-100">
+          <Card>
+            <h3 className="mb-3 text-base font-semibold">Tạo bài tập</h3>
+            <form onSubmit={addAssignment} className="grid gap-3 md:grid-cols-2">
+              <input placeholder="Tiêu đề *" value={asgForm.title} onChange={(e) => setAsgForm((f) => ({ ...f, title: e.target.value }))} className="rounded border border-neutral-200 px-3 py-2 text-sm" />
+              <select value={asgForm.type} onChange={(e) => setAsgForm((f) => ({ ...f, type: e.target.value as any }))} className="rounded border border-neutral-200 px-3 py-2 text-sm">
+                <option value="essay">Essay</option>
+                <option value="file">File</option>
+                <option value="quiz">Quiz</option>
+              </select>
+              <textarea placeholder="Mô tả" rows={3} value={asgForm.description} onChange={(e) => setAsgForm((f) => ({ ...f, description: e.target.value }))} className="md:col-span-2 rounded border border-neutral-200 px-3 py-2 text-sm" />
+              <input type="datetime-local" value={asgForm.due_at} onChange={(e) => setAsgForm((f) => ({ ...f, due_at: e.target.value }))} className="rounded border border-neutral-200 px-3 py-2 text-sm" />
+              <input type="number" step="0.1" value={asgForm.max_score} onChange={(e) => setAsgForm((f) => ({ ...f, max_score: e.target.value }))} className="rounded border border-neutral-200 px-3 py-2 text-sm" />
+              <input type="number" step="0.1" value={asgForm.weight} onChange={(e) => setAsgForm((f) => ({ ...f, weight: e.target.value }))} className="rounded border border-neutral-200 px-3 py-2 text-sm" />
+              <label className="flex items-center gap-2 text-sm text-neutral-700 md:col-span-2">
+                <input type="checkbox" checked={asgForm.is_published} onChange={(e) => setAsgForm((f) => ({ ...f, is_published: e.target.checked }))} />
+                Công khai ngay
+              </label>
+              <button type="submit" disabled={addingAsg || !asgForm.title.trim()} className="rounded-full bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50">
+                {addingAsg ? "Đang tạo..." : "Tạo bài tập"}
+              </button>
+            </form>
+          </Card>
+
+          <Card>
+            <h3 className="mb-3 text-base font-semibold">Danh sách bài tập</h3>
+            {assignments.length === 0 ? <EmptyState message="Chưa có bài tập nào." /> : (
+              <ul className="space-y-3">
                 {assignments.map((a) => (
-                  <li key={a.id} className="flex items-center justify-between py-3">
-                    <div>
-                      <p className="font-medium text-neutral-900">{a.title}</p>
-                      <p className="text-xs text-neutral-500">
-                        {a.type.toUpperCase()} · {a.max_score} điểm · Hạn: {formatDate(a.due_at)}
-                      </p>
-                    </div>
-                    <span className={`rounded-full px-2 py-0.5 text-xs ${a.is_published ? "bg-emerald-100 text-emerald-700" : "bg-amber-100 text-amber-700"}`}>
-                      {a.is_published ? "Đã xuất bản" : "Nháp"}
-                    </span>
+                  <li key={a.id} className="rounded-lg border border-neutral-200 p-3">
+                    <p className="font-medium text-neutral-900">{a.title}</p>
+                    <p className="mt-1 text-xs text-neutral-500">{a.type.toUpperCase()} · Hạn nộp: {formatDate(a.due_at)}</p>
                   </li>
                 ))}
               </ul>
-            </Card>
-          )}
-
-          <Card>
-            <p className="mb-3 text-sm font-medium text-neutral-700">Tạo bài tập mới</p>
-            <form onSubmit={addAssignment} className="space-y-3">
-              <input
-                required
-                placeholder="Tiêu đề bài tập *"
-                value={asgForm.title}
-                onChange={(e) => setAsgForm((f) => ({ ...f, title: e.target.value }))}
-                className="block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-              />
-              <textarea
-                placeholder="Mô tả / đề bài"
-                rows={2}
-                value={asgForm.description}
-                onChange={(e) => setAsgForm((f) => ({ ...f, description: e.target.value }))}
-                className="block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-              />
-              <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                <label className="block text-xs font-medium text-neutral-600">
-                  Loại
-                  <select
-                    value={asgForm.type}
-                    onChange={(e) => setAsgForm((f) => ({ ...f, type: e.target.value as "essay" | "file" | "quiz" }))}
-                    className="mt-1 block w-full rounded border border-neutral-300 px-2 py-1.5 text-sm focus:outline-none"
-                  >
-                    <option value="essay">Tự luận</option>
-                    <option value="file">Nộp file</option>
-                    <option value="quiz">Trắc nghiệm</option>
-                  </select>
-                </label>
-                <label className="block text-xs font-medium text-neutral-600">
-                  Điểm tối đa
-                  <input
-                    type="number"
-                    min={0}
-                    step={0.5}
-                    value={asgForm.max_score}
-                    onChange={(e) => setAsgForm((f) => ({ ...f, max_score: e.target.value }))}
-                    className="mt-1 block w-full rounded border border-neutral-300 px-2 py-1.5 text-sm focus:outline-none"
-                  />
-                </label>
-                <label className="block text-xs font-medium text-neutral-600">
-                  Trọng số
-                  <input
-                    type="number"
-                    min={0}
-                    step={0.1}
-                    value={asgForm.weight}
-                    onChange={(e) => setAsgForm((f) => ({ ...f, weight: e.target.value }))}
-                    className="mt-1 block w-full rounded border border-neutral-300 px-2 py-1.5 text-sm focus:outline-none"
-                  />
-                </label>
-                <label className="block text-xs font-medium text-neutral-600">
-                  Hạn nộp
-                  <input
-                    type="datetime-local"
-                    value={asgForm.due_at}
-                    onChange={(e) => setAsgForm((f) => ({ ...f, due_at: e.target.value }))}
-                    className="mt-1 block w-full rounded border border-neutral-300 px-2 py-1.5 text-sm focus:outline-none"
-                  />
-                </label>
-              </div>
-              <label className="flex items-center gap-2 text-sm">
-                <input
-                  type="checkbox"
-                  checked={asgForm.is_published}
-                  onChange={(e) => setAsgForm((f) => ({ ...f, is_published: e.target.checked }))}
-                  className="h-4 w-4 rounded accent-blue-600"
-                />
-                <span className="text-neutral-700">Xuất bản ngay</span>
-              </label>
-              <div className="flex justify-end">
-                <button
-                  type="submit"
-                  disabled={addingAsg || !asgForm.title.trim()}
-                  className="rounded-full bg-blue-600 px-5 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-                >
-                  {addingAsg ? "Đang tạo..." : "Tạo bài tập"}
-                </button>
-              </div>
-            </form>
+            )}
           </Card>
         </div>
       )}
@@ -402,90 +333,55 @@ export default function ManageCoursePage() {
       {tab === "submissions" && (
         <div className="space-y-4">
           <Card>
-            <label className="block text-sm font-medium text-neutral-700">
-              Chọn bài tập để xem submissions
-            </label>
-            <select
-              value={selectedAsgId}
-              onChange={(e) => loadSubmissions(e.target.value)}
-              className="mt-2 block w-full rounded-lg border border-neutral-300 px-3 py-2 text-sm focus:border-blue-500 focus:outline-none"
-            >
-              <option value="">-- Chọn bài tập --</option>
+            <h3 className="mb-3 text-base font-semibold">Chọn bài tập</h3>
+            <div className="flex flex-wrap gap-2">
               {assignments.map((a) => (
-                <option key={a.id} value={a.id}>{a.title}</option>
+                <button key={a.id} onClick={() => loadSubmissions(a.id)} className={`rounded-full border px-3 py-1 text-sm ${selectedAsgId === a.id ? "border-blue-600 bg-blue-50 text-blue-700" : "border-neutral-300 text-neutral-700 hover:bg-neutral-100"}`}>
+                  {a.title}
+                </button>
               ))}
-            </select>
+            </div>
           </Card>
 
-          {loadingSubs && <Card>Đang tải submissions...</Card>}
-
-          {!loadingSubs && selectedAsgId && submissions.length === 0 && (
-            <EmptyState message="Chưa có submission nào." />
-          )}
-
-          {!loadingSubs && submissions.length > 0 && (
-            <Card>
-              <ul className="divide-y divide-neutral-100">
+          <Card>
+            <h3 className="mb-3 text-base font-semibold">Bài nộp</h3>
+            {loadingSubs ? <p className="text-sm text-neutral-500">Đang tải...</p> : submissions.length === 0 ? (
+              <EmptyState message="Chưa có bài nộp hoặc chưa chọn bài tập." />
+            ) : (
+              <ul className="space-y-3">
                 {submissions.map((sub) => (
-                  <li key={sub.id} className="py-4">
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium text-neutral-800">
-                          Student: <span className="font-mono text-xs text-neutral-500">{sub.student_id.slice(0, 8)}…</span>
-                        </p>
-                        <p className="mt-0.5 text-xs text-neutral-500">
-                          Nộp: {formatDate(sub.submitted_at)} · Trạng thái: {sub.status}
-                        </p>
-                        {sub.content && (
-                          <p className="mt-2 rounded-lg bg-neutral-50 p-2 text-sm text-neutral-700 line-clamp-3">
-                            {sub.content}
-                          </p>
-                        )}
-                        {sub.file_url && (
-                          <a href={sub.file_url} target="_blank" rel="noreferrer" className="mt-2 block text-xs text-blue-600 hover:underline">
-                            Tải file: {sub.file_name ?? "file"}
-                          </a>
-                        )}
-                        {sub.score != null && (
-                          <p className="mt-2 text-sm font-medium text-emerald-700">
-                            Điểm: {sub.score} · {sub.feedback}
-                          </p>
-                        )}
-                      </div>
-
-                      {/* Grade form */}
-                      {sub.status !== "graded" && (
-                        <div className="flex flex-col gap-1.5 min-w-[160px]">
-                          <input
-                            type="number"
-                            min={0}
-                            step={0.5}
-                            placeholder="Điểm"
-                            value={gradeForm[sub.id]?.score ?? ""}
-                            onChange={(e) => setGradeForm((g) => ({ ...g, [sub.id]: { ...g[sub.id], score: e.target.value, feedback: g[sub.id]?.feedback ?? "" } }))}
-                            className="rounded border border-neutral-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-                          />
-                          <input
-                            placeholder="Nhận xét (tùy chọn)"
-                            value={gradeForm[sub.id]?.feedback ?? ""}
-                            onChange={(e) => setGradeForm((g) => ({ ...g, [sub.id]: { ...g[sub.id], feedback: e.target.value, score: g[sub.id]?.score ?? "" } }))}
-                            className="rounded border border-neutral-300 px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-                          />
-                          <button
-                            onClick={() => submitGrade(sub.id)}
-                            disabled={!gradeForm[sub.id]?.score || gradingId === sub.id}
-                            className="rounded-full bg-emerald-600 px-3 py-1 text-xs font-medium text-white hover:bg-emerald-700 disabled:opacity-40"
-                          >
-                            {gradingId === sub.id ? "Đang lưu..." : "Chấm điểm"}
-                          </button>
-                        </div>
-                      )}
+                  <li key={sub.id} className="rounded-lg border border-neutral-200 p-3">
+                    <div className="flex items-center justify-between">
+                      <p className="font-medium text-neutral-900">Student: {sub.student_id.slice(0, 8)}…</p>
+                      <span className="text-xs text-neutral-500">{sub.status}</span>
+                    </div>
+                    <p className="mt-1 text-xs text-neutral-500">Nộp lúc: {formatDate(sub.submitted_at)}</p>
+                    <div className="mt-3 grid gap-2 md:grid-cols-3">
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="Điểm"
+                        value={gradeForm[sub.id]?.score ?? ""}
+                        onChange={(e) => setGradeForm((g) => ({ ...g, [sub.id]: { ...g[sub.id], score: e.target.value, feedback: g[sub.id]?.feedback ?? "" } }))}
+                        className="rounded border border-neutral-200 px-3 py-2 text-sm"
+                      />
+                      <input
+                        placeholder="Nhận xét"
+                        value={gradeForm[sub.id]?.feedback ?? ""}
+                        onChange={(e) => setGradeForm((g) => ({ ...g, [sub.id]: { ...g[sub.id], score: g[sub.id]?.score ?? "", feedback: e.target.value } }))}
+                        className="rounded border border-neutral-200 px-3 py-2 text-sm md:col-span-2"
+                      />
+                    </div>
+                    <div className="mt-2 flex justify-end">
+                      <button onClick={() => submitGrade(sub.id)} disabled={gradingId === sub.id} className="rounded-full bg-black px-4 py-2 text-sm text-white hover:bg-neutral-800 disabled:opacity-50">
+                        {gradingId === sub.id ? "Đang lưu..." : "Lưu điểm"}
+                      </button>
                     </div>
                   </li>
                 ))}
               </ul>
-            </Card>
-          )}
+            )}
+          </Card>
         </div>
       )}
     </PageShell>
