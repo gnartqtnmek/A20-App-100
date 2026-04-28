@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 
 import { ApiError, apiClient } from "@/lib/api-client";
 import { getAccessToken, getUserRole } from "@/lib/auth-storage";
-import type { KnowledgeChunkRead, LessonRead } from "@/lib/types";
+import type { KnowledgeChunkRead } from "@/lib/types";
 import { Card, EmptyState, ErrorBanner, PageShell } from "@/components/page-shell";
 
 function formatDate(value: string): string {
@@ -18,7 +18,6 @@ export default function LessonChunksPage() {
   const lessonId = params.id;
   const role = getUserRole();
 
-  const [lesson, setLesson] = useState<LessonRead | null>(null);
   const [chunks, setChunks] = useState<KnowledgeChunkRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

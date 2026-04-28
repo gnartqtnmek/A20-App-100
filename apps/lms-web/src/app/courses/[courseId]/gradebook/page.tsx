@@ -128,8 +128,7 @@ export default function GradebookPage() {
   const [course, setCourse] = useState<CourseRead | null>(null);
   const [assignments, setAssignments] = useState<AssignmentRead[]>([]);
   const [selectedAssignmentId, setSelectedAssignmentId] = useState<string>("");
-  const [submissions, setSubmissions] = useState<SubmissionRead[]>([]);
-  const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [submissionsByAssignment, setSubmissionsByAssignment] = useState<Record<string, SubmissionRead[]>>({});
   const [grading, setGrading] = useState<SubmissionRead | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -174,35 +173,49 @@ export default function GradebookPage() {
   }, [courseId, role, router]);
 
   useEffect(() => {
-    if (!selectedAssignmentId) return;
+    if (!selectedAssignmentId || selectedAssignmentId in submissionsByAssignment) return;
+
+    const assignmentId = selectedAssignmentId;
     let cancelled = false;
-    setLoadingSubmissions(true);
-    setSubmissions([]);
+
     (async () => {
       try {
-        const data = await apiClient.listAssignmentSubmissions(selectedAssignmentId);
-        if (!cancelled) setSubmissions(data);
+        const data = await apiClient.listAssignmentSubmissions(assignmentId);
+        if (!cancelled) {
+          setSubmissionsByAssignment((prev) => ({ ...prev, [assignmentId]: data }));
+        }
       } catch {
-        // submissions stay empty
-      } finally {
-        if (!cancelled) setLoadingSubmissions(false);
+        if (!cancelled) {
+          setSubmissionsByAssignment((prev) => ({ ...prev, [assignmentId]: [] }));
+        }
       }
     })();
+
     return () => {
       cancelled = true;
     };
-  }, [selectedAssignmentId]);
+  }, [selectedAssignmentId, submissionsByAssignment]);
 
   const selectedAssignment = assignments.find((a) => a.id === selectedAssignmentId) ?? null;
+  const submissions =
+    selectedAssignmentId in submissionsByAssignment ? submissionsByAssignment[selectedAssignmentId] : null;
+  const loadingSubmissions = Boolean(selectedAssignmentId) && submissions === null;
+  const displayedSubmissions = submissions ?? [];
 
   function handleGradeSaved(grade: GradeRead) {
-    setSubmissions((prev) =>
-      prev.map((s) =>
+    if (!selectedAssignmentId) {
+      setGrading(null);
+      return;
+    }
+
+    setSubmissionsByAssignment((prev) => ({
+      ...prev,
+      [selectedAssignmentId]: (prev[selectedAssignmentId] ?? []).map((s) =>
         s.id === grading?.id
           ? { ...s, score: grade.score, status: "graded", graded_at: grade.recorded_at }
           : s,
       ),
-    );
+    }));
     setGrading(null);
   }
 
@@ -269,7 +282,7 @@ export default function GradebookPage() {
 
         {loadingSubmissions ? (
           <Card>Đang tải bài nộp...</Card>
-        ) : submissions.length === 0 ? (
+        ) : displayedSubmissions.length === 0 ? (
           <EmptyState message="Chưa có bài nộp nào cho bài tập này." />
         ) : (
           <Card className="overflow-x-auto">
@@ -285,7 +298,7 @@ export default function GradebookPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
-                {submissions.map((s) => (
+                {displayedSubmissions.map((s) => (
                   <tr key={s.id}>
                     <td className="py-3 pr-4 font-mono text-xs text-neutral-700">
                       {s.student_id.slice(0, 8)}…

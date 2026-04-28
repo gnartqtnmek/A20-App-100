@@ -292,7 +292,7 @@ export default function QuizPlayerPage() {
 
       {isOverdue && (
         <div className="rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-800">
-          Bài tập đã quá hạn. Bài nộp của bạn sẽ có trạng thái "late".
+          Bài tập đã quá hạn. Bài nộp của bạn sẽ có trạng thái &quot;late&quot;.
         </div>
       )}
 
