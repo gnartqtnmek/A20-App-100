@@ -38,6 +38,7 @@ Ghi lại hành trình xây dựng sản phẩm mỗi tuần — những gì đ�
 
 **Thành viên:** Nguyễn Thị Quỳnh Trang - 2A202600402
                 Phạm Minh Khải - 2A202600343
+                Lê Thành Long - 2A202600105
 
 #### Đã làm
 - Setup project TypeScript + cấu hình `.env`

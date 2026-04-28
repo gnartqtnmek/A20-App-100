@@ -6,7 +6,7 @@ this module is a code smell — funnel it through ``get_settings()``.
 from functools import lru_cache
 from typing import List
 
-from pydantic import Field
+from pydantic import Field, field_validator, model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -66,6 +66,61 @@ class Settings(BaseSettings):
         alias="AGENT_SERVICE_TOKEN",
         min_length=8,
     )
+
+    # ---- Embeddings (for knowledge chunk ingestion) ----
+    embedding_base_url: str = Field("https://api.openai.com/v1", alias="EMBEDDING_BASE_URL")
+    embedding_api_key: str = Field("", alias="EMBEDDING_API_KEY")
+    embedding_model: str = Field("text-embedding-3-small", alias="EMBEDDING_MODEL")
+
+    # ---- LLM (chat / agent) ----
+    llm_provider: str = Field("openai", alias="LLM_PROVIDER")  # openai | anthropic | ollama
+    llm_api_key: str = Field("", alias="LLM_API_KEY")
+    llm_base_url: str = Field("https://api.openai.com/v1", alias="LLM_BASE_URL")
+    llm_model: str = Field("gpt-4o-mini", alias="LLM_MODEL")
+    llm_temperature: float = Field(0.7, alias="LLM_TEMPERATURE")
+    llm_max_tokens: int = Field(2048, alias="LLM_MAX_TOKENS")
+
+    # ---- Mem0 (long-term memory) ----
+    mem0_api_key: str = Field("", alias="MEM0_API_KEY")
+    # Set to empty string to use the self-hosted OSS version via local DB.
+    mem0_org_id: str = Field("", alias="MEM0_ORG_ID")
+    mem0_project_id: str = Field("lms-chatbot", alias="MEM0_PROJECT_ID")
+    # Qdrant endpoint for self-hosted Mem0 (leave blank to use Mem0 cloud).
+    mem0_qdrant_url: str = Field("", alias="MEM0_QDRANT_URL")
+
+    # ---- Chat ----
+    chat_history_window: int = Field(20, alias="CHAT_HISTORY_WINDOW")
+    chat_rag_top_k: int = Field(5, alias="CHAT_RAG_TOP_K")
+
+    @field_validator("debug", mode="before")
+    @classmethod
+    def _coerce_debug(cls, value):
+        if isinstance(value, bool) or value is None:
+            return value
+        if isinstance(value, str):
+            normalized = value.strip().lower()
+            if normalized in {"1", "true", "yes", "on", "debug", "development"}:
+                return True
+            if normalized in {"0", "false", "no", "off", "release", "production"}:
+                return False
+        return value
+
+    @model_validator(mode="after")
+    def _validate_production_secrets(self) -> "Settings":
+        if self.environment != "production":
+            return self
+        errors: list[str] = []
+        if self.jwt_secret in ("change-me-in-production", ""):
+            errors.append("JWT_SECRET must be set to a secure value (generate: openssl rand -hex 32)")
+        elif len(self.jwt_secret) < 32:
+            errors.append("JWT_SECRET must be at least 32 characters")
+        if self.agent_service_token == "dev-agent-token-please-change":
+            errors.append("AGENT_SERVICE_TOKEN must be set to a secure value (generate: openssl rand -hex 32)")
+        elif len(self.agent_service_token) < 32:
+            errors.append("AGENT_SERVICE_TOKEN must be at least 32 characters")
+        if errors:
+            raise ValueError("Production secrets not configured:\n  " + "\n  ".join(errors))
+        return self
 
 
 @lru_cache

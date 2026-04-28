@@ -1,14 +1,23 @@
 import { clearSession, getAccessToken, getRefreshToken, saveSession } from "@/lib/auth-storage";
 import type {
+  AssignmentCreate,
   AssignmentRead,
   AuthResponse,
+  ChatMessageRead,
+  ChatSessionRead,
+  CourseCreate,
   CourseRead,
   EnrollmentRead,
   GradeRead,
+  KnowledgeChunkRead,
+  LessonCreate,
   LessonRead,
+  ModuleCreate,
   ModuleRead,
   NotificationRead,
+  QuizQuestionRead,
   SubmissionRead,
+  UploadResult,
   UserRead,
 } from "@/lib/types";
 
@@ -130,7 +139,6 @@ export const apiClient = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     });
-
     saveSession(result.tokens.access_token, result.tokens.refresh_token, result.user.role);
     return result;
   },
@@ -192,7 +200,7 @@ export const apiClient = {
 
   async submitAssignment(
     assignmentId: string,
-    payload: { content?: string; file_url?: string; file_name?: string },
+    payload: { content?: string; file_url?: string; file_name?: string; quiz_answers?: Record<string, unknown> },
   ): Promise<SubmissionRead> {
     return request<SubmissionRead>(`/assignments/${assignmentId}/submissions`, {
       method: "POST",
@@ -201,13 +209,32 @@ export const apiClient = {
     });
   },
 
+  async listAssignmentSubmissions(assignmentId: string): Promise<SubmissionRead[]> {
+    return request<SubmissionRead[]>(`/assignments/${assignmentId}/submissions`);
+  },
+
+  async listQuizQuestions(assignmentId: string): Promise<QuizQuestionRead[]> {
+    return request<QuizQuestionRead[]>(`/assignments/${assignmentId}/questions`);
+  },
+
   // ---- Grades ----
+
+  async gradeSubmission(
+    submissionId: string,
+    payload: { score: number; feedback?: string },
+  ): Promise<GradeRead> {
+    return request<GradeRead>(`/grades/submissions/${submissionId}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
   async listMyGrades(): Promise<GradeRead[]> {
     return request<GradeRead[]>("/grades/me");
   },
 
   async listCourseGrades(courseId: string): Promise<GradeRead[]> {
-    return request<GradeRead[]>(`/grades/course/${courseId}`);
+    return request<GradeRead[]>(`/grades/courses/${courseId}`);
   },
 
   // ---- Notifications ----
@@ -218,5 +245,115 @@ export const apiClient = {
 
   async markNotificationRead(id: string): Promise<NotificationRead> {
     return request<NotificationRead>(`/notifications/${id}/read`, { method: "POST" });
+  },
+
+  // ---- Lecturer: create/update ----
+  async createCourse(payload: CourseCreate): Promise<CourseRead> {
+    return request<CourseRead>("/courses", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async createModule(courseId: string, payload: ModuleCreate): Promise<ModuleRead> {
+    return request<ModuleRead>(`/curriculum/courses/${courseId}/modules`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async createLesson(moduleId: string, payload: LessonCreate): Promise<LessonRead> {
+    return request<LessonRead>(`/curriculum/modules/${moduleId}/lessons`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  async createAssignment(payload: AssignmentCreate): Promise<AssignmentRead> {
+    return request<AssignmentRead>("/assignments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+  },
+
+  // ---- Knowledge chunks ----
+  async listLessonChunks(lessonId: string): Promise<KnowledgeChunkRead[]> {
+    return request<KnowledgeChunkRead[]>(`/knowledge/lessons/${lessonId}/chunks`);
+  },
+
+  async deleteChunk(chunkId: string): Promise<void> {
+    return request<void>(`/knowledge/chunks/${chunkId}`, { method: "DELETE" });
+  },
+
+  // ---- Chat ----
+  async listChatSessions(): Promise<ChatSessionRead[]> {
+    return request<ChatSessionRead[]>("/chat/sessions");
+  },
+
+  async createChatSession(title?: string): Promise<ChatSessionRead> {
+    return request<ChatSessionRead>("/chat/sessions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ title: title ?? null }),
+    });
+  },
+
+  async getChatMessages(sessionId: string, limit = 50): Promise<ChatMessageRead[]> {
+    return request<ChatMessageRead[]>(`/chat/sessions/${sessionId}/messages?limit=${limit}`);
+  },
+
+  async sendChatMessage(
+    sessionId: string,
+    content: string,
+    courseId?: string,
+  ): Promise<ChatMessageRead> {
+    const query = courseId ? `?course_id=${courseId}` : "";
+    return request<ChatMessageRead>(`/chat/sessions/${sessionId}/messages${query}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ content }),
+    });
+  },
+
+  /** Returns the raw fetch Response for SSE streaming — caller must read the body. */
+  async streamChatMessage(
+    sessionId: string,
+    content: string,
+    courseId?: string,
+    signal?: AbortSignal,
+  ): Promise<Response> {
+    const query = courseId ? `?course_id=${courseId}` : "";
+    const token = getAccessToken();
+    const headers: Record<string, string> = { "Content-Type": "application/json" };
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+    return fetch(`${API_BASE_URL}/chat/sessions/${sessionId}/messages/stream${query}`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ content }),
+      signal,
+    });
+  },
+
+  // ---- Files ----
+  async uploadAssignmentFile(file: File): Promise<UploadResult> {
+    const form = new FormData();
+    form.append("file", file);
+    return request<UploadResult>("/files/assignments", { method: "POST", body: form });
+  },
+
+  async uploadAvatar(file: File): Promise<UploadResult> {
+    const form = new FormData();
+    form.append("file", file);
+    return request<UploadResult>("/files/avatars", { method: "POST", body: form });
+  },
+
+  async uploadLessonAttachment(file: File): Promise<UploadResult> {
+    const form = new FormData();
+    form.append("file", file);
+    return request<UploadResult>("/files/lessons", { method: "POST", body: form });
   },
 };

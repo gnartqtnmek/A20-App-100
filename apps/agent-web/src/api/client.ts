@@ -29,7 +29,6 @@ export function createConversation(input: {
     body: JSON.stringify({
       user_id: input.user_id,
       title: input.title ?? null,
-      context: {},
     }),
   });
 }

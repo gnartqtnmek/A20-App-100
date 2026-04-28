@@ -8,14 +8,19 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.api import (
+    admin,
     agent_tools,
     assignments,
     auth,
+    chat,
     courses,
     curriculum,
+    files,
     grades,
     health,
+    knowledge,
     notifications,
+    quiz,
     users,
 )
 from app.core.config import get_settings
@@ -56,12 +61,17 @@ def create_app() -> FastAPI:
     )
     app.include_router(health.router, tags=["health"])
     app.include_router(auth.router)
+    app.include_router(admin.router)
     app.include_router(users.router)
     app.include_router(courses.router)
     app.include_router(curriculum.router)
     app.include_router(assignments.router)
+    app.include_router(quiz.router)
     app.include_router(grades.router)
     app.include_router(notifications.router)
+    app.include_router(knowledge.router)
+    app.include_router(chat.router)
+    app.include_router(files.router)
     app.include_router(agent_tools.router)
 
     @app.get("/", tags=["meta"])

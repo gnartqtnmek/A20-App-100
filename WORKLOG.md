@@ -50,71 +50,7 @@ Ghi lại các quyết định kỹ thuật, phân công, và brainstorming củ
 
 ---
 
-## Quyết định thực tế của nhóm
-
-### [ADR-0002] Đổi sang `apps/<service>/` layout — 25/04/2026
-
-**Bối cảnh:** Sau Sprint 1 chuẩn bị có 4 service (lms-api, lms-web, agent-api,
-agent-web). Cấu trúc flat `backend/agent/frontend/` ở root khó scale + tên
-không rõ.
-
-**Quyết định:** Move vào `apps/`:
-- `backend/` → `apps/lms-api/`
-- `frontend/` → `apps/lms-web/`
-- `agent/` → `apps/agent-api/` (đã được team Agent mở rộng)
-- (mới) `apps/agent-web/` placeholder
-
-`infra/`, `docs/`, `scripts/` giữ nguyên ở root.
-
-**Hệ quả:** docker-compose, Makefile đã update. Cần `git rm -r backend agent
-frontend` sau pull. Plan docx đề cập cấu trúc cũ — sẽ update Sprint 2.
-Chi tiết: `docs/adr/0002-apps-monorepo-layout.md`.
-
----
-
-### [ADR-0001] Tổ chức code dạng monorepo — 25/04/2026
-
-**Bối cảnh:** Repo khởi đầu chỉ là template Python `/src` với agent loop cơ bản.
-Theo plan, hệ thống cần 3 service: Backend FastAPI, AI Agent (LangGraph),
-Frontend Next.js.
-
-**Các lựa chọn đã xem xét:**
-- **Monorepo:** atomic commit cross-service, một CI, dễ cho nhóm nhỏ.
-- **Polyrepo:** quá nặng với nhóm 3 người.
-- **Giữ nguyên `/src`:** không có chỗ cho frontend.
-
-**Quyết định:** Monorepo, sau đó refine sang `apps/<service>/` (xem ADR-0002).
-
-**Hệ quả:** Đổi import `from src.X` → `from agent.X`. Chi tiết:
-`docs/adr/0001-monorepo-structure.md`.
-
----
-
-### Sprint 0 — 25/04 → 02/05/2026 (1 tuần)
-
-**Mục tiêu:** Setup môi trường chung, ai pull cũng chạy được trong < 30 phút.
-
-| Task | Người làm | Trạng thái |
-|---|---|---|
-| Tổ chức monorepo (`apps/lms-api/lms-web/agent-api`) | Trang | ✅ Xong |
-| docker-compose dev (Postgres+pgvector, Redis, MinIO, backend, agent) | Trang | ✅ Xong |
-| FastAPI skeleton + `/healthz` + `/readyz` (DB ping) | Trang | ✅ Xong |
-| 19 SQLAlchemy models + Alembic migration đầu tiên | Trang | ✅ Xong |
-| Auth (JWT register/login/refresh/logout) + RBAC | Trang | ✅ Xong |
-| Course/Module/Lesson/Assignment/Submission/Grade APIs | Trang | ✅ Xong |
-| Frontend Next.js scaffold + 7 pages (login, register, dashboard, courses, course detail, assignment, grades) | Trang | ✅ Xong |
-| 4 Agent tool endpoints + service-token auth + docs | Trang | ✅ Xong |
-| Đăng ký free tier: Anthropic/OpenAI/Resend/Railway/Vercel/Sentry | Khải | ⏳ Chờ |
-
-**Definition of Done:**
-- [x] `make dev` bật full stack thành công
-- [x] `pytest` lms-api: 16/16 PASS
-- [x] `tsc --noEmit` lms-web: PASS
-- [x] `docs/agent-integration.md` cho team Agent
-
----
-
-## Ví dụ (template)
+## Ví dụ
 
 ### [ADR-1] Dùng TypeScript thay vì Python — 30/03/2026
 
@@ -200,4 +136,21 @@ Frontend Next.js.
 1. `max_iterations = 10` — hard stop sau 10 vòng
 2. Nếu tool trả về lỗi 3 lần liên tiếp → dừng và báo user
 
-**
+**Code thay đổi:** `src/agent.ts` lines 45-67
+
+**Học được:** Luôn thiết kế stop condition trước khi implement retry logic.
+
+---
+
+### [ADR-3] Chuyển sang service-first agent với LangChain/LangGraph + PostgreSQL — 17/04/2026
+
+**Bối cảnh:** Prototype hiện tại mới là CLI loop gọi trực tiếp Anthropic SDK, chỉ có personalization đơn giản trong PostgreSQL. Nhóm cần chuyển sang kiến trúc hỗ trợ nhiều user, nhiều conversation, short-term memory theo thread, và mở đường cho RAG lịch sử chat/tài liệu LMS.
+
+**Các lựa chọn đã xem xét:**
+- **Tiếp tục tự viết agent loop bằng SDK provider**: Đơn giản ở giai đoạn đầu nhưng khó chuẩn hóa multi-step tool orchestration, thread persistence và khả năng mở rộng.
+- **Dùng LangGraph thuần ngay từ đầu**: Linh hoạt nhất nhưng tốn effort orchestration sớm khi use case hiện tại vẫn là single-agent tool-calling.
+- **Dùng `LangChain create_agent` trên runtime LangGraph**: Có sẵn agent loop/tool-calling, vẫn tận dụng được thread persistence/checkpointer và còn mở đường lên custom graph sau này.
+
+**Quyết định:** Chọn hướng `LangChain create_agent` + `LangGraph PostgresSaver` + `FastAPI` + `PostgreSQL` business tables. `PostgresSaver` chỉ dùng cho short-term runtime state; lịch sử chat, personalization, summaries, và RAG indexes vẫn do các bảng riêng của ứng dụng quản lý.
+
+**Hệ quả:** Codebase chuyển từ CLI prototype sang service scaffold. Cần thêm dependencies mới (`fastapi`, `langchain`, `langgraph`, `langchain-anthropic`, `langchain-openai`, `langgraph-checkpoint-postgres`, `psycopg[binary,pool]`) và dùng image PostgreSQL có `pgvector`.

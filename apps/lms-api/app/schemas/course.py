@@ -12,7 +12,7 @@ from app.models.base import EnrollmentStatus
 class CourseCreate(BaseModel):
     code: str = Field(min_length=2, max_length=32)
     name: str = Field(min_length=3, max_length=255)
-    lecturer_id: UUID
+    lecturer_id: UUID | None = None
     description: str | None = None
     syllabus_md: str | None = None
     semester: str | None = Field(default=None, max_length=32)

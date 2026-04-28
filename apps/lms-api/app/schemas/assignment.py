@@ -45,7 +45,7 @@ class AssignmentRead(BaseModel):
 
 
 class SubmissionCreate(BaseModel):
-    student_id: UUID
+    student_id: UUID | None = None
     content: str | None = None
     file_url: str | None = None
     file_name: str | None = None
@@ -91,3 +91,31 @@ class GradeRead(BaseModel):
     recorded_at: datetime
     created_at: datetime
     updated_at: datetime
+
+
+# ---- Gradebook (lecturer view) ----
+
+class GradebookEntry(BaseModel):
+    assignment_id: UUID
+    assignment_title: str
+    assignment_type: str
+    max_score: float
+    weight: float
+    score: float | None = None
+
+
+class GradebookStudentRow(BaseModel):
+    student_id: UUID
+    full_name: str
+    email: str
+    entries: list[GradebookEntry]
+    weighted_average: float | None = Field(
+        description="Weighted average score (0–10 scale). Null if no graded items."
+    )
+
+
+class GradebookResponse(BaseModel):
+    course_id: UUID
+    course_name: str
+    assignments: list[dict]
+    students: list[GradebookStudentRow]

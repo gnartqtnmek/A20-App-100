@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, Space_Grotesk } from "next/font/google";
 
 import { AppHeader } from "@/components/app-header";
+import { ChatWidget } from "@/components/chat/ChatWidget";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
@@ -33,6 +34,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col bg-neutral-50 text-neutral-900">
         <AppHeader />
         {children}
+        <ChatWidget />
       </body>
     </html>
   );

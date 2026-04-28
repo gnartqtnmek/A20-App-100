@@ -17,7 +17,5 @@ RUN pip install -r requirements.txt
 
 COPY . .
 
-# Sprint 0–3: interactive CLI agent.
-# Sprint 4+: switch to ``uvicorn agent.server:app --host 0.0.0.0 --port 8001``.
-EXPOSE 8001
-CMD ["python", "-m", "agent.agent"]
+EXPOSE 8000
+CMD ["python", "-m", "src"]

@@ -10,8 +10,11 @@ export default function Home() {
             Learn, Teach, and Manage Courses in One Campus Workspace.
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-neutral-600">
-            This frontend is connected directly to your FastAPI backend for authentication,
-            courses, assignments, curriculum modules, gradebook, and notifications.
+            Nền tảng học tập tích hợp AI Agent — kết nối trực tiếp với FastAPI backend cho
+            xác thực, quản lý khóa học, bài tập, sổ điểm và thông báo.
+          </p>
+          <p className="mt-2 text-sm text-neutral-500">
+            Tài khoản được cấp bởi quản trị viên trường. Liên hệ bộ phận hỗ trợ để được cấp quyền truy cập.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-3">
@@ -19,19 +22,13 @@ export default function Home() {
               href="/login"
               className="rounded-full bg-black px-5 py-2.5 text-sm font-medium text-white transition hover:bg-neutral-800"
             >
-              Sign In
-            </Link>
-            <Link
-              href="/register"
-              className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition hover:bg-neutral-100"
-            >
-              Create Account
+              Đăng nhập
             </Link>
             <Link
               href="/dashboard"
               className="rounded-full border border-neutral-300 px-5 py-2.5 text-sm font-medium text-neutral-800 transition hover:bg-neutral-100"
             >
-              Open Dashboard
+              Dashboard
             </Link>
           </div>
         </div>
@@ -40,12 +37,12 @@ export default function Home() {
           <p className="text-sm text-neutral-300">Connected Endpoints</p>
           <ul className="mt-3 space-y-2 font-mono text-xs text-neutral-100">
             <li>POST /auth/login</li>
-            <li>POST /auth/register</li>
             <li>GET /auth/me</li>
             <li>GET /courses</li>
             <li>GET /curriculum/courses/:id/modules</li>
-            <li>GET /assignments/course/:id</li>
-            <li>GET /notifications/me</li>
+            <li>GET /assignments/:id/questions</li>
+            <li>GET /grades/me</li>
+            <li>GET /knowledge/lessons/:id/chunks</li>
           </ul>
         </aside>
       </section>

@@ -15,6 +15,7 @@ from langgraph.prebuilt import ToolNode
 
 from ..infra.llm import create_llm
 from ..infra.settings import Settings
+from ..services.lms import LMSService
 from ..services.personalization import PersonalizationService
 from ..services.context_builder import PromptContextBuilder
 from ..services.rag import RAGService
@@ -77,11 +78,12 @@ class AgentRuntimeService:
         prompt_context_builder: PromptContextBuilder,
         personalization: PersonalizationService,
         rag: RAGService,
+        lms: LMSService,
     ):
         self.settings = settings
         self.message_loader = message_loader
         self.prompt_context_builder = prompt_context_builder
-        tools = build_tools(personalization, rag)
+        tools = build_tools(personalization, rag, lms)
         self.agent = _build_graph(tools, checkpointer=None)
 
     def _make_config(

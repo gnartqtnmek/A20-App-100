@@ -8,10 +8,7 @@ import { ApiError, apiClient } from "@/lib/api-client";
 import { getAccessToken, getUserRole } from "@/lib/auth-storage";
 import type { GradeRead } from "@/lib/types";
 import { Card, EmptyState, ErrorBanner, PageShell } from "@/components/page-shell";
-
-function formatDate(value: string): string {
-  return new Date(value).toLocaleString("vi-VN", { dateStyle: "medium", timeStyle: "short" });
-}
+import { formatDate } from "@/lib/utils";
 
 export default function GradesPage() {
   const router = useRouter();

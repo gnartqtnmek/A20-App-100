@@ -1,9 +1,0 @@
-Alembic single-database async configuration.
-
-Initial migration (`20260425_0900_0001_initial_schema.py`) was hand-written
-because the repo doesn't ship with a live DB during Sprint 0. Once Postgres
-is up locally (`make dev`), regenerate or extend with:
-
-    cd backend
-    alembic revision --autogenerate -m "your message"
-    alembic upgrade head

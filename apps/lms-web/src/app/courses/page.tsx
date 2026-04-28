@@ -70,6 +70,16 @@ export default function CoursesPage() {
           ? "Danh sách lớp bạn đang phụ trách."
           : "Khóa học bạn đã enroll."
       }
+      actions={
+        (role === "lecturer" || role === "admin") ? (
+          <Link
+            href="/courses/new"
+            className="rounded-full bg-blue-600 px-4 py-1.5 text-sm font-medium text-white hover:bg-blue-700"
+          >
+            + Tạo khóa học
+          </Link>
+        ) : undefined
+      }
     >
       <ErrorBanner message={error} />
 

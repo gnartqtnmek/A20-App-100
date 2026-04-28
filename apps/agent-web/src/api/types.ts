@@ -2,7 +2,6 @@ export interface Conversation {
   id: string;
   user_id: string;
   title: string | null;
-  context: Record<string, unknown>;
   is_active: boolean;
   created_at: string;
   updated_at: string;

@@ -13,6 +13,11 @@ class ConversationCreateRequest(BaseModel):
     title: str | None = None
 
 
+class ConversationEnsureRequest(BaseModel):
+    user_id: str
+    title: str | None = None
+
+
 class ConversationResponse(BaseModel):
     id: str
     user_id: str

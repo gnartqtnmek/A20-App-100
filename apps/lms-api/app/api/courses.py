@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.deps import get_current_user, require_roles
@@ -24,6 +24,11 @@ async def create_course(
 ) -> CourseRead:
     if current_user.role == UserRole.LECTURER:
         payload.lecturer_id = current_user.id
+    elif payload.lecturer_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="lecturer_id is required for admin-created courses",
+        )
     course = await course_service.create_course(db, payload)
     return CourseRead.model_validate(course)
 
@@ -47,6 +52,16 @@ async def get_course(
 ) -> CourseRead:
     course = await course_service.get_course_or_404(db, course_id)
     return CourseRead.model_validate(course)
+
+
+@router.post("/enroll", response_model=EnrollmentRead, status_code=status.HTTP_201_CREATED)
+async def enroll_with_invite_code(
+    invite_code: str = Body(..., embed=True),
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+) -> EnrollmentRead:
+    enrollment = await course_service.enroll_by_invite_code(db, invite_code, current_user)
+    return EnrollmentRead.model_validate(enrollment)
 
 
 @router.post("/{course_id}/enrollments", response_model=EnrollmentRead, status_code=status.HTTP_201_CREATED)

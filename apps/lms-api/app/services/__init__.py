@@ -28,6 +28,25 @@ from app.services.course_service import (
 	list_lessons,
 	list_modules,
 )
+from app.services.chat_service import (
+	get_or_create_session,
+	get_session_messages,
+	list_sessions,
+	stream_chat,
+)
+from app.services.file_service import (
+	remove_file,
+	store_assignment_file,
+	store_avatar,
+	store_lesson_attachment,
+	validate_upload,
+)
+from app.services.memory_service import (
+	create_memory,
+	deactivate_memory,
+	list_memories,
+	sync_mem0_to_db,
+)
 from app.services.notification_service import (
 	list_notifications_for_user,
 	mark_notification_as_read,
@@ -63,4 +82,20 @@ __all__ = [
 	"login",
 	"refresh_session",
 	"revoke_refresh_token",
+	# chat
+	"get_or_create_session",
+	"list_sessions",
+	"get_session_messages",
+	"stream_chat",
+	# files
+	"validate_upload",
+	"store_assignment_file",
+	"store_avatar",
+	"store_lesson_attachment",
+	"remove_file",
+	# memory
+	"list_memories",
+	"create_memory",
+	"deactivate_memory",
+	"sync_mem0_to_db",
 ]

@@ -39,11 +39,16 @@ class Settings:
     short_term_max_turns: int
     short_term_recent_turns: int
     short_term_max_input_tokens: int
+    lms_api_url: str
+    agent_service_token: str
+
+
+_INSECURE_TOKEN = "dev-agent-token-please-change"
 
 
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
-    return Settings(
+    s = Settings(
         app_name=os.getenv("APP_NAME", "A20 LMS Agent"),
         api_host=os.getenv("API_HOST", "0.0.0.0"),
         api_port=_get_int("API_PORT", 8000),
@@ -53,7 +58,7 @@ def get_settings() -> Settings:
         anthropic_api_key=os.getenv("ANTHROPIC_API_KEY", ""),
         openai_api_key=os.getenv("OPENAI_API_KEY", ""),
         openai_base_url=os.getenv("OPENAI_BASE_URL", ""),
-        default_model=os.getenv("DEFAULT_MODEL", "gpt-5.4-mini"),
+        default_model=os.getenv("DEFAULT_MODEL", "gpt-4o-mini"),
         default_max_tokens=_get_int("DEFAULT_MAX_TOKENS", 4096),
         max_agent_steps=_get_int("MAX_AGENT_STEPS", 8),
         embedding_provider=os.getenv("EMBEDDING_PROVIDER", "openai_compatible"),
@@ -63,7 +68,18 @@ def get_settings() -> Settings:
         short_term_max_turns=_get_int("SHORT_TERM_MAX_TURNS", 10),
         short_term_recent_turns=_get_int("SHORT_TERM_RECENT_TURNS", 8),
         short_term_max_input_tokens=_get_int("SHORT_TERM_MAX_INPUT_TOKENS", 12000),
+        lms_api_url=os.getenv("LMS_API_URL", "http://localhost:8001"),
+        agent_service_token=os.getenv("AGENT_SERVICE_TOKEN", _INSECURE_TOKEN),
     )
+    if os.getenv("ENVIRONMENT", "development") == "production":
+        if s.agent_service_token == _INSECURE_TOKEN:
+            raise RuntimeError(
+                "AGENT_SERVICE_TOKEN must be changed from the default in production. "
+                "Generate one with: openssl rand -hex 32"
+            )
+        if len(s.agent_service_token) < 32:
+            raise RuntimeError("AGENT_SERVICE_TOKEN must be at least 32 characters in production.")
+    return s
 
 
 settings = get_settings()

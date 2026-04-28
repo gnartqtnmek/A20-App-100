@@ -1,9 +1,9 @@
 import { PanelLeft, Plus, Search, Settings2, User } from "lucide-react";
 import type { Conversation } from "../api/types";
-import { DEFAULT_USER_ID } from "../lib/constants";
 import { cn } from "../lib/utils";
 
 interface SidebarProps {
+  userId: string;
   conversations: Conversation[];
   activeConversationId: string | null;
   collapsed: boolean;
@@ -13,6 +13,7 @@ interface SidebarProps {
 }
 
 export function Sidebar({
+  userId,
   conversations,
   activeConversationId,
   collapsed,
@@ -101,7 +102,7 @@ export function Sidebar({
           <User className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
-          <div className="truncate text-sm font-medium">{DEFAULT_USER_ID}</div>
+          <div className="truncate text-sm font-medium">{userId}</div>
           <div className="text-xs text-[var(--color-ink-subtle)]">Free plan</div>
         </div>
       </div>

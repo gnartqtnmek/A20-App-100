@@ -94,6 +94,7 @@ class KnowledgeMatchForAgent(BaseModel):
     lesson_title: str
     course_id: UUID
     course_code: str
+    course_name: str
     chunk_index: int
     content: str
     similarity: float | None = Field(

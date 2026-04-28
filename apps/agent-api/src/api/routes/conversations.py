@@ -12,6 +12,7 @@ from ...infra.settings import get_settings
 from ..deps import get_container, normalize_record
 from ..schemas import (
     ConversationCreateRequest,
+    ConversationEnsureRequest,
     ConversationMessageResponse,
     ConversationResponse,
     MessageCreateRequest,
@@ -27,6 +28,21 @@ router = APIRouter(prefix="/v1")
 async def create_conversation(payload: ConversationCreateRequest, request: Request):
     container = get_container(request)
     conversation = await container.conversations.create_conversation(
+        user_id=payload.user_id,
+        title=payload.title,
+    )
+    return ConversationResponse.model_validate(normalize_record(conversation))
+
+
+@router.post("/conversations/{conversation_id}/ensure", response_model=ConversationResponse)
+async def ensure_conversation(
+    conversation_id: str,
+    payload: ConversationEnsureRequest,
+    request: Request,
+):
+    container = get_container(request)
+    conversation = await container.conversations.get_or_create_conversation(
+        conversation_id=conversation_id,
         user_id=payload.user_id,
         title=payload.title,
     )

@@ -14,11 +14,7 @@ import type {
   UserRead,
 } from "@/lib/types";
 import { Card, EmptyState, ErrorBanner, PageShell } from "@/components/page-shell";
-
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  return new Date(value).toLocaleString("vi-VN", { dateStyle: "medium", timeStyle: "short" });
-}
+import { formatDate } from "@/lib/utils";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -41,30 +37,23 @@ export default function DashboardPage() {
       setLoading(true);
       setError(null);
       try {
-        const me = await apiClient.me();
+        const [me, myCourses] = await Promise.all([apiClient.me(), apiClient.listCourses()]);
         if (cancelled) return;
         setUser(me);
-
-        const myCourses = await apiClient.listCourses();
-        if (cancelled) return;
         setCourses(myCourses);
 
-        // Aggregate assignments across the first 5 courses for the upcoming list.
-        const subset = myCourses.slice(0, 5);
-        const allAssignments = (
-          await Promise.all(subset.map((c) => apiClient.listCourseAssignments(c.id).catch(() => [])))
-        ).flat();
+        const [allAssignments, myGrades, notif] = await Promise.all([
+          Promise.all(
+            myCourses.slice(0, 5).map((c) => apiClient.listCourseAssignments(c.id).catch(() => []))
+          ).then((r) => r.flat()),
+          me.role === "student"
+            ? apiClient.listMyGrades().catch(() => [] as GradeRead[])
+            : Promise.resolve([] as GradeRead[]),
+          apiClient.listMyNotifications().catch(() => [] as NotificationRead[]),
+        ]);
         if (cancelled) return;
         setAssignments(allAssignments);
-
-        if (me.role === "student") {
-          const myGrades = await apiClient.listMyGrades().catch(() => [] as GradeRead[]);
-          if (cancelled) return;
-          setGrades(myGrades);
-        }
-
-        const notif = await apiClient.listMyNotifications().catch(() => [] as NotificationRead[]);
-        if (cancelled) return;
+        setGrades(myGrades);
         setNotifications(notif);
       } catch (err) {
         if (cancelled) return;
@@ -94,18 +83,16 @@ export default function DashboardPage() {
     .sort((a, b) => new Date(b.recorded_at).getTime() - new Date(a.recorded_at).getTime())
     .slice(0, 5);
 
+  const ROLE_SUBTITLE: Record<string, string> = {
+    student: "Tổng quan các khóa học, bài tập sắp đến hạn và điểm gần nhất.",
+    lecturer: "Tổng quan các khóa bạn dạy và bài tập đang hoạt động.",
+    admin: "Tổng quan hệ thống.",
+  };
+
   return (
     <PageShell
       title={user ? `Xin chào, ${user.full_name}` : "Dashboard"}
-      subtitle={
-        user
-          ? user.role === "student"
-            ? "Tổng quan các khóa học, bài tập sắp đến hạn và điểm gần nhất."
-            : user.role === "lecturer"
-              ? "Tổng quan các khóa bạn dạy và bài tập đang hoạt động."
-              : "Tổng quan hệ thống."
-          : undefined
-      }
+      subtitle={user ? (ROLE_SUBTITLE[user.role] ?? "Tổng quan hệ thống.") : undefined}
     >
       <ErrorBanner message={error} />
 

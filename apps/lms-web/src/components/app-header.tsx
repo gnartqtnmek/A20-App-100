@@ -40,14 +40,9 @@ export function AppHeader() {
           </Link>
 
           {!token ? (
-            <>
-              <Link href="/login" className={linkClass("/login")}>
-                Login
-              </Link>
-              <Link href="/register" className={linkClass("/register")}>
-                Register
-              </Link>
-            </>
+            <Link href="/login" className={linkClass("/login")}>
+              Đăng nhập
+            </Link>
           ) : (
             <button
               type="button"

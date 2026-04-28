@@ -1,6 +1,7 @@
 """API router modules."""
 
 from app.api import (
+    admin,
     agent_tools,
     assignments,
     auth,
@@ -15,6 +16,7 @@ from app.api import (
 __all__ = [
     "health",
     "auth",
+    "admin",
     "users",
     "courses",
     "curriculum",

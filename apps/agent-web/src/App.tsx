@@ -10,12 +10,21 @@ import { ChatScreen } from "./components/ChatScreen";
 import { Sidebar } from "./components/Sidebar";
 import type { ToolEvent, UIMessage } from "./components/MessageItem";
 import { WelcomeScreen } from "./components/WelcomeScreen";
-import { DEFAULT_USER_ID } from "./lib/constants";
+import { USER_ID_STORAGE_KEY } from "./lib/constants";
 
 const TYPEWRITER_CHARS_PER_FRAME = 2;
 const TYPEWRITER_FRAME_SKIP = 1; // render mỗi N+1 frames (~30fps)
 
 export default function App() {
+  const [userId, setUserId] = useState<string>(() => {
+    if (typeof window === "undefined") return "local-user";
+    const fromQuery = new URLSearchParams(window.location.search).get("user_id");
+    const fromStorage = window.localStorage.getItem(USER_ID_STORAGE_KEY);
+    const resolved = (fromQuery ?? fromStorage ?? `user-${crypto.randomUUID()}`).trim();
+    window.localStorage.setItem(USER_ID_STORAGE_KEY, resolved);
+    return resolved;
+  });
+  const [userIdInput, setUserIdInput] = useState(userId);
   const [collapsed, setCollapsed] = useState(false);
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -53,16 +62,27 @@ export default function App() {
 
   const refreshConversations = useCallback(async () => {
     try {
-      const rows = await listConversations(DEFAULT_USER_ID);
+      const rows = await listConversations(userId);
       setConversations(rows);
     } catch (err) {
       console.error(err);
     }
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     refreshConversations();
   }, [refreshConversations]);
+
+  useEffect(() => {
+    setConversations([]);
+    setMessages([]);
+    setActiveId(null);
+    setError(null);
+    setUserIdInput(userId);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(USER_ID_STORAGE_KEY, userId);
+    }
+  }, [userId]);
 
   const handleNewChat = useCallback(() => {
     setActiveId(null);
@@ -74,7 +94,7 @@ export default function App() {
     setActiveId(id);
     setError(null);
     try {
-      const rows = await listMessages(id, DEFAULT_USER_ID);
+      const rows = await listMessages(id, userId);
       const ui: UIMessage[] = [];
       let pendingToolEvents: ToolEvent[] = [];
 
@@ -115,7 +135,13 @@ export default function App() {
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
     }
-  }, []);
+  }, [userId]);
+
+  const handleApplyUserId = useCallback(() => {
+    const next = userIdInput.trim();
+    if (!next || next === userId) return;
+    setUserId(next);
+  }, [userId, userIdInput]);
 
   const handleSubmit = useCallback(
     async (content: string) => {
@@ -128,7 +154,7 @@ export default function App() {
         if (!conversationId) {
           const firstLine = content.split("\n")[0].slice(0, 60);
           const created = await createConversation({
-            user_id: DEFAULT_USER_ID,
+            user_id: userId,
             title: firstLine,
           });
           conversationId = created.id;
@@ -159,7 +185,7 @@ export default function App() {
       try {
         for await (const event of streamMessage({
           conversation_id: conversationId!,
-          user_id: DEFAULT_USER_ID,
+          user_id: userId,
           content,
         })) {
           if (event.type === "chunk") {
@@ -224,12 +250,13 @@ export default function App() {
         setSending(false);
       }
     },
-    [activeId, sending, refreshConversations, startTypewriter],
+    [activeId, sending, refreshConversations, startTypewriter, userId],
   );
 
   return (
     <div className="flex h-full w-full overflow-hidden">
       <Sidebar
+        userId={userId}
         conversations={conversations}
         activeConversationId={activeId}
         collapsed={collapsed}
@@ -238,6 +265,31 @@ export default function App() {
         onSelectConversation={handleSelectConversation}
       />
       <main className="flex flex-1 flex-col">
+        <div className="border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2">
+          <div className="flex flex-wrap items-center gap-2 text-sm">
+            <span className="font-medium text-[var(--color-text-dim)]">User ID</span>
+            <input
+              value={userIdInput}
+              onChange={(e) => setUserIdInput(e.target.value)}
+              onBlur={handleApplyUserId}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  handleApplyUserId();
+                }
+              }}
+              className="w-full max-w-xs rounded border border-[var(--color-border)] bg-transparent px-2 py-1 text-[var(--color-text)] outline-none focus:border-[var(--color-accent)]"
+              placeholder="Nhập user id để tách trí nhớ"
+            />
+            <button
+              onClick={handleApplyUserId}
+              className="rounded border border-[var(--color-border)] px-2 py-1 text-xs hover:bg-[var(--color-surface-soft)]"
+              type="button"
+            >
+              Áp dụng
+            </button>
+          </div>
+        </div>
         {error && (
           <div className="border-b border-[var(--color-border)] bg-[var(--color-surface)] px-6 py-2 text-sm text-[var(--color-accent)]">
             {error}

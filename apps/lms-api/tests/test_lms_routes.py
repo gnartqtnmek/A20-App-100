@@ -16,9 +16,9 @@ from app.models.base import EnrollmentStatus, SubmissionStatus, UserRole
 from app.main import app
 
 
-def _override_user(role: UserRole):
+def _override_user(role: UserRole, user_id=None):
     async def dependency():
-        return SimpleNamespace(id=uuid4(), role=role, is_active=True)
+        return SimpleNamespace(id=user_id or uuid4(), role=role, is_active=True)
 
     return dependency
 
@@ -63,6 +63,46 @@ def test_create_user_route_returns_user(monkeypatch) -> None:
     body = response.json()
     assert body["email"] == "student1@university.edu"
     assert body["role"] == UserRole.STUDENT.value
+    app.dependency_overrides.clear()
+
+
+def test_create_course_route_lecturer_uses_current_user_as_owner(monkeypatch) -> None:
+    now = datetime.now(timezone.utc)
+    lecturer_id = uuid4()
+
+    async def fake_create_course(db, payload):
+        return SimpleNamespace(
+            id=uuid4(),
+            code=payload.code,
+            name=payload.name,
+            description=payload.description,
+            syllabus_md=payload.syllabus_md,
+            lecturer_id=payload.lecturer_id,
+            semester=payload.semester,
+            is_published=payload.is_published,
+            invite_code=payload.invite_code,
+            cover_image_url=payload.cover_image_url,
+            created_at=now,
+            updated_at=now,
+        )
+
+    monkeypatch.setattr("app.api.courses.course_service.create_course", fake_create_course)
+
+    app.dependency_overrides[get_current_user] = _override_user(UserRole.LECTURER, lecturer_id)
+    client = TestClient(app)
+    response = client.post(
+        "/courses",
+        json={
+            "code": "cs101",
+            "name": "Intro to CS",
+            "description": "desc",
+            "is_published": True,
+        },
+    )
+
+    assert response.status_code == 201
+    body = response.json()
+    assert body["lecturer_id"] == str(lecturer_id)
     app.dependency_overrides.clear()
 
 
@@ -134,15 +174,16 @@ def test_submit_assignment_route_returns_submission(monkeypatch) -> None:
         "app.api.assignments.assignment_service.submit_assignment", fake_submit_assignment
     )
 
-    client = _client_with_role(UserRole.STUDENT)
+    app.dependency_overrides[get_current_user] = _override_user(UserRole.STUDENT, student_id)
+    client = TestClient(app)
     response = client.post(
         f"/assignments/{assignment_id}/submissions",
-        json={"student_id": str(student_id), "content": "My essay answer"},
+        json={"content": "My essay answer"},
     )
 
     assert response.status_code == 201
     body = response.json()
     assert body["assignment_id"] == str(assignment_id)
-    assert body["student_id"]
+    assert body["student_id"] == str(student_id)
     assert body["status"] == SubmissionStatus.SUBMITTED.value
     app.dependency_overrides.clear()

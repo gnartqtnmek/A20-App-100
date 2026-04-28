@@ -14,6 +14,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
 from app.models.assignment import Assignment, Grade, Submission
+from app.models.base import SubmissionStatus
 from app.models.course import Course, Lesson, Module
 from app.models.memory import KnowledgeChunk
 from app.models.user import User
@@ -101,23 +102,20 @@ async def get_my_assignments(
     out: list[AssignmentForAgent] = []
     for assignment, course, submission in rows:
         is_overdue = bool(assignment.due_at and assignment.due_at < now)
-        if only_pending and submission is not None and submission.status == "graded":
+        if only_pending and submission is not None and submission.status == SubmissionStatus.GRADED:
             continue
         out.append(
             AssignmentForAgent(
                 id=assignment.id,
                 title=assignment.title,
-                type=assignment.type.value if hasattr(assignment.type, "value") else str(assignment.type),
+                type=assignment.type.value,
                 due_at=assignment.due_at,
                 course_id=course.id,
                 course_code=course.code,
                 course_name=course.name,
                 max_score=assignment.max_score,
                 weight=assignment.weight,
-                submission_status=(
-                    submission.status.value if submission and hasattr(submission.status, "value")
-                    else str(submission.status) if submission else None
-                ),
+                submission_status=submission.status.value if submission else None,
                 submission_score=submission.score if submission else None,
                 is_overdue=is_overdue,
             )
@@ -193,12 +191,6 @@ async def search_knowledge(
     matches: list[KnowledgeMatchForAgent] = []
 
     if used_vector:
-        # ``<=>`` is the cosine-distance operator from pgvector.
-        from sqlalchemy import literal
-        from sqlalchemy.sql import literal_column
-
-        # We bind the embedding as a parameter; pgvector's SQLAlchemy type
-        # handles the conversion.
         distance = KnowledgeChunk.embedding.cosine_distance(embedding)
         stmt = (
             select(
@@ -227,6 +219,7 @@ async def search_knowledge(
                     lesson_title=lesson.title,
                     course_id=course.id,
                     course_code=course.code,
+                    course_name=course.name,
                     chunk_index=chunk.chunk_index,
                     content=chunk.content,
                     similarity=round(similarity, 4) if similarity is not None else None,
@@ -257,6 +250,7 @@ async def search_knowledge(
                     lesson_title=lesson.title,
                     course_id=course.id,
                     course_code=course.code,
+                    course_name=course.name,
                     chunk_index=chunk.chunk_index,
                     content=chunk.content,
                     similarity=None,

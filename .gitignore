@@ -45,5 +45,3 @@ _bmad-output/
 *.pyc
 .codegraph
 .kiro
-
-pytest-cache-files-oq6tnzzw

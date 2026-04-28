@@ -5,22 +5,20 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 
 import { ApiError, apiClient } from "@/lib/api-client";
-import { getAccessToken } from "@/lib/auth-storage";
-import type { AssignmentRead, CourseRead, ModuleRead } from "@/lib/types";
+import { getAccessToken, getUserRole } from "@/lib/auth-storage";
+import type { AssignmentRead, CourseRead, LessonRead, ModuleRead } from "@/lib/types";
 import { Card, EmptyState, ErrorBanner, PageShell } from "@/components/page-shell";
-
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  return new Date(value).toLocaleString("vi-VN", { dateStyle: "medium", timeStyle: "short" });
-}
+import { formatDate } from "@/lib/utils";
 
 export default function CourseDetailPage() {
   const params = useParams<{ courseId: string }>();
   const router = useRouter();
   const courseId = params.courseId;
 
+  const role = getUserRole();
   const [course, setCourse] = useState<CourseRead | null>(null);
   const [modules, setModules] = useState<ModuleRead[]>([]);
+  const [lessons, setLessons] = useState<Record<string, LessonRead[]>>({});
   const [assignments, setAssignments] = useState<AssignmentRead[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -41,9 +39,23 @@ export default function CourseDetailPage() {
           apiClient.listCourseAssignments(courseId).catch(() => [] as AssignmentRead[]),
         ]);
         if (cancelled) return;
+        const sorted = m.sort((x, y) => x.order_index - y.order_index);
         setCourse(c);
-        setModules(m.sort((x, y) => x.order_index - y.order_index));
+        setModules(sorted);
         setAssignments(a);
+
+        const lessonMap: Record<string, LessonRead[]> = {};
+        await Promise.all(
+          sorted.map(async (mod) => {
+            try {
+              const ls = await apiClient.listModuleLessons(mod.id);
+              lessonMap[mod.id] = ls.sort((x, y) => x.order_index - y.order_index);
+            } catch {
+              lessonMap[mod.id] = [];
+            }
+          }),
+        );
+        if (!cancelled) setLessons(lessonMap);
       } catch (err) {
         if (!cancelled) {
           if (err instanceof ApiError && err.status === 401) {
@@ -87,12 +99,30 @@ export default function CourseDetailPage() {
       title={course.name}
       subtitle={`${course.code}${course.semester ? " · " + course.semester : ""}`}
       actions={
-        <Link
-          href="/courses"
-          className="rounded-full border border-neutral-300 px-3 py-1.5 text-sm text-neutral-700 transition hover:bg-neutral-100"
-        >
-          ← Tất cả khóa học
-        </Link>
+        <div className="flex flex-wrap gap-2">
+          {(role === "lecturer" || role === "admin") && (
+            <>
+              <Link
+                href={`/courses/${courseId}/manage`}
+                className="rounded-full bg-blue-600 px-3 py-1.5 text-sm font-medium text-white transition hover:bg-blue-700"
+              >
+                Quản lý khóa học
+              </Link>
+              <Link
+                href={`/courses/${courseId}/gradebook`}
+                className="rounded-full bg-black px-3 py-1.5 text-sm font-medium text-white transition hover:bg-neutral-800"
+              >
+                Sổ điểm lớp
+              </Link>
+            </>
+          )}
+          <Link
+            href="/courses"
+            className="rounded-full border border-neutral-300 px-3 py-1.5 text-sm text-neutral-700 transition hover:bg-neutral-100"
+          >
+            ← Tất cả khóa học
+          </Link>
+        </div>
       }
     >
       <ErrorBanner message={error} />
@@ -118,6 +148,26 @@ export default function CourseDetailPage() {
                   <p className="mt-1 font-medium text-neutral-900">{m.title}</p>
                   {m.description && (
                     <p className="mt-1 text-sm text-neutral-600">{m.description}</p>
+                  )}
+                  {(lessons[m.id] ?? []).length > 0 && (
+                    <ul className="mt-2 space-y-1 border-t border-neutral-100 pt-2">
+                      {(lessons[m.id] ?? []).map((lesson) => (
+                        <li
+                          key={lesson.id}
+                          className="flex items-center justify-between text-sm"
+                        >
+                          <span className="text-neutral-700">{lesson.title}</span>
+                          {(role === "lecturer" || role === "admin") && (
+                            <Link
+                              href={`/lessons/${lesson.id}/chunks`}
+                              className="text-xs text-blue-600 hover:underline"
+                            >
+                              Chunks →
+                            </Link>
+                          )}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                 </li>
               ))}

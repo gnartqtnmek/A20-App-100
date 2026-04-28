@@ -91,7 +91,7 @@ class RAGService:
         self._model = settings.embedding_model
         self._dimensions = settings.embedding_dimensions
 
-    async def _embed(self, texts: list[str]) -> list[list[float]]:
+    async def embed(self, texts: list[str]) -> list[list[float]]:
         response = await self._client.embeddings.create(
             model=self._model,
             input=texts,
@@ -100,7 +100,7 @@ class RAGService:
         return [item.embedding for item in sorted(response.data, key=lambda x: x.index)]
 
     async def search(self, user_id: str, query: str, top_k: int = 3) -> str:
-        [query_vec] = await self._embed([query])
+        [query_vec] = await self.embed([query])
 
         rows = await self.db.fetch_all(
             """

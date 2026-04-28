@@ -23,6 +23,12 @@ async def get_course_or_404(db: AsyncSession, course_id: UUID) -> Course:
 
 
 async def create_course(db: AsyncSession, payload: CourseCreate) -> Course:
+    if payload.lecturer_id is None:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="lecturer_id is required",
+        )
+
     lecturer = await get_user_or_404(db, payload.lecturer_id)
     if lecturer.role not in {UserRole.LECTURER, UserRole.ADMIN}:
         raise HTTPException(
@@ -125,6 +131,53 @@ async def list_course_enrollments(db: AsyncSession, course_id: UUID) -> list[Cou
     ).order_by(CourseEnrollment.created_at.desc())
     result = await db.execute(statement)
     return list(result.scalars().all())
+
+
+async def enroll_by_invite_code(
+    db: AsyncSession,
+    invite_code: str,
+    student: User,
+) -> CourseEnrollment:
+    from app.models.base import UserRole
+
+    if student.role != UserRole.STUDENT:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only student accounts can enroll with an invite code",
+        )
+
+    stmt = select(Course).where(Course.invite_code == invite_code.strip())
+    result = await db.execute(stmt)
+    course = result.scalar_one_or_none()
+    if course is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Invalid invite code",
+        )
+    if not course.is_published:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This course is not open for enrollment",
+        )
+
+    existing_stmt = select(CourseEnrollment).where(
+        CourseEnrollment.course_id == course.id,
+        CourseEnrollment.student_id == student.id,
+    )
+    existing_result = await db.execute(existing_stmt)
+    enrollment = existing_result.scalar_one_or_none()
+    if enrollment is not None:
+        return enrollment
+
+    enrollment = CourseEnrollment(
+        course_id=course.id,
+        student_id=student.id,
+        status=EnrollmentStatus.ACTIVE,
+    )
+    db.add(enrollment)
+    await db.commit()
+    await db.refresh(enrollment)
+    return enrollment
 
 
 async def ensure_course_owner(db: AsyncSession, course_id: UUID, actor: User) -> Course:

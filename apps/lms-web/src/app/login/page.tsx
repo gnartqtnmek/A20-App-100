@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-
 import { ApiError, apiClient } from "@/lib/api-client";
 import { Card, ErrorBanner, PageShell } from "@/components/page-shell";
 
@@ -75,11 +73,8 @@ export default function LoginPage() {
             {submitting ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
 
-          <p className="text-center text-sm text-neutral-600">
-            Chưa có tài khoản?{" "}
-            <Link href="/register" className="font-medium text-black hover:underline">
-              Đăng ký
-            </Link>
+          <p className="text-center text-sm text-neutral-500">
+            Tài khoản được cấp bởi quản trị viên. Liên hệ bộ phận hỗ trợ nếu cần trợ giúp.
           </p>
         </form>
       </Card>

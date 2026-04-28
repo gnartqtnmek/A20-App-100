@@ -113,16 +113,28 @@ class ConversationService:
         self,
         user_id: str,
         title: str | None = None,
+        conversation_id: str | None = None,
     ) -> dict[str, Any]:
-        conversation_id = uuid.uuid4()
+        cid = uuid.UUID(conversation_id) if conversation_id else uuid.uuid4()
         await self.db.execute(
             """
             INSERT INTO conversations (id, user_id, title, messages)
             VALUES (%s, %s, %s, %s)
             """,
-            (conversation_id, user_id, title, Jsonb([])),
+            (cid, user_id, title, Jsonb([])),
         )
-        return await self.get_conversation(str(conversation_id), user_id)
+        return await self.get_conversation(str(cid), user_id)
+
+    async def get_or_create_conversation(
+        self,
+        conversation_id: str,
+        user_id: str,
+        title: str | None = None,
+    ) -> dict[str, Any]:
+        try:
+            return await self.get_conversation(conversation_id, user_id)
+        except ValueError:
+            return await self.create_conversation(user_id, title, conversation_id=conversation_id)
 
     async def get_conversation(self, conversation_id: str, user_id: str | None = None) -> dict[str, Any]:
         sql = """

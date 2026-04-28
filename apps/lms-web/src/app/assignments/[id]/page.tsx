@@ -8,11 +8,7 @@ import { ApiError, apiClient } from "@/lib/api-client";
 import { getAccessToken, getUserRole } from "@/lib/auth-storage";
 import type { AssignmentRead, SubmissionRead } from "@/lib/types";
 import { Card, ErrorBanner, PageShell } from "@/components/page-shell";
-
-function formatDate(value: string | null): string {
-  if (!value) return "—";
-  return new Date(value).toLocaleString("vi-VN", { dateStyle: "medium", timeStyle: "short" });
-}
+import { formatDate } from "@/lib/utils";
 
 export default function AssignmentDetailPage() {
   const params = useParams<{ id: string }>();
@@ -179,12 +175,21 @@ export default function AssignmentDetailPage() {
         </Card>
       )}
 
-      {assignment.type === "quiz" && (
+      {assignment.type === "quiz" && role === "student" && (
         <Card>
-          <p className="text-sm text-neutral-700">
-            Quiz player chưa được scaffold trong UI này (Sprint 3 sẽ làm). Hiện tại bạn vẫn có thể
-            mở Swagger UI để test endpoint quiz.
+          <h2 className="mb-3 text-lg font-semibold">Làm bài quiz</h2>
+          <p className="mb-4 text-sm text-neutral-600">
+            Bài tập này là quiz trắc nghiệm. Nhấn nút bên dưới để bắt đầu làm bài.
+            {assignment.time_limit_minutes && (
+              <> Thời gian giới hạn: <strong>{assignment.time_limit_minutes} phút</strong>.</>
+            )}
           </p>
+          <Link
+            href={`/assignments/${assignment.id}/quiz`}
+            className="inline-block rounded-full bg-black px-5 py-2 text-sm font-medium text-white transition hover:bg-neutral-800"
+          >
+            Bắt đầu làm bài →
+          </Link>
         </Card>
       )}
     </PageShell>
