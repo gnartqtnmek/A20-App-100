@@ -1,0 +1,42 @@
+
+> brainio-web@0.1.0 dev
+> next dev --hostname 127.0.0.1 --port 3001
+
+  ▲ Next.js 14.2.5
+  - Local:        http://127.0.0.1:3001
+  - Network:      http://127.0.0.1:3001
+
+ ✓ Starting...
+ ✓ Ready in 1917ms
+ ○ Compiling /login ...
+ ✓ Compiled /login in 695ms (502 modules)
+ GET /login 200 in 913ms
+ ✓ Compiled /dashboard/[role] in 229ms (524 modules)
+ GET /dashboard/student 500 in 725ms
+ ✓ Compiled in 1549ms (538 modules)
+ GET /login 200 in 105ms
+ GET /dashboard/student 200 in 39ms
+ ✓ Compiled in 395ms (277 modules)
+ ✓ Compiled in 224ms (277 modules)
+ ✓ Compiled in 214ms (277 modules)
+ ✓ Compiled in 276ms (277 modules)
+ ✓ Compiled in 181ms (277 modules)
+ ✓ Compiled in 236ms (277 modules)
+ ✓ Compiled in 140ms (277 modules)
+ ✓ Compiled in 106ms (277 modules)
+ ✓ Compiled in 149ms (277 modules)
+ ✓ Compiled in 138ms (277 modules)
+ ✓ Compiled in 114ms (277 modules)
+ ✓ Compiled in 128ms (277 modules)
+ ✓ Compiled in 227ms (277 modules)
+ ✓ Compiled in 409ms (277 modules)
+ ✓ Compiled in 219ms (277 modules)
+ ✓ Compiled in 180ms (277 modules)
+ ✓ Compiled in 123ms (277 modules)
+ ✓ Compiled in 155ms (277 modules)
+ ✓ Compiled in 114ms (277 modules)
+ ✓ Compiled in 262ms (277 modules)
+ ✓ Compiled in 187ms (277 modules)
+ ✓ Compiled in 361ms (283 modules)
+ ✓ Compiled in 328ms (283 modules)
+ ✓ Compiled in 250ms (283 modules)
