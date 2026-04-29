@@ -1,1526 +1,831 @@
 # API Specification
 ## LMS Chatbot Có Trí Nhớ (AI20K-015)
 
-**Phiên bản:** 2.0 | **Ngày:** 2026-04-27
+**Phiên bản:** 3.0 | **Ngày:** 2026-04-29
 
 > Dev Frontend và Backend đọc tài liệu này để biết chính xác từng endpoint: method, URL, auth, params, request body, response body, error codes. Mọi thứ phải rõ ràng không cần đoán.
+> Phạm vi: Hệ thống LMS dành cho **Sinh viên, Giảng viên, Quản trị viên hệ thống, Khoa/Bộ môn/Phòng đào tạo, Cố vấn học tập**.  
+> Kiến trúc đề xuất: Frontend React/Vite, Backend REST API, PostgreSQL, Redis, Object Storage, Email/Notification Service, tích hợp SSO và lớp học trực tuyến.
 
 ---
 
-## 1. Chuẩn Chung (Global Standards)
+## 1. Mục tiêu tài liệu
 
-### 1.1 Base URLs
+Tài liệu này mô tả đầy đủ API cho hệ thống LMS, bao gồm:
 
-| Môi trường | LMS API | Agent API |
-|-----------|---------|---------|
-| Local Dev | `http://localhost:8000/api/v1` | `http://localhost:8001/api/v1` |
-| Staging | `https://api.staging.lms-team100.app/api/v1` | `https://agent-api.staging.lms-team100.app/api/v1` |
-| Production | `https://api.lms-team100.app/api/v1` | `https://agent-api.lms-team100.app/api/v1` |
+- Chuẩn endpoint REST.
+- Quy ước request/response.
+- Authentication và Authorization.
+- Danh sách API theo module nghiệp vụ.
+- API phục vụ 5 nhóm người dùng chính.
+- Request body mẫu.
+- Response body mẫu.
+- Error codes.
+- Pagination, filtering, sorting.
+- Upload file.
+- Notification.
+- Báo cáo.
+- API tích hợp bên ngoài.
 
-### 1.2 Authentication
+Tài liệu này có thể dùng để triển khai Swagger/OpenAPI, Postman Collection hoặc làm tài liệu giao tiếp giữa Frontend và Backend.
 
-Tất cả endpoint (trừ auth) yêu cầu JWT Bearer token:
+---
+
+## 2. Tổng quan hệ thống API
+
+### 2.1. Base URL
+
 ```http
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+Local:      http://localhost:8080/api/v1
+Staging:    https://staging-lms.example.edu.vn/api/v1
+Production: https://lms.example.edu.vn/api/v1
 ```
 
-Token hết hạn → `401 TOKEN_EXPIRED` → Frontend tự gọi `POST /auth/refresh` → Retry.
-
-### 1.3 Request Headers Chuẩn
+### 2.2. Content Type
 
 ```http
 Content-Type: application/json
+Accept: application/json
+```
+
+Riêng upload file dùng:
+
+```http
+Content-Type: multipart/form-data
+```
+
+### 2.3. Authentication
+
+Hệ thống sử dụng JWT Access Token và Refresh Token.
+
+```http
 Authorization: Bearer <access_token>
-X-Request-ID: <uuid-v4>  (optional, FE gán để trace)
-Accept-Language: vi       (optional)
 ```
 
-### 1.4 Pagination (Request)
+### 2.4. Các vai trò chính
 
-Tất cả danh sách endpoint hỗ trợ:
-
-| Param | Type | Default | Max | Mô tả |
-|-------|------|---------|-----|-------|
-| `page` | integer | 1 | — | Trang hiện tại |
-| `limit` | integer | 20 | 100 | Số items/trang |
-| `sort_by` | string | — | — | Field để sort (vd: created_at, title) |
-| `sort_order` | string | desc | — | `asc` hoặc `desc` |
-
-### 1.5 Pagination (Response Envelope)
-
-```json
-{
-  "items": [...],
-  "total": 150,
-  "page": 1,
-  "limit": 20,
-  "pages": 8,
-  "has_next": true,
-  "has_prev": false
-}
-```
-
-### 1.6 Error Response Format
-
-Tất cả lỗi trả về format chuẩn:
-```json
-{
-  "detail": "Mô tả lỗi bằng tiếng Việt cho user",
-  "error_code": "SNAKE_CASE_CODE",
-  "field_errors": {
-    "email": ["Email không hợp lệ"],
-    "password": ["Mật khẩu quá ngắn"]
-  },
-  "request_id": "550e8400-e29b-41d4-a716-446655440000"
-}
-```
-- `field_errors`: chỉ có khi `error_code = VALIDATION_ERROR` (422)
-- `request_id`: luôn có, dùng để trace logs
-
-### 1.7 HTTP Status Codes
-
-| Code | Ý nghĩa | Khi nào |
-|------|---------|---------|
-| 200 | OK | GET thành công, PATCH thành công |
-| 201 | Created | POST tạo resource thành công |
-| 204 | No Content | DELETE thành công |
-| 400 | Bad Request | Logic lỗi (deadline passed, đã enroll, ...) |
-| 401 | Unauthorized | Token không hợp lệ hoặc hết hạn |
-| 403 | Forbidden | Đã auth nhưng không có quyền |
-| 404 | Not Found | Resource không tồn tại |
-| 409 | Conflict | Duplicate (email, course_code, ...) |
-| 422 | Unprocessable Entity | Validation lỗi (Pydantic) |
-| 429 | Too Many Requests | Rate limit exceeded |
-| 500 | Internal Server Error | Lỗi server không xử lý được |
-| 502 | Bad Gateway | External service (AI API) lỗi |
-
-### 1.8 Rate Limits
-
-| Nhóm | Limit | Redis Key |
-|------|-------|----------|
-| Auth endpoints | 10 req/min/IP | `rl:auth:{ip}` |
-| General API | 60 req/min/user | `rl:api:{user_id}` |
-| File upload | 5 req/min/user | `rl:upload:{user_id}` |
-| AI Chat | 10 req/min/user | `rl:ai:{user_id}` |
-
-Rate limit headers trong response:
-```http
-X-RateLimit-Limit: 60
-X-RateLimit-Remaining: 55
-X-RateLimit-Reset: 1704067200
-Retry-After: 30  (chỉ khi 429)
-```
-
-### 1.9 Datetime Format
-
-- Tất cả datetime: **ISO 8601 UTC** — `"2024-03-15T08:30:00Z"`
-- Date only: `"2024-03-15"`
-- Frontend hiển thị theo timezone `Asia/Ho_Chi_Minh` (UTC+7)
-
-### 1.10 UUID Format
-
-Tất cả IDs: UUID v4 — `"550e8400-e29b-41d4-a716-446655440000"`
+| Role Code | Tên vai trò | Mô tả |
+|---|---|---|
+| `STUDENT` | Sinh viên | Học tập, nộp bài, làm quiz, xem điểm |
+| `LECTURER` | Giảng viên | Quản lý lớp, bài giảng, bài tập, quiz, điểm |
+| `ADMIN` | Quản trị viên hệ thống | Toàn quyền hệ thống |
+| `ACADEMIC_STAFF` | Khoa/Bộ môn/Phòng đào tạo | Quản lý đào tạo theo phạm vi khoa/bộ môn |
+| `ADVISOR` | Cố vấn học tập | Theo dõi, cảnh báo và tư vấn sinh viên |
+| `TEACHING_ASSISTANT` | Trợ giảng | Hỗ trợ giảng viên nếu hệ thống mở rộng |
 
 ---
 
-## 2. Authentication API
+## 3. Quy ước response chuẩn
 
-### POST `/auth/register`
+### 3.1. Response thành công
 
-Đăng ký tài khoản mới.
-
-**Auth:** Không cần | **Rate limit:** Auth limit
-
-**Request Body:**
 ```json
 {
-  "email": "nguyen.van.a@university.edu.vn",
-  "password": "SecurePass123!",
-  "full_name": "Nguyễn Văn A",
-  "role": "student",
-  "student_id": "20210001"
-}
-```
-
-| Field | Type | Required | Validation |
-|-------|------|---------|-----------|
-| `email` | string | ✅ | valid email, max 255, normalized lowercase |
-| `password` | string | ✅ | min 8, 1 uppercase, 1 lowercase, 1 digit |
-| `full_name` | string | ✅ | min 2, max 255 |
-| `role` | string | ✅ | enum: `student`, `instructor` |
-| `student_id` | string | nếu role=student | max 20, alphanumeric |
-
-**Response 201:**
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "email": "nguyen.van.a@university.edu.vn",
-  "full_name": "Nguyễn Văn A",
-  "role": "student",
-  "student_id": "20210001",
-  "created_at": "2024-01-15T08:00:00Z"
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 409 | `EMAIL_EXISTS` | Email đã tồn tại trong DB |
-| 409 | `STUDENT_ID_EXISTS` | student_id đã tồn tại |
-| 422 | `VALIDATION_ERROR` | Bất kỳ field nào không pass validation |
-
----
-
-### POST `/auth/login`
-
-Đăng nhập.
-
-**Auth:** Không cần | **Rate limit:** Auth limit
-
-**Request Body:**
-```json
-{
-  "email": "nguyen.van.a@university.edu.vn",
-  "password": "SecurePass123!"
-}
-```
-
-**Response 200:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI1NTBlODQwMC1lMjliLTQxZDQtYTcxNi00NDY2NTU0NDAwMDAiLCJlbWFpbCI6Im5ndXllbi52YW4uYUB1bml2ZXJzaXR5LmVkdS52biIsInJvbGUiOiJzdHVkZW50IiwiaWF0IjoxNzA0MDY3MjAwLCJleHAiOjE3MDQwNjgxMDAsImp0aSI6InVuaXF1ZS1qd3QtaWQifQ.signature",
-  "refresh_token": "a3f2b1c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2",
-  "token_type": "bearer",
-  "expires_in": 900,
-  "user": {
-    "id": "550e8400-e29b-41d4-a716-446655440000",
-    "email": "nguyen.van.a@university.edu.vn",
-    "full_name": "Nguyễn Văn A",
-    "role": "student",
-    "student_id": "20210001",
-    "avatar_url": null
+  "success": true,
+  "message": "Thao tác thành công",
+  "data": {},
+  "meta": {
+    "timestamp": "2026-04-29T10:47:00+07:00",
+    "requestId": "req_01HXABC123"
   }
 }
 ```
 
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 401 | `INVALID_CREDENTIALS` | Email hoặc password sai |
-| 403 | `ACCOUNT_SUSPENDED` | is_active = false |
+### 3.2. Response danh sách có phân trang
 
----
-
-### POST `/auth/refresh`
-
-Làm mới access token.
-
-**Auth:** Không cần (dùng refresh_token)
-
-**Request Body:**
 ```json
 {
-  "refresh_token": "a3f2b1c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2"
-}
-```
-
-**Response 200:**
-```json
-{
-  "access_token": "eyJhbGciOiJIUzI1NiJ9...",
-  "expires_in": 900
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 401 | `REFRESH_INVALID` | Token không tìm thấy trong DB |
-| 401 | `REFRESH_EXPIRED` | Token đã hết hạn |
-| 401 | `REFRESH_REVOKED` | Token đã bị revoke |
-
----
-
-### POST `/auth/logout`
-
-Đăng xuất (revoke refresh token).
-
-**Auth:** Required
-
-**Request Body:**
-```json
-{
-  "refresh_token": "a3f2b1c4..."
-}
-```
-
-**Response 200:**
-```json
-{"message": "Đăng xuất thành công"}
-```
-
----
-
-### POST `/auth/forgot-password`
-
-Yêu cầu reset mật khẩu.
-
-**Auth:** Không cần | **Rate limit:** Auth limit
-
-**Request Body:**
-```json
-{"email": "nguyen.van.a@university.edu.vn"}
-```
-
-**Response 200 (luôn trả về 200 dù email có tồn tại hay không — bảo mật):**
-```json
-{
-  "message": "Nếu email tồn tại trong hệ thống, bạn sẽ nhận được hướng dẫn đặt lại mật khẩu."
-}
-```
-
----
-
-### POST `/auth/reset-password`
-
-Đặt lại mật khẩu với token từ email.
-
-**Auth:** Không cần
-
-**Request Body:**
-```json
-{
-  "token": "hex-token-from-email",
-  "new_password": "NewSecurePass456!",
-  "confirm_password": "NewSecurePass456!"
-}
-```
-
-**Response 200:**
-```json
-{"message": "Đặt lại mật khẩu thành công. Vui lòng đăng nhập lại."}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `RESET_TOKEN_EXPIRED` | Token quá 1 giờ |
-| 400 | `RESET_TOKEN_USED` | Token đã dùng rồi |
-| 400 | `RESET_TOKEN_INVALID` | Token không tồn tại |
-| 422 | `VALIDATION_ERROR` | Password không đủ mạnh hoặc không khớp |
-
----
-
-### POST `/auth/change-password`
-
-Đổi mật khẩu (đang đăng nhập).
-
-**Auth:** Required
-
-**Request Body:**
-```json
-{
-  "current_password": "OldPass123!",
-  "new_password": "NewPass456!",
-  "confirm_password": "NewPass456!"
-}
-```
-
-**Response 200:**
-```json
-{"message": "Đổi mật khẩu thành công. Các phiên đăng nhập khác đã bị đăng xuất."}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `WRONG_PASSWORD` | current_password sai |
-| 422 | `VALIDATION_ERROR` | new_password không đủ mạnh hoặc không khớp |
-
----
-
-## 3. Users API
-
-### GET `/users/me`
-
-Xem profile của mình.
-
-**Auth:** Required (any role)
-
-**Response 200:**
-```json
-{
-  "id": "550e8400-e29b-41d4-a716-446655440000",
-  "email": "nguyen.van.a@university.edu.vn",
-  "full_name": "Nguyễn Văn A",
-  "role": "student",
-  "student_id": "20210001",
-  "avatar_url": "https://example.com/avatars/user.jpg",
-  "is_active": true,
-  "email_subscribed": true,
-  "created_at": "2024-01-15T08:00:00Z",
-  "updated_at": "2024-01-15T08:00:00Z"
-}
-```
-
----
-
-### PATCH `/users/me`
-
-Cập nhật profile. Chỉ các field được gửi mới được update.
-
-**Auth:** Required (any role)
-
-**Request Body (tất cả optional):**
-```json
-{
-  "full_name": "Nguyễn Văn An",
-  "email_subscribed": false
-}
-```
-
-**Response 200:** User object đầy đủ
-
-**Lưu ý:** Không cho đổi email, role, student_id qua endpoint này.
-
----
-
-### PATCH `/users/me/avatar`
-
-Upload ảnh đại diện.
-
-**Auth:** Required | **Content-Type:** `multipart/form-data`
-
-**Request:** `file` — image file (JPEG/PNG/WebP, max 5MB)
-
-**Response 200:**
-```json
-{
-  "avatar_url": "https://example.com/uploads/avatars/user-uuid.jpg"
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `INVALID_IMAGE_TYPE` | File không phải ảnh |
-| 400 | `FILE_TOO_LARGE` | > 5MB |
-
----
-
-### GET `/users` *(Admin only)*
-
-Danh sách tất cả users.
-
-**Auth:** Required (admin only)
-
-**Query params:**
-
-| Param | Type | Mô tả |
-|-------|------|-------|
-| `page` | int | Trang (default: 1) |
-| `limit` | int | Số items (default: 20, max: 100) |
-| `role` | string | Filter: student / instructor / admin |
-| `is_active` | boolean | Filter trạng thái |
-| `search` | string | Tìm theo full_name, email, student_id |
-| `sort_by` | string | created_at / full_name / email |
-| `sort_order` | string | asc / desc (default: desc) |
-
-**Response 200:** Paginated list of User objects
-
----
-
-### GET `/users/{userId}` *(Admin only)*
-
-Xem chi tiết 1 user.
-
-**Auth:** Required (admin only)
-
-**Response 200:** User object đầy đủ
-
-**Error:** `404 USER_NOT_FOUND`
-
----
-
-### PATCH `/users/{userId}` *(Admin only)*
-
-Admin cập nhật user (khóa, đổi role).
-
-**Auth:** Required (admin only)
-
-**Request Body (tất cả optional):**
-```json
-{
-  "is_active": false,
-  "role": "instructor",
-  "email_subscribed": true
-}
-```
-
-**Behavior khi `is_active: false`:** Tự động revoke tất cả refresh_tokens của user đó.
-
-**Response 200:** User object
-
----
-
-## 4. Courses API
-
-### POST `/courses`
-
-Tạo khóa học mới.
-
-**Auth:** Required (instructor, admin)
-
-**Request Body:**
-```json
-{
-  "title": "Cấu trúc Dữ liệu và Giải thuật",
-  "description": "## Mô tả\nKhóa học này bao gồm...",
-  "course_code": "CS201",
-  "start_date": "2024-02-01",
-  "end_date": "2024-06-30",
-  "max_students": 60,
-  "is_open": true
-}
-```
-
-| Field | Type | Required | Validation |
-|-------|------|---------|-----------|
-| `title` | string | ✅ | min 3, max 255 |
-| `description` | string | ❌ | max 5000, Markdown |
-| `course_code` | string | ✅ | min 2, max 20, alphanumeric+dash, unique |
-| `start_date` | date | ❌ | YYYY-MM-DD |
-| `end_date` | date | ❌ | YYYY-MM-DD, after start_date |
-| `max_students` | integer | ❌ | ≥ 1, null = unlimited |
-| `is_open` | boolean | ❌ | default: false |
-
-**Response 201:**
-```json
-{
-  "id": "course-uuid",
-  "title": "Cấu trúc Dữ liệu và Giải thuật",
-  "description": "## Mô tả...",
-  "course_code": "CS201",
-  "instructor": {
-    "id": "instructor-uuid",
-    "full_name": "Trần Thị B",
-    "avatar_url": null
-  },
-  "start_date": "2024-02-01",
-  "end_date": "2024-06-30",
-  "max_students": 60,
-  "enrolled_count": 0,
-  "is_open": true,
-  "is_archived": false,
-  "created_at": "2024-01-15T08:00:00Z",
-  "updated_at": "2024-01-15T08:00:00Z"
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 409 | `COURSE_CODE_EXISTS` | course_code trùng |
-| 400 | `INVALID_DATE_RANGE` | end_date trước start_date |
-
----
-
-### GET `/courses`
-
-Danh sách khóa học.
-
-**Auth:** Required | **Rate limit:** General
-
-**Query params:**
-
-| Param | Type | Mô tả |
-|-------|------|-------|
-| `page, limit` | int | Pagination |
-| `search` | string | Tìm theo title, course_code |
-| `is_open` | boolean | Lọc theo is_open |
-| `enrolled` | boolean | `true` = chỉ courses đã enroll (SV only) |
-| `teaching` | boolean | `true` = chỉ courses đang dạy (GV only) |
-
-**Response 200:** Paginated list với mỗi item:
-```json
-{
-  "id": "course-uuid",
-  "title": "Cấu trúc Dữ liệu",
-  "course_code": "CS201",
-  "instructor": {"id": "...", "full_name": "Trần Thị B"},
-  "enrolled_count": 45,
-  "max_students": 60,
-  "is_open": true,
-  "is_enrolled": true,
-  "my_progress": {
-    "submitted": 3,
-    "total_assignments": 7,
-    "percentage": 43
-  }
-}
-```
-- `is_enrolled`: true/false (từ góc nhìn user đang request)
-- `my_progress`: chỉ có với SV đã enroll
-
----
-
-### GET `/courses/{courseId}`
-
-Chi tiết 1 khóa học.
-
-**Auth:** Required
-
-**Response 200:**
-```json
-{
-  "id": "course-uuid",
-  "title": "Cấu trúc Dữ liệu và Giải thuật",
-  "description": "## Mô tả...",
-  "course_code": "CS201",
-  "instructor": {
-    "id": "instructor-uuid",
-    "full_name": "Trần Thị B",
-    "avatar_url": "https://..."
-  },
-  "start_date": "2024-02-01",
-  "end_date": "2024-06-30",
-  "max_students": 60,
-  "enrolled_count": 45,
-  "is_open": true,
-  "is_archived": false,
-  "is_enrolled": true,
-  "enrollment_status": "active",
-  "documents_count": 8,
-  "assignments_count": 7,
-  "created_at": "2024-01-15T08:00:00Z"
-}
-```
-
-**Error:** `404 COURSE_NOT_FOUND`
-
-**Permission:** SV chỉ xem được course đã enroll hoặc course is_open=true.
-
----
-
-### PATCH `/courses/{courseId}`
-
-Cập nhật khóa học.
-
-**Auth:** Required (owner instructor, admin)
-
-**Request Body (tất cả optional):**
-```json
-{
-  "title": "Tên mới",
-  "description": "Mô tả mới",
-  "is_open": false,
-  "max_students": 80
-}
-```
-
-**Không cho sửa:** `course_code`, `instructor_id`
-
-**Response 200:** Course object đầy đủ
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 403 | `NOT_COURSE_INSTRUCTOR` | User không phải instructor của course |
-| 404 | `COURSE_NOT_FOUND` | |
-
----
-
-### DELETE `/courses/{courseId}`
-
-Archive (soft delete) khóa học.
-
-**Auth:** Required (owner instructor, admin)
-
-**Response 200:**
-```json
-{"message": "Đã lưu trữ khóa học thành công"}
-```
-
----
-
-### POST `/courses/{courseId}/enroll`
-
-Sinh viên đăng ký khóa học.
-
-**Auth:** Required (student only)
-
-**Request Body:** Không cần (user_id lấy từ JWT)
-
-**Response 201:**
-```json
-{
-  "enrollment_id": "enroll-uuid",
-  "course_id": "course-uuid",
-  "status": "active",
-  "enrolled_at": "2024-01-20T08:00:00Z"
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `COURSE_NOT_OPEN` | is_open = false |
-| 400 | `COURSE_FULL` | enrolled_count >= max_students |
-| 409 | `ALREADY_ENROLLED` | Đã có enrollment với status=active |
-| 403 | `PERMISSION_DENIED` | Không phải student |
-
----
-
-### DELETE `/courses/{courseId}/enroll`
-
-Sinh viên rời khỏi khóa học (drop).
-
-**Auth:** Required (student only)
-
-**Response 200:**
-```json
-{"message": "Đã rời khỏi khóa học"}
-```
-
----
-
-### GET `/courses/{courseId}/students`
-
-Danh sách sinh viên trong khóa học.
-
-**Auth:** Required (instructor của course, admin)
-
-**Query params:** `?status=active&page=1&limit=50&search=nguyen`
-
-**Response 200:** Paginated list:
-```json
-{
-  "items": [
-    {
-      "id": "user-uuid",
-      "full_name": "Nguyễn Văn A",
-      "student_id": "20210001",
-      "email": "nguyen@...",
-      "avatar_url": null,
-      "enrolled_at": "2024-01-20T08:00:00Z",
-      "status": "active",
-      "submissions_count": 3,
-      "graded_count": 2,
-      "last_active_at": "2024-03-01T15:00:00Z"
-    }
+  "success": true,
+  "message": "Lấy danh sách thành công",
+  "data": [
+    {}
   ],
-  "total": 45
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "totalItems": 125,
+    "totalPages": 7,
+    "hasNext": true,
+    "hasPrev": false
+  },
+  "meta": {
+    "timestamp": "2026-04-29T10:47:00+07:00",
+    "requestId": "req_01HXABC123"
+  }
 }
 ```
 
----
+### 3.3. Response lỗi
 
-### DELETE `/courses/{courseId}/students/{studentId}`
-
-GV kick sinh viên khỏi khóa học.
-
-**Auth:** Required (instructor của course, admin)
-
-**Response 200:**
-```json
-{"message": "Đã xóa sinh viên khỏi khóa học"}
-```
-
----
-
-### POST `/courses/{courseId}/documents`
-
-Upload tài liệu vào khóa học.
-
-**Auth:** Required (instructor của course, admin)
-
-**Content-Type:** `multipart/form-data`
-
-**Request:** `file` — PDF/DOCX/PPTX/TXT/ZIP, max 100MB
-
-**Response 201:**
 ```json
 {
-  "id": "doc-uuid",
-  "filename": "Slide_Chuong3.pdf",
-  "file_type": "pdf",
-  "file_size_bytes": 2048576,
-  "is_indexed": false,
-  "index_status": "pending",
-  "uploaded_at": "2024-03-01T08:00:00Z"
-}
-```
-
-**Lưu ý:** Sau khi upload, background task tự động index. FE polling `GET /courses/{id}/documents` để biết khi nào `is_indexed = true`.
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `INVALID_FILE_TYPE` | File không phải loại cho phép |
-| 400 | `FILE_TOO_LARGE` | > 100MB |
-
----
-
-### GET `/courses/{courseId}/documents`
-
-Danh sách tài liệu của khóa học.
-
-**Auth:** Required (enrolled student, instructor, admin)
-
-**Response 200:**
-```json
-{
-  "items": [
-    {
-      "id": "doc-uuid",
-      "filename": "Slide_Chuong3.pdf",
-      "file_type": "pdf",
-      "file_size_bytes": 2048576,
-      "is_indexed": true,
-      "index_status": "indexed",
-      "uploaded_at": "2024-03-01T08:00:00Z",
-      "uploaded_by": {
-        "full_name": "Trần Thị B"
+  "success": false,
+  "message": "Dữ liệu không hợp lệ",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "details": [
+      {
+        "field": "email",
+        "message": "Email không đúng định dạng"
       }
-    }
-  ]
-}
-```
-
----
-
-### DELETE `/courses/{courseId}/documents/{docId}`
-
-Xóa tài liệu.
-
-**Auth:** Required (instructor của course, admin)
-
-**Response 204:** No content
-
-**Side effect:** Xóa tất cả document_chunks liên quan (cascade).
-
----
-
-### POST `/courses/{courseId}/announcements`
-
-GV đăng thông báo.
-
-**Auth:** Required (instructor của course, admin)
-
-**Request Body:**
-```json
-{
-  "title": "Thông báo lịch thi giữa kỳ",
-  "content": "## Chi tiết\n\nThi vào ngày 15/03...",
-  "is_pinned": false
-}
-```
-
-**Response 201:** Announcement object
-
-**Side effect:** Gửi in-app notification cho tất cả SV enrolled.
-
----
-
-### GET `/courses/{courseId}/announcements`
-
-Danh sách thông báo.
-
-**Auth:** Required (enrolled student, instructor, admin)
-
-**Response 200:** Pinned announcements trước, sau đó sort theo created_at DESC
-
----
-
-## 5. Assignments API
-
-### POST `/courses/{courseId}/assignments`
-
-GV tạo bài tập.
-
-**Auth:** Required (instructor của course, admin)
-
-**Request Body:**
-```json
-{
-  "title": "Bài tập 2: Implement Binary Tree",
-  "description": "## Yêu cầu\n\nImplement BST với:\n- insert()\n- search()\n- delete()\n\n## Nộp bài\nFile .py hoặc .zip",
-  "deadline": "2024-03-15T23:59:59Z",
-  "max_score": 100,
-  "allow_late_submission": false,
-  "submission_type": "file",
-  "is_published": true
-}
-```
-
-| Field | Type | Required | Validation |
-|-------|------|---------|-----------|
-| `title` | string | ✅ | min 3, max 255 |
-| `description` | string | ❌ | max 10000 |
-| `deadline` | datetime | ✅ | phải > NOW() |
-| `max_score` | integer | ✅ | 1-1000 |
-| `allow_late_submission` | boolean | ❌ | default: false |
-| `submission_type` | string | ❌ | text/file/both, default: both |
-| `is_published` | boolean | ❌ | default: false |
-
-**Response 201:**
-```json
-{
-  "id": "assign-uuid",
-  "course_id": "course-uuid",
-  "title": "Bài tập 2: Implement Binary Tree",
-  "description": "## Yêu cầu...",
-  "deadline": "2024-03-15T23:59:59Z",
-  "max_score": 100,
-  "allow_late_submission": false,
-  "submission_type": "file",
-  "is_published": true,
-  "submissions_count": 0,
-  "graded_count": 0,
-  "created_at": "2024-01-15T08:00:00Z"
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `FUTURE_DEADLINE_REQUIRED` | deadline ≤ NOW() |
-| 403 | `NOT_COURSE_INSTRUCTOR` | |
-
----
-
-### GET `/courses/{courseId}/assignments`
-
-Danh sách bài tập của khóa học.
-
-**Auth:** Required (enrolled student, instructor, admin)
-
-**Query params:** `?page=1&limit=20&status=not_submitted` (status filter chỉ cho SV)
-
-**Response 200 (từ góc nhìn SV):**
-```json
-{
-  "items": [
-    {
-      "id": "assign-uuid",
-      "title": "Bài tập 1: Linked List",
-      "deadline": "2024-03-01T23:59:59Z",
-      "max_score": 100,
-      "allow_late_submission": false,
-      "submission_type": "file",
-      "my_submission": {
-        "id": "sub-uuid",
-        "submitted_at": "2024-02-28T15:30:00Z",
-        "is_late": false,
-        "attempt_number": 1,
-        "file_name": "linked_list.py"
-      },
-      "my_grade": {
-        "score": 85,
-        "max_score": 100,
-        "feedback": "Code tốt!",
-        "graded_at": "2024-03-05T10:00:00Z"
-      },
-      "status": "graded",
-      "effective_deadline": "2024-03-01T23:59:59Z"
-    }
-  ]
-}
-```
-
-**Response 200 (từ góc nhìn GV — thêm trường):**
-```json
-{
-  "items": [
-    {
-      "id": "assign-uuid",
-      "title": "...",
-      "deadline": "...",
-      "submissions_count": 38,
-      "graded_count": 25,
-      "not_submitted_count": 7,
-      "average_score": 78.5,
-      "is_published": true
-    }
-  ]
-}
-```
-
----
-
-### GET `/assignments/{assignmentId}`
-
-Chi tiết 1 bài tập.
-
-**Auth:** Required
-
-**Response 200:** Full assignment object với my_submission và my_grade (nếu là SV)
-
-**Error:** `404 ASSIGNMENT_NOT_FOUND`
-
----
-
-### PATCH `/assignments/{assignmentId}`
-
-Cập nhật bài tập.
-
-**Auth:** Required (instructor, admin)
-
-**Request Body (tất cả optional):**
-```json
-{
-  "title": "Bài tập mới",
-  "deadline": "2024-04-01T23:59:59Z",
-  "allow_late_submission": true
-}
-```
-
-**Lưu ý:** deadline mới phải > NOW(). Không cho sửa max_score nếu đã có grade.
-
-**Response 200:** Assignment object
-
----
-
-### DELETE `/assignments/{assignmentId}`
-
-Xóa bài tập (soft delete — is_deleted=true).
-
-**Auth:** Required (instructor, admin)
-
-**Response 200:**
-```json
-{"message": "Đã xóa bài tập"}
-```
-
----
-
-### POST `/assignments/{assignmentId}/publish`
-
-Publish/unpublish bài tập.
-
-**Auth:** Required (instructor, admin)
-
-**Request Body:**
-```json
-{"is_published": true}
-```
-
-**Side effect khi `is_published: true`:** Gửi notification cho tất cả SV enrolled.
-
-**Response 200:** `{"is_published": true, "message": "Đã đăng bài tập"}`
-
----
-
-### POST `/assignments/{assignmentId}/submit`
-
-Sinh viên nộp bài.
-
-**Auth:** Required (student only) | **Content-Type:** `multipart/form-data` hoặc `application/json`
-
-**Request (JSON — text submission):**
-```json
-{"content": "Đây là câu trả lời của tôi..."}
-```
-
-**Request (multipart — file submission):**
-- `file`: file binary
-- `content`: (optional) text kèm theo
-
-**Response 201:**
-```json
-{
-  "id": "sub-uuid",
-  "assignment_id": "assign-uuid",
-  "submitted_at": "2024-02-28T15:30:22Z",
-  "is_late": false,
-  "attempt_number": 1,
-  "file_name": "binary_tree.py",
-  "file_size_bytes": 4096
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `DEADLINE_PASSED` | Quá deadline và allow_late=false |
-| 400 | `ALREADY_GRADED` | Bài đã được chấm, không cho nộp lại |
-| 400 | `FILE_TOO_LARGE` | > 50MB |
-| 400 | `INVALID_FILE_TYPE` | Magic bytes không hợp lệ |
-| 403 | `NOT_ENROLLED` | Chưa enroll hoặc status≠active |
-
----
-
-### GET `/assignments/{assignmentId}/submissions`
-
-Danh sách bài nộp (GV xem).
-
-**Auth:** Required (instructor của course, admin)
-
-**Query params:** `?page=1&limit=30&status=not_submitted&search=nguyen`
-
-**status values:** `all | submitted | not_submitted | graded | late`
-
-**Response 200:**
-```json
-{
-  "items": [
-    {
-      "id": "sub-uuid",
-      "student": {
-        "id": "user-uuid",
-        "full_name": "Nguyễn Văn A",
-        "student_id": "20210001",
-        "avatar_url": null
-      },
-      "submitted_at": "2024-02-28T15:30:22Z",
-      "is_late": false,
-      "attempt_number": 1,
-      "file_name": "binary_tree.py",
-      "file_size_bytes": 4096,
-      "content_preview": null,
-      "grade": {
-        "score": 85,
-        "max_score": 100,
-        "graded_at": "2024-03-05T10:00:00Z"
-      },
-      "status": "graded"
-    }
-  ],
-  "total": 45,
-  "submitted": 38,
-  "graded": 25,
-  "not_submitted": 7,
-  "late": 3,
-  "average_score": 78.5
-}
-```
-
----
-
-### GET `/assignments/{assignmentId}/my-submission`
-
-SV xem bài nộp của mình.
-
-**Auth:** Required (student only)
-
-**Response 200:** Submission object + grade nếu đã chấm. `null` nếu chưa nộp.
-
----
-
-### GET `/submissions/{submissionId}`
-
-Chi tiết 1 bài nộp.
-
-**Auth:** Required (student=own, instructor=in own course, admin=any)
-
-**Response 200:**
-```json
-{
-  "id": "sub-uuid",
-  "assignment": {
-    "id": "assign-uuid",
-    "title": "Bài tập 2",
-    "max_score": 100
+    ]
   },
-  "student": {
-    "id": "user-uuid",
-    "full_name": "Nguyễn Văn A"
-  },
-  "content": null,
-  "file_name": "binary_tree.py",
-  "file_size_bytes": 4096,
-  "download_url": "/api/v1/submissions/sub-uuid/download",
-  "submitted_at": "2024-02-28T15:30:22Z",
-  "is_late": false,
-  "attempt_number": 1,
-  "grade": {
-    "score": 85,
-    "max_score": 100,
-    "feedback": "Code tốt, cần cải thiện edge cases",
-    "graded_by": {"full_name": "Trần Thị B"},
-    "graded_at": "2024-03-05T10:00:00Z"
+  "meta": {
+    "timestamp": "2026-04-29T10:47:00+07:00",
+    "requestId": "req_01HXABC123"
   }
 }
 ```
 
 ---
 
-### GET `/submissions/{submissionId}/download`
+## 4. HTTP Status Codes
 
-Download file submission.
+| Status | Ý nghĩa | Khi sử dụng |
+|---|---|---|
+| 200 | OK | Lấy dữ liệu, cập nhật thành công |
+| 201 | Created | Tạo mới thành công |
+| 204 | No Content | Xóa thành công, không trả body |
+| 400 | Bad Request | Request sai định dạng |
+| 401 | Unauthorized | Chưa đăng nhập/token sai |
+| 403 | Forbidden | Không có quyền |
+| 404 | Not Found | Không tìm thấy tài nguyên |
+| 409 | Conflict | Trùng dữ liệu hoặc xung đột trạng thái |
+| 422 | Validation Error | Dữ liệu không hợp lệ |
+| 429 | Too Many Requests | Gửi request quá nhiều |
+| 500 | Internal Server Error | Lỗi hệ thống |
 
-**Auth:** Required (student=own, instructor=in own course, admin)
+---
 
-**Response:** Binary file với headers:
+## 5. Error Codes chuẩn
+
+| Code | Mô tả |
+|---|---|
+| `AUTH_INVALID_CREDENTIALS` | Sai tài khoản hoặc mật khẩu |
+| `AUTH_TOKEN_EXPIRED` | Access token hết hạn |
+| `AUTH_REFRESH_TOKEN_INVALID` | Refresh token không hợp lệ |
+| `AUTH_ACCOUNT_LOCKED` | Tài khoản bị khóa |
+| `FORBIDDEN_ROLE` | Vai trò không đủ quyền |
+| `RESOURCE_NOT_FOUND` | Không tìm thấy dữ liệu |
+| `VALIDATION_ERROR` | Lỗi validation |
+| `DUPLICATE_RESOURCE` | Dữ liệu đã tồn tại |
+| `COURSE_NOT_OPEN` | Lớp học phần chưa mở |
+| `ENROLLMENT_NOT_FOUND` | Sinh viên chưa ghi danh |
+| `ASSIGNMENT_CLOSED` | Bài tập đã đóng |
+| `QUIZ_NOT_AVAILABLE` | Quiz chưa mở hoặc đã đóng |
+| `QUIZ_ATTEMPT_LIMIT_REACHED` | Vượt số lần làm bài |
+| `GRADE_LOCKED` | Bảng điểm đã khóa |
+| `ATTENDANCE_SESSION_CLOSED` | Phiên điểm danh đã đóng |
+| `FILE_TOO_LARGE` | File vượt dung lượng |
+| `FILE_TYPE_NOT_ALLOWED` | Loại file không được phép |
+| `INTEGRATION_ERROR` | Lỗi tích hợp bên ngoài |
+
+---
+
+## 6. Quy ước pagination, filter, sort
+
+### 6.1. Query parameters chung
+
 ```http
-Content-Type: application/pdf
-Content-Disposition: attachment; filename="binary_tree.py"
+GET /courses?page=1&limit=20&sort=createdAt:desc&keyword=database
 ```
 
-**Lưu ý:** URL có thể là signed URL (valid 5 phút) để security.
+| Tham số | Kiểu | Mô tả |
+|---|---|---|
+| `page` | number | Trang hiện tại, mặc định 1 |
+| `limit` | number | Số bản ghi/trang, mặc định 20 |
+| `sort` | string | Ví dụ `createdAt:desc`, `name:asc` |
+| `keyword` | string | Tìm kiếm chung |
+| `status` | string | Lọc trạng thái |
+| `fromDate` | string | Ngày bắt đầu |
+| `toDate` | string | Ngày kết thúc |
 
 ---
 
-### POST `/submissions/{submissionId}/grade`
+## 7. Authentication & Account APIs
 
-GV chấm điểm lần đầu.
+### 7.1. Đăng nhập
 
-**Auth:** Required (instructor của course, admin)
+```http
+POST /auth/login
+```
 
-**Request Body:**
+**Request**
+
 ```json
 {
-  "score": 85,
-  "feedback": "Code tốt! Logic xử lý edge case cần được cải thiện, đặc biệt khi tree rỗng. Complexity analysis đúng."
+  "username": "sv001@university.edu.vn",
+  "password": "Password@123",
+  "rememberMe": true
 }
 ```
 
-| Field | Type | Required | Validation |
-|-------|------|---------|-----------|
-| `score` | number | ✅ | 0 ≤ score ≤ max_score |
-| `feedback` | string | ❌ | max 2000 chars |
+**Response**
 
-**Response 201:**
 ```json
 {
-  "id": "grade-uuid",
-  "submission_id": "sub-uuid",
-  "student_id": "user-uuid",
-  "score": 85,
-  "max_score": 100,
-  "percentage": 85.0,
-  "feedback": "Code tốt!...",
-  "graded_by": {
-    "id": "instructor-uuid",
-    "full_name": "Trần Thị B"
-  },
-  "graded_at": "2024-03-05T10:00:00Z"
-}
-```
-
-**Side effect:** Tạo in-app notification + gửi email cho SV.
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 400 | `SCORE_EXCEEDS_MAX` | score > max_score |
-| 409 | `ALREADY_GRADED` | Đã có grade, dùng PATCH để update |
-| 403 | `NOT_COURSE_INSTRUCTOR` | |
-
----
-
-### PATCH `/submissions/{submissionId}/grade`
-
-GV cập nhật điểm đã chấm.
-
-**Auth:** Required (instructor, admin)
-
-**Request Body:** Giống POST
-
-**Response 200:** Grade object
-
----
-
-## 6. Grades API
-
-### GET `/grades/my`
-
-SV xem tất cả điểm của mình.
-
-**Auth:** Required (student only)
-
-**Response 200:**
-```json
-{
-  "courses": [
-    {
-      "course": {
-        "id": "course-uuid",
-        "title": "Cấu trúc Dữ liệu",
-        "course_code": "CS201"
-      },
-      "grades": [
-        {
-          "assignment_id": "assign-uuid",
-          "assignment_title": "Bài tập 1: Linked List",
-          "grade_type": "assignment",
-          "score": 85,
-          "max_score": 100,
-          "percentage": 85.0,
-          "feedback": "Code tốt!",
-          "graded_at": "2024-03-05T10:00:00Z"
-        },
-        {
-          "assignment_title": "Giữa kỳ",
-          "grade_type": "midterm",
-          "score": 7.5,
-          "max_score": 10,
-          "percentage": 75.0,
-          "graded_at": "2024-04-01T10:00:00Z"
-        }
-      ],
-      "course_gpa": 8.0,
-      "assignments_submitted": 5,
-      "assignments_total": 7
+  "success": true,
+  "message": "Đăng nhập thành công",
+  "data": {
+    "accessToken": "jwt_access_token",
+    "refreshToken": "jwt_refresh_token",
+    "expiresIn": 3600,
+    "user": {
+      "id": "usr_001",
+      "fullName": "Nguyễn Văn A",
+      "email": "sv001@university.edu.vn",
+      "roles": ["STUDENT"]
     }
-  ],
-  "overall_gpa": 7.8
+  }
+}
+```
+
+**Quyền:** Public.
+
+---
+
+### 7.2. Làm mới token
+
+```http
+POST /auth/refresh-token
+```
+
+**Request**
+
+```json
+{
+  "refreshToken": "jwt_refresh_token"
 }
 ```
 
 ---
 
-### GET `/grades/my/summary`
+### 7.3. Đăng xuất
 
-GPA summary ngắn gọn.
+```http
+POST /auth/logout
+```
 
-**Auth:** Required (student only)
+**Request**
 
-**Response 200:**
 ```json
 {
-  "overall_gpa": 7.8,
-  "courses_count": 3,
-  "total_assignments": 15,
-  "submitted": 12,
-  "graded": 10,
-  "submission_rate": 80.0
+  "refreshToken": "jwt_refresh_token"
+}
+```
+
+**Quyền:** Authenticated.
+
+---
+
+### 7.4. Quên mật khẩu
+
+```http
+POST /auth/forgot-password
+```
+
+**Request**
+
+```json
+{
+  "email": "user@university.edu.vn"
 }
 ```
 
 ---
 
-### GET `/courses/{courseId}/grades`
+### 7.5. Đặt lại mật khẩu
 
-GV xem điểm toàn bộ SV trong course.
+```http
+POST /auth/reset-password
+```
 
-**Auth:** Required (instructor của course, admin)
+**Request**
 
-**Query params:** `?page=1&limit=50`
-
-**Response 200:**
 ```json
 {
-  "assignments": [
-    {"id": "assign-1-uuid", "title": "Bài tập 1", "max_score": 100},
-    {"id": "assign-2-uuid", "title": "Giữa kỳ", "max_score": 10}
-  ],
-  "students": [
-    {
-      "student": {"id": "user-uuid", "full_name": "Nguyễn Văn A", "student_id": "20210001"},
-      "grades": {
-        "assign-1-uuid": {"score": 85, "graded_at": "..."},
-        "assign-2-uuid": {"score": 7.5, "graded_at": "..."}
-      },
-      "gpa": 8.0
-    }
-  ],
-  "class_average": 7.5
+  "token": "reset_token",
+  "newPassword": "NewPassword@123"
 }
 ```
 
 ---
 
-### POST `/courses/{courseId}/grades/manual`
+### 7.6. Đổi mật khẩu
 
-GV nhập điểm thủ công (midterm, final).
-
-**Auth:** Required (instructor, admin)
-
-**Request Body:**
-```json
-{
-  "title": "Thi giữa kỳ",
-  "grade_type": "midterm",
-  "max_score": 10,
-  "grades": [
-    {"student_id": "user-uuid-1", "score": 7.5, "feedback": ""},
-    {"student_id": "user-uuid-2", "score": 8.0, "feedback": ""}
-  ]
-}
+```http
+PUT /auth/change-password
 ```
 
-**Response 200:**
+**Request**
+
 ```json
 {
-  "created_count": 2,
-  "message": "Đã nhập điểm cho 2 sinh viên"
+  "currentPassword": "OldPassword@123",
+  "newPassword": "NewPassword@123"
 }
 ```
 
 ---
 
-## 7. Notifications API
+### 7.7. Lấy thông tin tài khoản hiện tại
 
-### GET `/notifications`
+```http
+GET /auth/me
+```
 
-Danh sách notifications.
+**Response**
 
-**Auth:** Required (any role, own only)
-
-**Query params:** `?page=1&limit=20&unread=true`
-
-**Response 200:**
 ```json
 {
-  "items": [
-    {
-      "id": "notif-uuid",
-      "type": "grade_released",
-      "title": "Bạn đã có điểm mới",
-      "body": "Bài tập 1 của môn CS201 đã được chấm: 85/100",
-      "resource_type": "grade",
-      "resource_id": "grade-uuid",
-      "is_read": false,
-      "created_at": "2024-03-05T10:00:00Z",
-      "read_at": null
-    }
-  ],
-  "total": 12,
-  "unread_count": 3
-}
-```
-
----
-
-### PATCH `/notifications/{notifId}/read`
-
-Đánh dấu đã đọc.
-
-**Auth:** Required (own only)
-
-**Response 200:**
-```json
-{"is_read": true, "read_at": "2024-03-06T08:00:00Z"}
-```
-
----
-
-### POST `/notifications/read-all`
-
-Đánh dấu tất cả đã đọc.
-
-**Auth:** Required
-
-**Response 200:**
-```json
-{"marked_count": 3, "message": "Đã đánh dấu 3 thông báo là đã đọc"}
-```
-
----
-
-### DELETE `/notifications/{notifId}`
-
-Xóa notification.
-
-**Auth:** Required (own only)
-
-**Response 204:** No content
-
----
-
-### GET `/notifications/preferences`
-
-Xem cài đặt thông báo.
-
-**Auth:** Required
-
-**Response 200:**
-```json
-{
-  "email_new_assignment": true,
-  "email_deadline_reminder": true,
-  "email_grade_released": true,
-  "email_submission_confirmed": true,
-  "email_weekly_digest": true,
-  "email_announcements": false,
-  "inapp_new_assignment": true,
-  "inapp_deadline_reminder": true,
-  "inapp_grade_released": true,
-  "inapp_new_submission": true
-}
-```
-
----
-
-### PATCH `/notifications/preferences`
-
-Cập nhật cài đặt thông báo.
-
-**Auth:** Required
-
-**Request Body (tất cả optional):**
-```json
-{
-  "email_weekly_digest": false,
-  "email_announcements": true
-}
-```
-
-**Response 200:** Preferences object đầy đủ
-
----
-
-## 8. Admin API
-
-### GET `/admin/dashboard`
-
-Tổng quan hệ thống.
-
-**Auth:** Required (admin only)
-
-**Response 200:**
-```json
-{
-  "users": {
-    "total": 350,
-    "students": 300,
-    "instructors": 48,
-    "admins": 2,
-    "active": 340
-  },
-  "courses": {
-    "total": 25,
-    "open": 18,
-    "archived": 3
-  },
-  "activity": {
-    "messages_today": 234,
-    "submissions_today": 45,
-    "active_users_today": 89
-  },
-  "ai_costs": {
-    "this_month_usd": 12.45,
-    "this_week_usd": 3.21,
-    "today_usd": 0.87
+  "id": "usr_001",
+  "fullName": "Nguyễn Văn A",
+  "email": "sv001@university.edu.vn",
+  "avatarUrl": "https://cdn.example.edu.vn/avatar.png",
+  "roles": ["STUDENT"],
+  "department": {
+    "id": "dep_it",
+    "name": "Khoa Công nghệ thông tin"
   }
 }
 ```
 
 ---
 
-### GET `/admin/users`
+## 8. User Profile APIs
 
-Danh sách users (admin).
+### 8.1. Xem hồ sơ cá nhân
 
-**Auth:** Required (admin only)
+```http
+GET /profile
+```
 
-**Query params:** `?role=student&is_active=true&search=nguyen&page=1&limit=20`
+**Quyền:** Authenticated.
 
-**Response 200:** Paginated User list với thêm thống kê:
+### 8.2. Cập nhật hồ sơ cá nhân
+
+```http
+PUT /profile
+```
+
+**Request**
+
 ```json
 {
-  "items": [
+  "fullName": "Nguyễn Văn A",
+  "phone": "0900000000",
+  "address": "Hà Nội",
+  "dateOfBirth": "2004-01-01",
+  "gender": "MALE"
+}
+```
+
+### 8.3. Upload avatar
+
+```http
+POST /profile/avatar
+Content-Type: multipart/form-data
+```
+
+**Form data**
+
+| Field | Type | Required |
+|---|---|---|
+| `file` | file | Yes |
+
+---
+
+## 9. Admin — User Management APIs
+
+### 9.1. Lấy danh sách người dùng
+
+```http
+GET /admin/users?page=1&limit=20&role=STUDENT&departmentId=dep_it&status=ACTIVE&keyword=nguyen
+```
+
+**Quyền:** `ADMIN`, `ACADEMIC_STAFF` phạm vi được cấp.
+
+### 9.2. Tạo người dùng
+
+```http
+POST /admin/users
+```
+
+**Request**
+
+```json
+{
+  "code": "SV2026001",
+  "fullName": "Nguyễn Văn A",
+  "email": "sv2026001@university.edu.vn",
+  "phone": "0900000000",
+  "password": "Password@123",
+  "roles": ["STUDENT"],
+  "departmentId": "dep_it",
+  "majorId": "major_se",
+  "classId": "class_k18a",
+  "status": "ACTIVE"
+}
+```
+
+### 9.3. Xem chi tiết người dùng
+
+```http
+GET /admin/users/{userId}
+```
+
+### 9.4. Cập nhật người dùng
+
+```http
+PUT /admin/users/{userId}
+```
+
+### 9.5. Khóa tài khoản
+
+```http
+PATCH /admin/users/{userId}/lock
+```
+
+**Request**
+
+```json
+{
+  "reason": "Vi phạm quy định sử dụng hệ thống"
+}
+```
+
+### 9.6. Mở khóa tài khoản
+
+```http
+PATCH /admin/users/{userId}/unlock
+```
+
+### 9.7. Reset mật khẩu người dùng
+
+```http
+POST /admin/users/{userId}/reset-password
+```
+
+### 9.8. Xóa người dùng
+
+```http
+DELETE /admin/users/{userId}
+```
+
+### 9.9. Import người dùng
+
+```http
+POST /admin/users/import
+Content-Type: multipart/form-data
+```
+
+**Form data:** `file`, `role`, `departmentId`.
+
+### 9.10. Export người dùng
+
+```http
+GET /admin/users/export?format=xlsx&role=STUDENT&departmentId=dep_it
+```
+
+---
+
+## 10. Role & Permission APIs
+
+### 10.1. Lấy danh sách vai trò
+
+```http
+GET /admin/roles
+```
+
+### 10.2. Tạo vai trò
+
+```http
+POST /admin/roles
+```
+
+```json
+{
+  "code": "ADVISOR",
+  "name": "Cố vấn học tập",
+  "description": "Theo dõi và hỗ trợ sinh viên"
+}
+```
+
+### 10.3. Cập nhật vai trò
+
+```http
+PUT /admin/roles/{roleId}
+```
+
+### 10.4. Xóa vai trò
+
+```http
+DELETE /admin/roles/{roleId}
+```
+
+### 10.5. Lấy danh sách quyền
+
+```http
+GET /admin/permissions
+```
+
+### 10.6. Gán quyền cho vai trò
+
+```http
+PUT /admin/roles/{roleId}/permissions
+```
+
+```json
+{
+  "permissionIds": [
+    "course.read",
+    "course.create",
+    "course.update",
+    "grade.approve"
+  ]
+}
+```
+
+### 10.7. Gán vai trò cho người dùng
+
+```http
+POST /admin/users/{userId}/roles
+```
+
+```json
+{
+  "roleCodes": ["LECTURER", "ADVISOR"]
+}
+```
+
+### 10.8. Thu hồi vai trò người dùng
+
+```http
+DELETE /admin/users/{userId}/roles/{roleCode}
+```
+
+---
+
+## 11. Organization APIs — Khoa, Bộ môn, Ngành, Lớp hành chính
+
+### 11.1. Danh sách khoa
+
+```http
+GET /departments
+```
+
+### 11.2. Tạo khoa
+
+```http
+POST /admin/departments
+```
+
+```json
+{
+  "code": "IT",
+  "name": "Khoa Công nghệ thông tin",
+  "description": "Đào tạo CNTT",
+  "managerId": "usr_lecturer_001"
+}
+```
+
+### 11.3. Cập nhật khoa
+
+```http
+PUT /admin/departments/{departmentId}
+```
+
+### 11.4. Xóa/ẩn khoa
+
+```http
+DELETE /admin/departments/{departmentId}
+```
+
+### 11.5. Danh sách bộ môn
+
+```http
+GET /departments/{departmentId}/subject-groups
+```
+
+### 11.6. Tạo bộ môn
+
+```http
+POST /admin/subject-groups
+```
+
+```json
+{
+  "departmentId": "dep_it",
+  "code": "SE",
+  "name": "Bộ môn Công nghệ phần mềm",
+  "managerId": "usr_lecturer_002"
+}
+```
+
+### 11.7. Danh sách ngành/chuyên ngành
+
+```http
+GET /majors?departmentId=dep_it
+```
+
+### 11.8. Tạo ngành
+
+```http
+POST /admin/majors
+```
+
+### 11.9. Danh sách lớp hành chính
+
+```http
+GET /academic-classes?departmentId=dep_it&cohort=2026
+```
+
+### 11.10. Tạo lớp hành chính
+
+```http
+POST /admin/academic-classes
+```
+
+```json
+{
+  "code": "K18A-CNTT",
+  "name": "K18A Công nghệ thông tin",
+  "departmentId": "dep_it",
+  "majorId": "major_it",
+  "cohort": "2026",
+  "advisorId": "usr_advisor_001"
+}
+```
+
+---
+
+## 12. Academic Year & Semester APIs
+
+### 12.1. Danh sách năm học
+
+```http
+GET /academic-years
+```
+
+### 12.2. Tạo năm học
+
+```http
+POST /admin/academic-years
+```
+
+```json
+{
+  "name": "2026-2027",
+  "startDate": "2026-08-01",
+  "endDate": "2027-07-31",
+  "status": "ACTIVE"
+}
+```
+
+### 12.3. Danh sách học kỳ
+
+```http
+GET /semesters?academicYearId=ay_2026
+```
+
+### 12.4. Tạo học kỳ
+
+```http
+POST /admin/semesters
+```
+
+```json
+{
+  "academicYearId": "ay_2026",
+  "code": "HK1",
+  "name": "Học kỳ 1",
+  "startDate": "2026-08-15",
+  "endDate": "2026-12-31",
+  "registrationStartDate": "2026-07-15",
+  "registrationEndDate": "2026-08-01"
+}
+```
+
+### 12.5. Khóa học kỳ
+
+```http
+PATCH /admin/semesters/{semesterId}/lock
+```
+
+---
+
+## 13. Course Catalog APIs — Môn học
+
+### 13.1. Lấy danh sách môn học
+
+```http
+GET /courses/catalog?departmentId=dep_it&keyword=database&page=1&limit=20
+```
+
+### 13.2. Tạo môn học
+
+```http
+POST /admin/courses/catalog
+```
+
+```json
+{
+  "code": "IT301",
+  "name": "Cơ sở dữ liệu",
+  "credits": 3,
+  "departmentId": "dep_it",
+  "subjectGroupId": "sg_se",
+  "description": "Môn học về thiết kế và truy vấn cơ sở dữ liệu",
+  "prerequisiteCourseIds": ["course_it101"],
+  "status": "ACTIVE"
+}
+```
+
+### 13.3. Chi tiết môn học
+
+```http
+GET /courses/catalog/{courseId}
+```
+
+### 13.4. Cập nhật môn học
+
+```http
+PUT /admin/courses/catalog/{courseId}
+```
+
+### 13.5. Ẩn/ngừng môn học
+
+```http
+PATCH /admin/courses/catalog/{courseId}/deactivate
+```
+
+### 13.6. Quản lý môn tiên quyết
+
+```http
+PUT /admin/courses/catalog/{courseId}/prerequisites
+```
+
+```json
+{
+  "prerequisiteCourseIds": ["course_it101", "course_math101"]
+}
+```
+
+---
+
+## 14. Program Curriculum APIs — Chương trình đào tạo
+
+### 14.1. Danh sách chương trình đào tạo
+
+```http
+GET /curriculums?majorId=major_it&cohort=2026
+```
+
+### 14.2. Tạo chương trình đào tạo
+
+```http
+POST /academic/curriculums
+```
+
+```json
+{
+  "majorId": "major_it",
+  "cohort": "2026",
+  "name": "CTĐT CNTT khóa 2026",
+  "totalCredits": 140,
+  "description": "Chương trình đào tạo ngành CNTT"
+}
+```
+
+### 14.3. Thêm môn vào chương trình
+
+```http
+POST /academic/curriculums/{curriculumId}/courses
+```
+
+```json
+{
+  "courseId": "course_it301",
+  "semesterNo": 4,
+  "type": "REQUIRED",
+  "credits": 3
+}
+```
+
+### 14.4. Cập nhật mapping chuẩn đầu ra CLO/PLO
+
+```http
+PUT /academic/curriculums/{curriculumId}/outcome-mapping
+```
+
+```json
+{
+  "mappings": [
     {
-      "id": "...",
-      "email": "...",
-      "full_name": "...",
-      "role": "student",
-      "student_id": "20210001",
-      "is_active": true,
-      "created_at": "...",
-      "enrolled_courses_count": 3,
-      "last_login_at": "2024-03-01T15:00:00Z"
+      "courseId": "course_it301",
+      "cloCode": "CLO1",
+      "ploCode": "PLO2",
+      "level": "HIGH"
     }
   ]
 }
@@ -1528,431 +833,1497 @@ Danh sách users (admin).
 
 ---
 
-### POST `/admin/users`
+## 15. Course Section APIs — Lớp học phần
 
-Admin tạo user thủ công (kể cả admin role).
+### 15.1. Danh sách lớp học phần
 
-**Auth:** Required (admin only)
+```http
+GET /course-sections?semesterId=sem_2026_hk1&departmentId=dep_it&lecturerId=usr_lecturer_001&status=OPEN
+```
 
-**Request Body:** Giống /auth/register nhưng có thể set `role: "admin"`
+### 15.2. Tạo lớp học phần
 
-**Response 201:** User object
+```http
+POST /academic/course-sections
+```
 
----
-
-## 9. Agent API (Base: `:8001/api/v1`)
-
-### POST `/conversations`
-
-Tạo conversation mới.
-
-**Auth:** Required
-
-**Request Body:**
 ```json
 {
-  "course_id": "course-uuid",
-  "title": null
+  "courseId": "course_it301",
+  "semesterId": "sem_2026_hk1",
+  "sectionCode": "IT301-01",
+  "name": "Cơ sở dữ liệu - Nhóm 01",
+  "lecturerId": "usr_lecturer_001",
+  "teachingAssistantIds": ["usr_ta_001"],
+  "maxStudents": 60,
+  "scheduleText": "Thứ 2, tiết 1-3, phòng A101",
+  "status": "DRAFT"
 }
 ```
 
-| Field | Required | Mô tả |
-|-------|---------|-------|
-| `course_id` | ❌ | UUID. Phải là course user đã enroll. null = general context |
-| `title` | ❌ | null = auto-generated từ message đầu tiên |
+### 15.3. Chi tiết lớp học phần
 
-**Response 201:**
+```http
+GET /course-sections/{sectionId}
+```
+
+### 15.4. Cập nhật lớp học phần
+
+```http
+PUT /academic/course-sections/{sectionId}
+```
+
+### 15.5. Mở lớp học phần
+
+```http
+PATCH /academic/course-sections/{sectionId}/open
+```
+
+### 15.6. Đóng/hủy lớp học phần
+
+```http
+PATCH /academic/course-sections/{sectionId}/close
+```
+
 ```json
 {
-  "id": "conv-uuid",
-  "user_id": "user-uuid",
-  "course_id": "course-uuid",
-  "course": {
-    "title": "CS201 - Cấu trúc Dữ liệu",
-    "course_code": "CS201"
-  },
-  "title": null,
-  "created_at": "2024-03-01T08:00:00Z",
-  "last_message_at": null
+  "reason": "Không đủ sĩ số"
 }
 ```
 
-**Error:** `403 NOT_ENROLLED` nếu course_id được cung cấp nhưng user chưa enroll
+### 15.7. Gán giảng viên
+
+```http
+PUT /academic/course-sections/{sectionId}/lecturer
+```
+
+```json
+{
+  "lecturerId": "usr_lecturer_001"
+}
+```
+
+### 15.8. Gán trợ giảng
+
+```http
+PUT /academic/course-sections/{sectionId}/teaching-assistants
+```
+
+```json
+{
+  "teachingAssistantIds": ["usr_ta_001", "usr_ta_002"]
+}
+```
+
+### 15.9. Sao chép lớp học phần từ kỳ trước
+
+```http
+POST /academic/course-sections/{sectionId}/clone
+```
+
+```json
+{
+  "targetSemesterId": "sem_2026_hk2",
+  "copyContent": true,
+  "copyAssignments": true,
+  "copyQuizzes": false
+}
+```
 
 ---
 
-### GET `/conversations`
+## 16. Enrollment APIs — Ghi danh sinh viên
 
-Danh sách conversations của mình.
+### 16.1. Danh sách sinh viên trong lớp học phần
 
-**Auth:** Required
+```http
+GET /course-sections/{sectionId}/enrollments?page=1&limit=50&status=ACTIVE
+```
 
-**Query params:** `?page=1&limit=20&course_id=uuid`
+### 16.2. Ghi danh một sinh viên
 
-**Response 200:**
+```http
+POST /course-sections/{sectionId}/enrollments
+```
+
+```json
+{
+  "studentId": "usr_student_001"
+}
+```
+
+### 16.3. Ghi danh hàng loạt
+
+```http
+POST /course-sections/{sectionId}/enrollments/bulk
+```
+
+```json
+{
+  "studentIds": ["usr_student_001", "usr_student_002"]
+}
+```
+
+### 16.4. Import danh sách ghi danh
+
+```http
+POST /course-sections/{sectionId}/enrollments/import
+Content-Type: multipart/form-data
+```
+
+### 16.5. Hủy ghi danh
+
+```http
+DELETE /course-sections/{sectionId}/enrollments/{studentId}
+```
+
+### 16.6. Chuyển lớp học phần
+
+```http
+POST /enrollments/transfer
+```
+
+```json
+{
+  "studentId": "usr_student_001",
+  "fromSectionId": "sec_001",
+  "toSectionId": "sec_002",
+  "reason": "Trùng lịch học"
+}
+```
+
+### 16.7. Sinh viên xem các lớp của mình
+
+```http
+GET /student/course-sections?semesterId=sem_2026_hk1
+```
+
+**Quyền:** `STUDENT`.
+
+---
+
+## 17. Course Content APIs — Bài giảng, học liệu
+
+### 17.1. Danh sách module/chương của lớp
+
+```http
+GET /course-sections/{sectionId}/modules
+```
+
+### 17.2. Tạo module/chương
+
+```http
+POST /lecturer/course-sections/{sectionId}/modules
+```
+
+```json
+{
+  "title": "Chương 1: Tổng quan cơ sở dữ liệu",
+  "description": "Giới thiệu về DBMS",
+  "orderIndex": 1,
+  "publishAt": "2026-09-01T08:00:00+07:00",
+  "isVisible": true
+}
+```
+
+### 17.3. Cập nhật module
+
+```http
+PUT /lecturer/modules/{moduleId}
+```
+
+### 17.4. Xóa module
+
+```http
+DELETE /lecturer/modules/{moduleId}
+```
+
+### 17.5. Sắp xếp module
+
+```http
+PUT /lecturer/course-sections/{sectionId}/modules/reorder
+```
+
 ```json
 {
   "items": [
-    {
-      "id": "conv-uuid",
-      "title": "Recursion là gì?",
-      "course": {
-        "id": "course-uuid",
-        "title": "CS201 - Cấu trúc Dữ liệu",
-        "course_code": "CS201"
-      },
-      "last_message_at": "2024-03-01T10:30:00Z",
-      "created_at": "2024-03-01T08:00:00Z",
-      "message_count": 8
-    }
+    { "moduleId": "mod_001", "orderIndex": 1 },
+    { "moduleId": "mod_002", "orderIndex": 2 }
   ]
 }
 ```
 
----
+### 17.6. Danh sách bài học
 
-### GET `/conversations/{convId}`
+```http
+GET /modules/{moduleId}/lessons
+```
 
-Chi tiết conversation.
+### 17.7. Tạo bài học
 
-**Auth:** Required (owner, instructor của course liên quan, admin)
+```http
+POST /lecturer/modules/{moduleId}/lessons
+```
 
-**Response 200:** Conversation object
-
----
-
-### DELETE `/conversations/{convId}`
-
-Xóa conversation (soft delete).
-
-**Auth:** Required (owner only)
-
-**Response 200:** `{"message": "Đã xóa cuộc trò chuyện"}`
-
----
-
-### GET `/conversations/{convId}/messages`
-
-Lịch sử messages.
-
-**Auth:** Required (owner, instructor của course, admin)
-
-**Query params:** `?page=1&limit=50` (oldest first)
-
-**Response 200:**
 ```json
 {
-  "conversation": {
-    "id": "conv-uuid",
-    "title": "Recursion là gì?"
-  },
-  "messages": [
+  "title": "Bài 1: Khái niệm DBMS",
+  "type": "VIDEO",
+  "contentHtml": "<p>Nội dung bài học</p>",
+  "videoUrl": "https://cdn.example.edu.vn/videos/dbms.mp4",
+  "durationMinutes": 45,
+  "orderIndex": 1,
+  "isRequired": true,
+  "publishAt": "2026-09-01T08:00:00+07:00"
+}
+```
+
+### 17.8. Cập nhật bài học
+
+```http
+PUT /lecturer/lessons/{lessonId}
+```
+
+### 17.9. Xóa bài học
+
+```http
+DELETE /lecturer/lessons/{lessonId}
+```
+
+### 17.10. Upload tài liệu bài học
+
+```http
+POST /lecturer/lessons/{lessonId}/resources
+Content-Type: multipart/form-data
+```
+
+**Form data:** `file`, `title`, `description`.
+
+### 17.11. Sinh viên xem bài học
+
+```http
+GET /student/lessons/{lessonId}
+```
+
+### 17.12. Đánh dấu hoàn thành bài học
+
+```http
+POST /student/lessons/{lessonId}/complete
+```
+
+### 17.13. Ghi nhận tiến độ xem video
+
+```http
+POST /student/lessons/{lessonId}/progress
+```
+
+```json
+{
+  "watchedSeconds": 960,
+  "totalSeconds": 1800,
+  "lastPositionSeconds": 960,
+  "completed": false
+}
+```
+
+### 17.14. Bookmark bài học
+
+```http
+POST /student/lessons/{lessonId}/bookmark
+```
+
+### 17.15. Ghi chú cá nhân trong bài học
+
+```http
+POST /student/lessons/{lessonId}/notes
+```
+
+```json
+{
+  "content": "Cần ôn lại phần normalization",
+  "timestampSeconds": 540
+}
+```
+
+### 17.16. Tìm kiếm nội dung trong khóa học
+
+```http
+GET /course-sections/{sectionId}/search?keyword=normalization
+```
+
+---
+
+## 18. Assignment APIs — Bài tập
+
+### 18.1. Danh sách bài tập của lớp
+
+```http
+GET /course-sections/{sectionId}/assignments?status=OPEN
+```
+
+### 18.2. Tạo bài tập
+
+```http
+POST /lecturer/course-sections/{sectionId}/assignments
+```
+
+```json
+{
+  "title": "Bài tập 1: Thiết kế ERD",
+  "description": "Thiết kế ERD cho hệ thống quản lý thư viện",
+  "type": "INDIVIDUAL",
+  "submissionType": "FILE",
+  "maxScore": 10,
+  "openAt": "2026-09-10T08:00:00+07:00",
+  "dueAt": "2026-09-20T23:59:00+07:00",
+  "allowLateSubmission": true,
+  "latePenaltyPercentPerDay": 10,
+  "allowedFileTypes": ["pdf", "docx", "zip"],
+  "maxFileSizeMb": 50,
+  "rubricId": "rubric_001"
+}
+```
+
+### 18.3. Chi tiết bài tập
+
+```http
+GET /assignments/{assignmentId}
+```
+
+### 18.4. Cập nhật bài tập
+
+```http
+PUT /lecturer/assignments/{assignmentId}
+```
+
+### 18.5. Xóa bài tập
+
+```http
+DELETE /lecturer/assignments/{assignmentId}
+```
+
+### 18.6. Gia hạn bài tập cho lớp
+
+```http
+PATCH /lecturer/assignments/{assignmentId}/extend
+```
+
+```json
+{
+  "newDueAt": "2026-09-25T23:59:00+07:00",
+  "reason": "Gia hạn theo đề nghị lớp"
+}
+```
+
+### 18.7. Gia hạn bài tập cho một sinh viên
+
+```http
+PATCH /lecturer/assignments/{assignmentId}/extend-student
+```
+
+```json
+{
+  "studentId": "usr_student_001",
+  "newDueAt": "2026-09-26T23:59:00+07:00",
+  "reason": "Sinh viên có lý do chính đáng"
+}
+```
+
+### 18.8. Sinh viên nộp bài
+
+```http
+POST /student/assignments/{assignmentId}/submissions
+Content-Type: multipart/form-data
+```
+
+**Form data**
+
+| Field | Type | Required | Mô tả |
+|---|---|---|---|
+| `files` | file[] | No | File bài nộp |
+| `textAnswer` | string | No | Nội dung text |
+| `linkUrl` | string | No | Link bài làm |
+
+### 18.9. Sinh viên cập nhật bài nộp
+
+```http
+PUT /student/assignments/{assignmentId}/submissions/{submissionId}
+```
+
+### 18.10. Xem bài nộp của sinh viên
+
+```http
+GET /student/assignments/{assignmentId}/my-submission
+```
+
+### 18.11. Giảng viên xem danh sách bài nộp
+
+```http
+GET /lecturer/assignments/{assignmentId}/submissions?status=SUBMITTED&page=1&limit=50
+```
+
+### 18.12. Tải toàn bộ bài nộp
+
+```http
+GET /lecturer/assignments/{assignmentId}/submissions/download-all
+```
+
+### 18.13. Chấm bài
+
+```http
+POST /lecturer/submissions/{submissionId}/grade
+```
+
+```json
+{
+  "score": 8.5,
+  "feedback": "Bài làm tốt, cần bổ sung phần quan hệ N-N",
+  "rubricScores": [
     {
-      "id": "msg-uuid-1",
-      "role": "user",
-      "content": "Recursion là gì?",
-      "created_at": "2024-03-01T08:00:00Z"
+      "criterionId": "crit_001",
+      "score": 4
+    }
+  ],
+  "publishToStudent": true
+}
+```
+
+### 18.14. Upload file phản hồi
+
+```http
+POST /lecturer/submissions/{submissionId}/feedback-files
+Content-Type: multipart/form-data
+```
+
+### 18.15. Sinh viên xem feedback bài tập
+
+```http
+GET /student/submissions/{submissionId}/feedback
+```
+
+### 18.16. Kiểm tra đạo văn bài nộp
+
+```http
+POST /lecturer/submissions/{submissionId}/plagiarism-check
+```
+
+### 18.17. Xem báo cáo đạo văn
+
+```http
+GET /lecturer/submissions/{submissionId}/plagiarism-report
+```
+
+---
+
+## 19. Rubric APIs
+
+### 19.1. Danh sách rubric
+
+```http
+GET /rubrics?courseId=course_it301
+```
+
+### 19.2. Tạo rubric
+
+```http
+POST /lecturer/rubrics
+```
+
+```json
+{
+  "name": "Rubric chấm ERD",
+  "description": "Tiêu chí đánh giá bài thiết kế ERD",
+  "criteria": [
+    {
+      "name": "Đúng thực thể",
+      "description": "Xác định đúng entity",
+      "maxScore": 4
     },
     {
-      "id": "msg-uuid-2",
-      "role": "assistant",
-      "content": "Recursion (đệ quy) là kỹ thuật lập trình...",
-      "sources": [
-        {
-          "filename": "Slide_Chuong4.pdf",
-          "page_number": 12,
-          "section_title": "Đệ quy cơ bản"
-        }
-      ],
-      "tokens_used": 245,
-      "model_used": "claude-sonnet-4-6",
-      "created_at": "2024-03-01T08:00:05Z"
-    }
-  ],
-  "total": 8
-}
-```
-
----
-
-### POST `/conversations/{convId}/messages` ⭐ SSE Streaming
-
-Gửi message và nhận response dạng stream.
-
-**Auth:** Required (owner only) | **Rate limit:** AI limit (10/min/user)
-
-**Request Body:**
-```json
-{
-  "content": "Điểm bài tập 1 của tôi là bao nhiêu?"
-}
-```
-
-**Request Headers:**
-```http
-Content-Type: application/json
-Accept: text/event-stream
-Authorization: Bearer <token>
-```
-
-**Response:** `Content-Type: text/event-stream`
-
-**SSE Event Format:**
-```
-data: <JSON>\n\n
-```
-
-**Tất cả event types:**
-
-```
-# 1. Token event — mỗi token từ LLM
-data: {"type": "token", "content": "Bài"}
-
-data: {"type": "token", "content": " tập"}
-
-data: {"type": "token", "content": " 1"}
-
-# 2. Tool call start — Agent bắt đầu gọi tool
-data: {"type": "tool_call_start", "tool_name": "get_grades", "display_message": "Đang tra cứu điểm số..."}
-
-# 3. Tool call end — Tool xong
-data: {"type": "tool_call_end", "tool_name": "get_grades"}
-
-# 4. Tool result (optional, debug)
-data: {"type": "tool_result", "tool_name": "get_grades", "summary": "Tìm thấy 3 grades"}
-
-# 5. Memory update (sau khi done)
-data: {"type": "memory_update", "message": "Đã cập nhật memory của bạn"}
-
-# 6. Info — thông tin phụ (ví dụ: dùng fallback model)
-data: {"type": "info", "message": "Đang dùng model dự phòng do quá tải"}
-
-# 7. Error — lỗi xảy ra
-data: {"type": "error", "error_code": "AI_UNAVAILABLE", "message": "Hệ thống AI tạm thời gián đoạn. Vui lòng thử lại sau ít phút."}
-
-# 8. Done — kết thúc stream
-data: {"type": "done", "message_id": "msg-uuid", "tokens_used": 245, "model_used": "claude-sonnet-4-6"}
-
-# Stream kết thúc
-data: [DONE]
-```
-
-**Ví dụ full stream:**
-```
-data: {"type": "tool_call_start", "tool_name": "get_grades", "display_message": "Đang tra cứu điểm số..."}
-
-data: {"type": "tool_call_end", "tool_name": "get_grades"}
-
-data: {"type": "token", "content": "Dựa"}
-
-data: {"type": "token", "content": " trên"}
-
-data: {"type": "token", "content": " dữ"}
-
-data: {"type": "token", "content": " liệu"}
-
-data: {"type": "token", "content": " điểm"}
-
-data: {"type": "token", "content": " số"}
-
-data: {"type": "token", "content": " của"}
-
-data: {"type": "token", "content": " bạn:\n\n"}
-
-data: {"type": "token", "content": "**Bài"}
-
-data: {"type": "token", "content": " tập"}
-
-data: {"type": "token", "content": " 1:"}
-
-data: {"type": "token", "content": " Linked"}
-
-data: {"type": "token", "content": " List**"}
-
-data: {"type": "token", "content": " —"}
-
-data: {"type": "token", "content": " 85/100\n"}
-
-data: {"type": "done", "message_id": "msg-uuid-assistant", "tokens_used": 312, "model_used": "claude-sonnet-4-6"}
-
-data: [DONE]
-```
-
-**Frontend handling:**
-```typescript
-// Kết nối SSE
-const response = await fetch(url, { method: 'POST', body: ..., headers: { 'Accept': 'text/event-stream' } });
-const reader = response.body.getReader();
-let buffer = '';
-let fullContent = '';
-
-while (true) {
-  const { done, value } = await reader.read();
-  if (done) break;
-  
-  buffer += new TextDecoder().decode(value);
-  const lines = buffer.split('\n');
-  buffer = lines.pop() || ''; // Giữ lại dòng chưa hoàn chỉnh
-  
-  for (const line of lines) {
-    if (!line.startsWith('data: ')) continue;
-    const data = line.slice(6).trim();
-    if (data === '[DONE]') return;
-    
-    const event = JSON.parse(data);
-    switch (event.type) {
-      case 'token':
-        fullContent += event.content;
-        updateMessageUI(fullContent);  // Re-render
-        break;
-      case 'tool_call_start':
-        showToolIndicator(event.display_message);
-        break;
-      case 'tool_call_end':
-        hideToolIndicator();
-        break;
-      case 'error':
-        showError(event.message);
-        return;
-      case 'done':
-        finalizeMessage(event.message_id);
-        break;
-    }
-  }
-}
-```
-
-**Errors:**
-| Status | error_code | Khi nào |
-|--------|-----------|---------|
-| 403 | `PERMISSION_DENIED` | Không phải owner của conversation |
-| 429 | `AI_RATE_LIMIT` | Vượt 10 requests/phút |
-| 502 | `AI_UNAVAILABLE` | Tất cả AI providers fail |
-
----
-
-### GET `/memories/my`
-
-Xem memories của mình.
-
-**Auth:** Required
-
-**Query params:** `?type=weakness&page=1&limit=20`
-
-**type values:** `weakness | preference | question | progress | achievement | other`
-
-**Response 200:**
-```json
-{
-  "items": [
-    {
-      "id": "mem-uuid",
-      "memory_type": "weakness",
-      "content": "Sinh viên đang gặp khó khăn với Recursion và Dynamic Programming",
-      "topic": "Recursion",
-      "course": {
-        "id": "course-uuid",
-        "title": "CS201",
-        "course_code": "CS201"
-      },
-      "created_at": "2024-03-01T08:00:00Z",
-      "updated_at": "2024-03-10T15:00:00Z"
+      "name": "Đúng quan hệ",
+      "description": "Xác định đúng relationship",
+      "maxScore": 4
     },
     {
-      "id": "mem-uuid-2",
-      "memory_type": "preference",
-      "content": "Sinh viên thích học qua ví dụ code Python cụ thể",
-      "topic": null,
-      "course": null,
-      "created_at": "2024-03-02T09:00:00Z"
+      "name": "Trình bày",
+      "description": "Sơ đồ rõ ràng",
+      "maxScore": 2
     }
-  ],
-  "total": 12,
-  "by_type": {
-    "weakness": 3,
-    "preference": 2,
-    "question": 5,
-    "progress": 2
+  ]
+}
+```
+
+### 19.3. Cập nhật rubric
+
+```http
+PUT /lecturer/rubrics/{rubricId}
+```
+
+### 19.4. Xóa rubric
+
+```http
+DELETE /lecturer/rubrics/{rubricId}
+```
+
+---
+
+## 20. Quiz & Exam APIs
+
+### 20.1. Danh sách quiz của lớp
+
+```http
+GET /course-sections/{sectionId}/quizzes
+```
+
+### 20.2. Tạo quiz/bài thi
+
+```http
+POST /lecturer/course-sections/{sectionId}/quizzes
+```
+
+```json
+{
+  "title": "Quiz chương 1",
+  "description": "Kiểm tra kiến thức chương 1",
+  "type": "QUIZ",
+  "openAt": "2026-09-15T08:00:00+07:00",
+  "closeAt": "2026-09-15T23:59:00+07:00",
+  "durationMinutes": 30,
+  "maxAttempts": 1,
+  "gradingMethod": "HIGHEST",
+  "shuffleQuestions": true,
+  "shuffleAnswers": true,
+  "showResultMode": "AFTER_CLOSE",
+  "enableProctoring": false,
+  "maxScore": 10
+}
+```
+
+### 20.3. Cập nhật quiz
+
+```http
+PUT /lecturer/quizzes/{quizId}
+```
+
+### 20.4. Xóa quiz
+
+```http
+DELETE /lecturer/quizzes/{quizId}
+```
+
+### 20.5. Thêm câu hỏi vào quiz
+
+```http
+POST /lecturer/quizzes/{quizId}/questions
+```
+
+```json
+{
+  "questionBankId": "qb_001",
+  "questionIds": ["q_001", "q_002"],
+  "randomConfig": {
+    "enabled": true,
+    "easyCount": 5,
+    "mediumCount": 3,
+    "hardCount": 2
   }
 }
 ```
 
----
+### 20.6. Sinh viên bắt đầu làm quiz
 
-### DELETE `/memories/{memoryId}`
+```http
+POST /student/quizzes/{quizId}/attempts/start
+```
 
-Xóa 1 memory entry.
+**Response**
 
-**Auth:** Required (owner only)
-
-**Response 204:** No content
-
----
-
-### GET `/rag/search`
-
-Tìm kiếm trong tài liệu khóa học (dùng nội bộ bởi agent, cũng exposed cho debug).
-
-**Auth:** Required
-
-**Query params:**
-
-| Param | Required | Mô tả |
-|-------|---------|-------|
-| `q` | ✅ | Query text |
-| `course_id` | ✅ | UUID của course |
-| `limit` | ❌ | Số kết quả (default: 5, max: 10) |
-
-**Response 200:**
 ```json
 {
-  "results": [
+  "attemptId": "attempt_001",
+  "quizId": "quiz_001",
+  "startedAt": "2026-09-15T08:00:00+07:00",
+  "expireAt": "2026-09-15T08:30:00+07:00",
+  "questions": [
     {
-      "content": "Binary Search Tree (BST) là một cấu trúc dữ liệu dạng cây...",
-      "similarity": 0.94,
-      "document": {
-        "filename": "Slide_Chuong4.pdf",
-        "course_id": "course-uuid"
-      },
-      "page_number": 12,
-      "section_title": "Binary Search Tree"
+      "id": "question_001",
+      "type": "SINGLE_CHOICE",
+      "content": "DBMS là gì?",
+      "score": 1,
+      "answers": [
+        { "id": "ans_001", "content": "Database Management System" },
+        { "id": "ans_002", "content": "Data Backup Management" }
+      ]
     }
-  ],
-  "query": "binary search tree",
-  "course_id": "course-uuid"
+  ]
 }
 ```
 
-**Error:** `400 COURSE_NOT_INDEXED` nếu course chưa có tài liệu nào is_indexed=true
+### 20.7. Lưu câu trả lời tạm thời
 
----
+```http
+PUT /student/quiz-attempts/{attemptId}/answers
+```
 
-## 10. Internal Agent Tools API
-
-> ⚠️ Các endpoints này **CHỈ** dành cho Agent API gọi nội bộ. Không expose ra internet. Auth bằng header `X-Agent-Key`.
-
-**Base:** `http://lms-api:8000/api/v1/agent-tools` (internal Docker network)
-
-**Auth header:** `X-Agent-Key: {AGENT_INTERNAL_KEY}`
-
----
-
-### GET `/agent-tools/students/{userId}/profile`
-
-Lấy profile + enrolled courses của SV.
-
-**Response 200:**
 ```json
 {
-  "id": "user-uuid",
-  "full_name": "Nguyễn Văn A",
-  "student_id": "20210001",
-  "enrolled_courses": [
+  "answers": [
     {
-      "id": "course-uuid",
-      "title": "Cấu trúc Dữ liệu và Giải thuật",
-      "course_code": "CS201",
-      "instructor_name": "Trần Thị B"
+      "questionId": "question_001",
+      "selectedAnswerIds": ["ans_001"]
+    },
+    {
+      "questionId": "question_002",
+      "textAnswer": "Câu trả lời tự luận"
+    }
+  ]
+}
+```
+
+### 20.8. Nộp bài quiz
+
+```http
+POST /student/quiz-attempts/{attemptId}/submit
+```
+
+### 20.9. Xem kết quả quiz của sinh viên
+
+```http
+GET /student/quizzes/{quizId}/results
+```
+
+### 20.10. Giảng viên xem danh sách lượt làm bài
+
+```http
+GET /lecturer/quizzes/{quizId}/attempts?page=1&limit=50
+```
+
+### 20.11. Chấm câu tự luận
+
+```http
+POST /lecturer/quiz-attempts/{attemptId}/manual-grade
+```
+
+```json
+{
+  "questionGrades": [
+    {
+      "questionId": "question_essay_001",
+      "score": 3.5,
+      "feedback": "Lập luận khá tốt"
+    }
+  ]
+}
+```
+
+### 20.12. Xem log làm bài
+
+```http
+GET /lecturer/quiz-attempts/{attemptId}/logs
+```
+
+### 20.13. Mở lại lượt làm bài
+
+```http
+PATCH /lecturer/quiz-attempts/{attemptId}/reopen
+```
+
+```json
+{
+  "newExpireAt": "2026-09-15T10:00:00+07:00",
+  "reason": "Sinh viên mất kết nối"
+}
+```
+
+---
+
+## 21. Question Bank APIs
+
+### 21.1. Danh sách ngân hàng câu hỏi
+
+```http
+GET /question-banks?courseId=course_it301
+```
+
+### 21.2. Tạo ngân hàng câu hỏi
+
+```http
+POST /lecturer/question-banks
+```
+
+```json
+{
+  "courseId": "course_it301",
+  "name": "Ngân hàng câu hỏi CSDL",
+  "description": "Câu hỏi theo chương"
+}
+```
+
+### 21.3. Tạo câu hỏi
+
+```http
+POST /lecturer/question-banks/{bankId}/questions
+```
+
+```json
+{
+  "type": "SINGLE_CHOICE",
+  "content": "Khóa chính là gì?",
+  "difficulty": "EASY",
+  "score": 1,
+  "tags": ["primary-key", "database"],
+  "answers": [
+    {
+      "content": "Thuộc tính định danh duy nhất bản ghi",
+      "isCorrect": true
+    },
+    {
+      "content": "Thuộc tính cho phép null",
+      "isCorrect": false
+    }
+  ],
+  "explanation": "Khóa chính dùng để định danh duy nhất mỗi bản ghi."
+}
+```
+
+### 21.4. Cập nhật câu hỏi
+
+```http
+PUT /lecturer/questions/{questionId}
+```
+
+### 21.5. Xóa câu hỏi
+
+```http
+DELETE /lecturer/questions/{questionId}
+```
+
+### 21.6. Import câu hỏi
+
+```http
+POST /lecturer/question-banks/{bankId}/questions/import
+Content-Type: multipart/form-data
+```
+
+### 21.7. Export câu hỏi
+
+```http
+GET /lecturer/question-banks/{bankId}/questions/export?format=xlsx
+```
+
+---
+
+## 22. Gradebook APIs — Điểm số
+
+### 22.1. Sinh viên xem bảng điểm của mình trong lớp
+
+```http
+GET /student/course-sections/{sectionId}/grades
+```
+
+### 22.2. Giảng viên xem bảng điểm lớp
+
+```http
+GET /lecturer/course-sections/{sectionId}/gradebook
+```
+
+### 22.3. Tạo cột điểm
+
+```http
+POST /lecturer/course-sections/{sectionId}/grade-items
+```
+
+```json
+{
+  "name": "Điểm chuyên cần",
+  "type": "ATTENDANCE",
+  "maxScore": 10,
+  "weightPercent": 10,
+  "isPublished": false
+}
+```
+
+### 22.4. Cập nhật cột điểm
+
+```http
+PUT /lecturer/grade-items/{gradeItemId}
+```
+
+### 22.5. Nhập điểm thủ công
+
+```http
+PUT /lecturer/grade-items/{gradeItemId}/scores
+```
+
+```json
+{
+  "scores": [
+    {
+      "studentId": "usr_student_001",
+      "score": 8.5,
+      "comment": "Tốt"
+    }
+  ]
+}
+```
+
+### 22.6. Import điểm
+
+```http
+POST /lecturer/course-sections/{sectionId}/grades/import
+Content-Type: multipart/form-data
+```
+
+### 22.7. Export bảng điểm
+
+```http
+GET /lecturer/course-sections/{sectionId}/grades/export?format=xlsx
+```
+
+### 22.8. Công bố điểm
+
+```http
+PATCH /lecturer/grade-items/{gradeItemId}/publish
+```
+
+### 22.9. Ẩn điểm
+
+```http
+PATCH /lecturer/grade-items/{gradeItemId}/unpublish
+```
+
+### 22.10. Tính điểm tổng kết
+
+```http
+POST /lecturer/course-sections/{sectionId}/grades/calculate-final
+```
+
+### 22.11. Gửi điểm cho khoa/phòng đào tạo duyệt
+
+```http
+POST /lecturer/course-sections/{sectionId}/grades/submit-for-approval
+```
+
+### 22.12. Khoa/phòng đào tạo duyệt điểm
+
+```http
+POST /academic/course-sections/{sectionId}/grades/approve
+```
+
+```json
+{
+  "approved": true,
+  "note": "Bảng điểm hợp lệ"
+}
+```
+
+### 22.13. Khóa bảng điểm
+
+```http
+PATCH /academic/course-sections/{sectionId}/grades/lock
+```
+
+### 22.14. Mở khóa bảng điểm
+
+```http
+PATCH /academic/course-sections/{sectionId}/grades/unlock
+```
+
+```json
+{
+  "reason": "Cần điều chỉnh điểm sau phúc khảo"
+}
+```
+
+### 22.15. Lịch sử sửa điểm
+
+```http
+GET /course-sections/{sectionId}/grades/audit-logs
+```
+
+---
+
+## 23. Grade Appeal APIs — Phúc khảo/khiếu nại điểm
+
+### 23.1. Sinh viên tạo yêu cầu phúc khảo
+
+```http
+POST /student/grade-appeals
+```
+
+```json
+{
+  "sectionId": "sec_001",
+  "gradeItemId": "grade_midterm",
+  "reason": "Em muốn xem lại điểm bài giữa kỳ",
+  "evidenceFileIds": ["file_001"]
+}
+```
+
+### 23.2. Sinh viên xem danh sách phúc khảo
+
+```http
+GET /student/grade-appeals
+```
+
+### 23.3. Giảng viên xem yêu cầu phúc khảo lớp mình
+
+```http
+GET /lecturer/grade-appeals?sectionId=sec_001&status=PENDING
+```
+
+### 23.4. Giảng viên phản hồi phúc khảo
+
+```http
+POST /lecturer/grade-appeals/{appealId}/respond
+```
+
+```json
+{
+  "status": "APPROVED",
+  "response": "Đã kiểm tra lại, điểm được điều chỉnh",
+  "newScore": 8.0
+}
+```
+
+### 23.5. Khoa/phòng đào tạo theo dõi phúc khảo
+
+```http
+GET /academic/grade-appeals?departmentId=dep_it&status=PENDING
+```
+
+---
+
+## 24. Attendance APIs — Điểm danh
+
+### 24.1. Danh sách buổi điểm danh của lớp
+
+```http
+GET /course-sections/{sectionId}/attendance-sessions
+```
+
+### 24.2. Tạo buổi điểm danh
+
+```http
+POST /lecturer/course-sections/{sectionId}/attendance-sessions
+```
+
+```json
+{
+  "title": "Điểm danh tuần 1",
+  "sessionDate": "2026-09-01",
+  "startTime": "08:00",
+  "endTime": "10:30",
+  "method": "QR_CODE",
+  "location": "A101",
+  "allowLateMinutes": 15
+}
+```
+
+### 24.3. Tạo mã QR điểm danh
+
+```http
+POST /lecturer/attendance-sessions/{sessionId}/qr-code
+```
+
+```json
+{
+  "expiresInSeconds": 120,
+  "refreshable": true
+}
+```
+
+### 24.4. Sinh viên điểm danh bằng QR
+
+```http
+POST /student/attendance-sessions/{sessionId}/check-in/qr
+```
+
+```json
+{
+  "qrToken": "qr_token_value",
+  "deviceId": "device_001",
+  "latitude": 21.0278,
+  "longitude": 105.8342
+}
+```
+
+### 24.5. Sinh viên điểm danh bằng mã lớp
+
+```http
+POST /student/attendance-sessions/{sessionId}/check-in/code
+```
+
+```json
+{
+  "code": "123456"
+}
+```
+
+### 24.6. Giảng viên điểm danh thủ công
+
+```http
+PUT /lecturer/attendance-sessions/{sessionId}/records
+```
+
+```json
+{
+  "records": [
+    {
+      "studentId": "usr_student_001",
+      "status": "PRESENT",
+      "note": "Có mặt"
+    },
+    {
+      "studentId": "usr_student_002",
+      "status": "ABSENT",
+      "note": "Không phép"
+    }
+  ]
+}
+```
+
+### 24.7. Sinh viên xem chuyên cần cá nhân
+
+```http
+GET /student/course-sections/{sectionId}/attendance
+```
+
+### 24.8. Giảng viên xem báo cáo chuyên cần lớp
+
+```http
+GET /lecturer/course-sections/{sectionId}/attendance/report
+```
+
+### 24.9. Khoa/phòng đào tạo xem báo cáo chuyên cần
+
+```http
+GET /academic/attendance/reports?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+### 24.10. Sinh viên gửi lý do vắng
+
+```http
+POST /student/attendance-records/{recordId}/excuse
+```
+
+```json
+{
+  "reason": "Bị ốm",
+  "evidenceFileIds": ["file_medical_001"]
+}
+```
+
+### 24.11. Duyệt lý do vắng
+
+```http
+POST /lecturer/attendance-excuses/{excuseId}/review
+```
+
+```json
+{
+  "status": "APPROVED",
+  "note": "Đã duyệt vắng có phép"
+}
+```
+
+---
+
+## 25. Online Class APIs — Lớp học trực tuyến
+
+### 25.1. Danh sách buổi học online
+
+```http
+GET /course-sections/{sectionId}/online-sessions
+```
+
+### 25.2. Tạo buổi học online
+
+```http
+POST /lecturer/course-sections/{sectionId}/online-sessions
+```
+
+```json
+{
+  "title": "Buổi học online tuần 2",
+  "platform": "ZOOM",
+  "startTime": "2026-09-08T08:00:00+07:00",
+  "endTime": "2026-09-08T10:30:00+07:00",
+  "autoCreateMeeting": true,
+  "description": "Học chương 2"
+}
+```
+
+### 25.3. Cập nhật buổi học online
+
+```http
+PUT /lecturer/online-sessions/{onlineSessionId}
+```
+
+### 25.4. Xóa buổi học online
+
+```http
+DELETE /lecturer/online-sessions/{onlineSessionId}
+```
+
+### 25.5. Sinh viên lấy link tham gia
+
+```http
+GET /student/online-sessions/{onlineSessionId}/join-link
+```
+
+### 25.6. Upload bản ghi buổi học
+
+```http
+POST /lecturer/online-sessions/{onlineSessionId}/recordings
+Content-Type: multipart/form-data
+```
+
+### 25.7. Sinh viên xem bản ghi
+
+```http
+GET /student/online-sessions/{onlineSessionId}/recordings
+```
+
+### 25.8. Đồng bộ attendance từ nền tảng online
+
+```http
+POST /integrations/online-sessions/{onlineSessionId}/sync-attendance
+```
+
+---
+
+## 26. Forum & Discussion APIs
+
+### 26.1. Danh sách diễn đàn lớp
+
+```http
+GET /course-sections/{sectionId}/forums
+```
+
+### 26.2. Tạo diễn đàn
+
+```http
+POST /lecturer/course-sections/{sectionId}/forums
+```
+
+```json
+{
+  "title": "Hỏi đáp chương 1",
+  "description": "Nơi đặt câu hỏi về chương 1",
+  "isPinned": true,
+  "allowStudentPost": true
+}
+```
+
+### 26.3. Danh sách chủ đề
+
+```http
+GET /forums/{forumId}/topics?page=1&limit=20
+```
+
+### 26.4. Tạo chủ đề
+
+```http
+POST /forums/{forumId}/topics
+```
+
+```json
+{
+  "title": "Câu hỏi về khóa chính",
+  "content": "Em chưa hiểu khác nhau giữa primary key và unique key",
+  "tags": ["database", "primary-key"]
+}
+```
+
+### 26.5. Bình luận chủ đề
+
+```http
+POST /forum-topics/{topicId}/comments
+```
+
+```json
+{
+  "content": "Primary key không được null, unique key có thể tùy DBMS."
+}
+```
+
+### 26.6. Like/đánh dấu hữu ích
+
+```http
+POST /forum-posts/{postId}/reactions
+```
+
+```json
+{
+  "type": "HELPFUL"
+}
+```
+
+### 26.7. Ghim chủ đề
+
+```http
+PATCH /lecturer/forum-topics/{topicId}/pin
+```
+
+### 26.8. Khóa chủ đề
+
+```http
+PATCH /lecturer/forum-topics/{topicId}/lock
+```
+
+### 26.9. Báo cáo nội dung vi phạm
+
+```http
+POST /forum-posts/{postId}/report
+```
+
+```json
+{
+  "reason": "Nội dung không phù hợp"
+}
+```
+
+### 26.10. Admin kiểm duyệt bài viết
+
+```http
+POST /admin/forum-reports/{reportId}/review
+```
+
+```json
+{
+  "action": "HIDE_POST",
+  "note": "Nội dung vi phạm quy định"
+}
+```
+
+---
+
+## 27. Messaging APIs — Nhắn tin
+
+### 27.1. Danh sách hội thoại
+
+```http
+GET /messages/conversations
+```
+
+### 27.2. Tạo hội thoại
+
+```http
+POST /messages/conversations
+```
+
+```json
+{
+  "participantIds": ["usr_student_001", "usr_lecturer_001"],
+  "title": "Trao đổi bài tập 1"
+}
+```
+
+### 27.3. Xem tin nhắn trong hội thoại
+
+```http
+GET /messages/conversations/{conversationId}/messages?page=1&limit=30
+```
+
+### 27.4. Gửi tin nhắn
+
+```http
+POST /messages/conversations/{conversationId}/messages
+```
+
+```json
+{
+  "content": "Thầy/cô cho em hỏi về deadline bài tập 1 ạ.",
+  "attachmentFileIds": []
+}
+```
+
+### 27.5. Đánh dấu đã đọc
+
+```http
+PATCH /messages/conversations/{conversationId}/read
+```
+
+---
+
+## 28. Notification APIs — Thông báo
+
+### 28.1. Danh sách thông báo của tôi
+
+```http
+GET /notifications?page=1&limit=20&status=UNREAD
+```
+
+### 28.2. Đánh dấu đã đọc
+
+```http
+PATCH /notifications/{notificationId}/read
+```
+
+### 28.3. Đánh dấu tất cả đã đọc
+
+```http
+PATCH /notifications/read-all
+```
+
+### 28.4. Gửi thông báo lớp học
+
+```http
+POST /lecturer/course-sections/{sectionId}/announcements
+```
+
+```json
+{
+  "title": "Nhắc nộp bài tập 1",
+  "content": "Các bạn nhớ nộp bài trước 23:59 ngày 20/09.",
+  "channels": ["WEB", "EMAIL"],
+  "scheduleAt": null
+}
+```
+
+### 28.5. Admin gửi thông báo toàn hệ thống
+
+```http
+POST /admin/announcements
+```
+
+```json
+{
+  "title": "Bảo trì hệ thống",
+  "content": "Hệ thống bảo trì từ 22:00 đến 23:00.",
+  "target": {
+    "roles": ["STUDENT", "LECTURER"],
+    "departmentIds": []
+  },
+  "channels": ["WEB", "EMAIL", "PUSH"],
+  "scheduleAt": "2026-04-30T08:00:00+07:00"
+}
+```
+
+### 28.6. Cấu hình nhận thông báo cá nhân
+
+```http
+PUT /notification-settings
+```
+
+```json
+{
+  "emailEnabled": true,
+  "pushEnabled": true,
+  "assignmentReminder": true,
+  "gradePublished": true,
+  "forumReply": true
+}
+```
+
+---
+
+## 29. Calendar APIs — Lịch học, lịch thi, deadline
+
+### 29.1. Lịch cá nhân
+
+```http
+GET /calendar/my-events?fromDate=2026-09-01&toDate=2026-09-30
+```
+
+### 29.2. Lịch lớp học phần
+
+```http
+GET /course-sections/{sectionId}/calendar
+```
+
+### 29.3. Tạo sự kiện lớp
+
+```http
+POST /lecturer/course-sections/{sectionId}/calendar-events
+```
+
+```json
+{
+  "title": "Ôn tập giữa kỳ",
+  "type": "CLASS_EVENT",
+  "startTime": "2026-10-01T08:00:00+07:00",
+  "endTime": "2026-10-01T10:00:00+07:00",
+  "location": "A101",
+  "description": "Ôn tập trước kiểm tra giữa kỳ"
+}
+```
+
+### 29.4. Đồng bộ Google Calendar/Outlook
+
+```http
+POST /calendar/sync
+```
+
+```json
+{
+  "provider": "GOOGLE_CALENDAR"
+}
+```
+
+---
+
+## 30. Learning Group APIs — Nhóm học tập
+
+### 30.1. Danh sách nhóm trong lớp
+
+```http
+GET /course-sections/{sectionId}/groups
+```
+
+### 30.2. Tạo nhóm thủ công
+
+```http
+POST /lecturer/course-sections/{sectionId}/groups
+```
+
+```json
+{
+  "name": "Nhóm 1",
+  "memberIds": ["usr_student_001", "usr_student_002"],
+  "leaderId": "usr_student_001"
+}
+```
+
+### 30.3. Tạo nhóm tự động
+
+```http
+POST /lecturer/course-sections/{sectionId}/groups/auto-generate
+```
+
+```json
+{
+  "groupSize": 5,
+  "strategy": "RANDOM"
+}
+```
+
+### 30.4. Cập nhật thành viên nhóm
+
+```http
+PUT /lecturer/groups/{groupId}/members
+```
+
+### 30.5. Sinh viên xem nhóm của mình
+
+```http
+GET /student/course-sections/{sectionId}/my-group
+```
+
+### 30.6. Peer review thành viên nhóm
+
+```http
+POST /student/groups/{groupId}/peer-reviews
+```
+
+```json
+{
+  "reviews": [
+    {
+      "studentId": "usr_student_002",
+      "score": 4,
+      "comment": "Bạn đóng góp tốt"
     }
   ]
 }
@@ -1960,119 +2331,863 @@ Lấy profile + enrolled courses của SV.
 
 ---
 
-### GET `/agent-tools/students/{userId}/grades`
+## 31. Survey & Feedback APIs
 
-Lấy điểm số của SV.
+### 31.1. Danh sách khảo sát
 
-**Query params:** `?course_id=uuid` (optional, filter theo course)
-
-**Response 200:**
-```json
-{
-  "grades": [
-    {
-      "course_code": "CS201",
-      "course_title": "Cấu trúc Dữ liệu",
-      "assignment_title": "Bài tập 1: Linked List",
-      "grade_type": "assignment",
-      "score": 85,
-      "max_score": 100,
-      "percentage": 85.0,
-      "feedback": "Code tốt!",
-      "graded_at": "2024-03-05T10:00:00Z"
-    }
-  ],
-  "course_gpas": [
-    {"course_code": "CS201", "gpa": 8.2}
-  ],
-  "overall_gpa": 7.8
-}
+```http
+GET /surveys?target=STUDENT&status=OPEN
 ```
 
----
+### 31.2. Tạo khảo sát
 
-### GET `/agent-tools/students/{userId}/assignments`
+```http
+POST /academic/surveys
+```
 
-Lấy danh sách bài tập + status của SV.
-
-**Query params:** `?status=not_submitted&course_id=uuid`
-
-**Response 200:**
 ```json
 {
-  "assignments": [
+  "title": "Khảo sát đánh giá môn học",
+  "description": "Đánh giá chất lượng giảng dạy",
+  "anonymous": true,
+  "target": {
+    "sectionIds": ["sec_001"],
+    "roles": ["STUDENT"]
+  },
+  "openAt": "2026-12-01T08:00:00+07:00",
+  "closeAt": "2026-12-15T23:59:00+07:00",
+  "questions": [
     {
-      "id": "assign-uuid",
-      "title": "Bài tập 2: Binary Tree",
-      "course_code": "CS201",
-      "course_title": "Cấu trúc Dữ liệu",
-      "deadline": "2024-04-01T23:59:59Z",
-      "effective_deadline": "2024-04-01T23:59:59Z",
-      "days_remaining": 5,
-      "hours_remaining": 120,
-      "max_score": 100,
-      "status": "not_submitted",
-      "allow_late_submission": false
+      "type": "RATING",
+      "content": "Mức độ hài lòng với môn học?",
+      "required": true,
+      "maxRating": 5
+    },
+    {
+      "type": "TEXT",
+      "content": "Góp ý thêm",
+      "required": false
     }
   ]
 }
 ```
 
+### 31.3. Sinh viên gửi phản hồi khảo sát
+
+```http
+POST /surveys/{surveyId}/responses
+```
+
+```json
+{
+  "answers": [
+    {
+      "questionId": "sq_001",
+      "rating": 5
+    },
+    {
+      "questionId": "sq_002",
+      "text": "Môn học hữu ích"
+    }
+  ]
+}
+```
+
+### 31.4. Xem kết quả khảo sát
+
+```http
+GET /academic/surveys/{surveyId}/results
+```
+
 ---
 
-### GET `/agent-tools/students/{userId}/courses`
+## 32. Advisor APIs — Cố vấn học tập
 
-Lấy danh sách courses đã enroll.
+### 32.1. Danh sách sinh viên phụ trách
 
-**Response 200:** List of course objects với basic info
+```http
+GET /advisor/students?page=1&limit=50&riskLevel=HIGH&keyword=nguyen
+```
+
+### 32.2. Hồ sơ học tập sinh viên
+
+```http
+GET /advisor/students/{studentId}/academic-profile
+```
+
+**Response gồm:** thông tin cá nhân, lớp, ngành, môn đang học, điểm, chuyên cần, tiến độ học tập, cảnh báo, lịch sử tư vấn.
+
+### 32.3. Tiến độ học tập sinh viên
+
+```http
+GET /advisor/students/{studentId}/learning-progress?semesterId=sem_2026_hk1
+```
+
+### 32.4. Điểm và chuyên cần của sinh viên
+
+```http
+GET /advisor/students/{studentId}/performance?semesterId=sem_2026_hk1
+```
+
+### 32.5. Danh sách cảnh báo học vụ
+
+```http
+GET /advisor/academic-alerts?status=OPEN&riskLevel=HIGH
+```
+
+### 32.6. Tạo cảnh báo học vụ thủ công
+
+```http
+POST /advisor/academic-alerts
+```
+
+```json
+{
+  "studentId": "usr_student_001",
+  "type": "LOW_GRADE",
+  "riskLevel": "HIGH",
+  "reason": "Điểm giữa kỳ dưới 5 ở 3 môn",
+  "recommendedAction": "Hẹn tư vấn và lập kế hoạch học tập"
+}
+```
+
+### 32.7. Cập nhật trạng thái cảnh báo
+
+```http
+PATCH /advisor/academic-alerts/{alertId}/status
+```
+
+```json
+{
+  "status": "IN_PROGRESS",
+  "note": "Đã liên hệ sinh viên"
+}
+```
+
+### 32.8. Đóng cảnh báo học vụ
+
+```http
+PATCH /advisor/academic-alerts/{alertId}/close
+```
+
+```json
+{
+  "resolution": "Sinh viên đã cam kết cải thiện và có kế hoạch học tập mới"
+}
+```
+
+### 32.9. Tạo lịch hẹn tư vấn
+
+```http
+POST /advisor/counseling-sessions
+```
+
+```json
+{
+  "studentId": "usr_student_001",
+  "title": "Tư vấn học tập giữa kỳ",
+  "scheduledAt": "2026-10-10T14:00:00+07:00",
+  "location": "Phòng cố vấn A203",
+  "mode": "OFFLINE",
+  "note": "Trao đổi về kết quả giữa kỳ"
+}
+```
+
+### 32.10. Ghi biên bản tư vấn
+
+```http
+POST /advisor/counseling-sessions/{sessionId}/notes
+```
+
+```json
+{
+  "summary": "Sinh viên gặp khó khăn môn CSDL và Toán rời rạc",
+  "issues": ["LOW_GRADE", "LOW_ATTENDANCE"],
+  "actionPlan": "Học phụ đạo 2 buổi/tuần, hoàn thành bài còn thiếu",
+  "followUpAt": "2026-10-24T14:00:00+07:00"
+}
+```
+
+### 32.11. Tạo kế hoạch học tập cá nhân
+
+```http
+POST /advisor/students/{studentId}/study-plans
+```
+
+```json
+{
+  "title": "Kế hoạch cải thiện học tập tháng 10",
+  "goals": [
+    "Hoàn thành 100% bài tập CSDL",
+    "Đạt trên 7 điểm quiz chương 2"
+  ],
+  "tasks": [
+    {
+      "title": "Ôn normalization",
+      "dueDate": "2026-10-15"
+    }
+  ]
+}
+```
+
+### 32.12. Báo cáo cố vấn
+
+```http
+GET /advisor/reports/summary?semesterId=sem_2026_hk1
+```
 
 ---
 
-## 11. Bảng Error Codes Đầy đủ
+## 33. Academic Staff APIs — Khoa/Bộ môn/Phòng đào tạo
 
-| error_code | HTTP | Mô tả |
-|-----------|------|-------|
-| `EMAIL_EXISTS` | 409 | Email đã tồn tại |
-| `STUDENT_ID_EXISTS` | 409 | Mã sinh viên đã tồn tại |
-| `COURSE_CODE_EXISTS` | 409 | Mã môn học đã tồn tại |
-| `ALREADY_ENROLLED` | 409 | SV đã enroll khóa học này |
-| `ALREADY_GRADED` | 409 | Submission đã được chấm |
-| `INVALID_CREDENTIALS` | 401 | Sai email/password |
-| `TOKEN_EXPIRED` | 401 | Access token hết hạn |
-| `REFRESH_INVALID` | 401 | Refresh token không hợp lệ |
-| `REFRESH_EXPIRED` | 401 | Refresh token hết hạn |
-| `REFRESH_REVOKED` | 401 | Refresh token đã bị revoke |
-| `ACCOUNT_SUSPENDED` | 403 | Tài khoản bị khóa |
-| `PERMISSION_DENIED` | 403 | Không có quyền |
-| `NOT_COURSE_INSTRUCTOR` | 403 | Không phải GV của course này |
-| `NOT_ENROLLED` | 403 | Chưa enroll hoặc enrollment không active |
-| `COURSE_NOT_FOUND` | 404 | Course không tồn tại |
-| `ASSIGNMENT_NOT_FOUND` | 404 | Assignment không tồn tại |
-| `SUBMISSION_NOT_FOUND` | 404 | Submission không tồn tại |
-| `USER_NOT_FOUND` | 404 | User không tồn tại |
-| `NOTIFICATION_NOT_FOUND` | 404 | Notification không tồn tại |
-| `DOCUMENT_NOT_FOUND` | 404 | Document không tồn tại |
-| `MEMORY_NOT_FOUND` | 404 | Memory không tồn tại |
-| `CONVERSATION_NOT_FOUND` | 404 | Conversation không tồn tại |
-| `COURSE_NOT_OPEN` | 400 | Course chưa mở đăng ký |
-| `COURSE_FULL` | 400 | Course đã đủ SV |
-| `DEADLINE_PASSED` | 400 | Quá hạn nộp bài |
-| `FUTURE_DEADLINE_REQUIRED` | 400 | Deadline phải ở tương lai |
-| `SCORE_EXCEEDS_MAX` | 400 | Điểm vượt quá điểm tối đa |
-| `FILE_TOO_LARGE` | 400 | File quá lớn |
-| `INVALID_FILE_TYPE` | 400 | Định dạng file không hỗ trợ |
-| `INVALID_IMAGE_TYPE` | 400 | File không phải ảnh hợp lệ |
-| `INVALID_DATE_RANGE` | 400 | end_date trước start_date |
-| `WRONG_PASSWORD` | 400 | Mật khẩu hiện tại sai |
-| `RESET_TOKEN_EXPIRED` | 400 | Token reset hết hạn |
-| `RESET_TOKEN_USED` | 400 | Token đã dùng |
-| `RESET_TOKEN_INVALID` | 400 | Token không tồn tại |
-| `VALIDATION_ERROR` | 422 | Input validation lỗi |
-| `RATE_LIMIT_EXCEEDED` | 429 | Vượt rate limit |
-| `AI_RATE_LIMIT` | 429 | Vượt AI rate limit |
-| `COURSE_NOT_INDEXED` | 400 | Course chưa có tài liệu được index |
-| `AI_UNAVAILABLE` | 502 | AI service không khả dụng |
-| `INTERNAL_ERROR` | 500 | Lỗi server |
+### 33.1. Dashboard đào tạo
+
+```http
+GET /academic/dashboard?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+### 33.2. Theo dõi tiến độ lớp học phần
+
+```http
+GET /academic/course-sections/{sectionId}/progress
+```
+
+### 33.3. Theo dõi hoạt động giảng viên
+
+```http
+GET /academic/lecturers/{lecturerId}/teaching-activity?semesterId=sem_2026_hk1
+```
+
+### 33.4. Danh sách lớp rủi ro
+
+```http
+GET /academic/risk/course-sections?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+### 33.5. Danh sách sinh viên rủi ro
+
+```http
+GET /academic/risk/students?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+### 33.6. Phân công giảng viên
+
+```http
+POST /academic/teaching-assignments
+```
+
+```json
+{
+  "sectionId": "sec_001",
+  "lecturerId": "usr_lecturer_001",
+  "role": "PRIMARY_LECTURER"
+}
+```
+
+### 33.7. Xem tải giảng viên
+
+```http
+GET /academic/lecturers/workload?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+### 33.8. Duyệt đề cương môn học
+
+```http
+POST /academic/course-sections/{sectionId}/syllabus/review
+```
+
+```json
+{
+  "status": "APPROVED",
+  "comment": "Đề cương đầy đủ"
+}
+```
+
+### 33.9. Duyệt đề thi
+
+```http
+POST /academic/quizzes/{quizId}/review
+```
+
+```json
+{
+  "status": "APPROVED",
+  "comment": "Đề thi phù hợp chuẩn đầu ra"
+}
+```
+
+### 33.10. Báo cáo đào tạo cấp khoa
+
+```http
+GET /academic/reports/training-quality?departmentId=dep_it&semesterId=sem_2026_hk1
+```
+
+---
+
+## 34. Learning Analytics APIs
+
+### 34.1. Dashboard tiến độ lớp
+
+```http
+GET /analytics/course-sections/{sectionId}/overview
+```
+
+### 34.2. Sinh viên có nguy cơ trong lớp
+
+```http
+GET /analytics/course-sections/{sectionId}/risk-students
+```
+
+### 34.3. Phân tích bài tập
+
+```http
+GET /analytics/assignments/{assignmentId}
+```
+
+### 34.4. Phân tích quiz
+
+```http
+GET /analytics/quizzes/{quizId}
+```
+
+### 34.5. Phân tích câu hỏi quiz
+
+```http
+GET /analytics/quizzes/{quizId}/question-analysis
+```
+
+### 34.6. Phân tích phổ điểm lớp
+
+```http
+GET /analytics/course-sections/{sectionId}/grade-distribution
+```
+
+### 34.7. Phân tích chuyên cần
+
+```http
+GET /analytics/course-sections/{sectionId}/attendance
+```
+
+---
+
+## 35. Report APIs
+
+### 35.1. Báo cáo sinh viên cá nhân
+
+```http
+GET /reports/students/{studentId}/academic-summary?semesterId=sem_2026_hk1
+```
+
+### 35.2. Báo cáo lớp học phần
+
+```http
+GET /reports/course-sections/{sectionId}/summary
+```
+
+### 35.3. Báo cáo giảng viên
+
+```http
+GET /reports/lecturers/{lecturerId}/summary?semesterId=sem_2026_hk1
+```
+
+### 35.4. Báo cáo khoa
+
+```http
+GET /reports/departments/{departmentId}/summary?semesterId=sem_2026_hk1
+```
+
+### 35.5. Báo cáo toàn hệ thống
+
+```http
+GET /admin/reports/system-summary?semesterId=sem_2026_hk1
+```
+
+### 35.6. Export báo cáo
+
+```http
+POST /reports/export
+```
+
+```json
+{
+  "reportType": "COURSE_SECTION_SUMMARY",
+  "format": "PDF",
+  "filters": {
+    "sectionId": "sec_001"
+  }
+}
+```
+
+### 35.7. Kiểm tra trạng thái file export
+
+```http
+GET /reports/export-jobs/{jobId}
+```
+
+---
+
+## 36. File & Storage APIs
+
+### 36.1. Upload file chung
+
+```http
+POST /files/upload
+Content-Type: multipart/form-data
+```
+
+**Form data**
+
+| Field | Type | Required |
+|---|---|---|
+| `file` | file | Yes |
+| `module` | string | Yes |
+| `visibility` | string | No |
+
+### 36.2. Lấy thông tin file
+
+```http
+GET /files/{fileId}
+```
+
+### 36.3. Tải file
+
+```http
+GET /files/{fileId}/download
+```
+
+### 36.4. Xóa file
+
+```http
+DELETE /files/{fileId}
+```
+
+### 36.5. Admin cấu hình loại file cho phép
+
+```http
+PUT /admin/file-settings
+```
+
+```json
+{
+  "allowedExtensions": ["pdf", "docx", "pptx", "xlsx", "zip", "mp4"],
+  "maxFileSizeMb": 200,
+  "maxVideoSizeMb": 2048,
+  "storageQuotaPerCourseMb": 10240
+}
+```
+
+---
+
+## 37. Audit Log APIs
+
+### 37.1. Admin xem audit log
+
+```http
+GET /admin/audit-logs?action=GRADE_UPDATE&userId=usr_001&fromDate=2026-09-01&toDate=2026-09-30
+```
+
+### 37.2. Xem audit log của tài nguyên
+
+```http
+GET /audit-logs/resource?resourceType=GRADE&resourceId=grade_001
+```
+
+---
+
+## 38. System Configuration APIs
+
+### 38.1. Lấy cấu hình hệ thống
+
+```http
+GET /admin/system-settings
+```
+
+### 38.2. Cập nhật cấu hình hệ thống
+
+```http
+PUT /admin/system-settings
+```
+
+```json
+{
+  "schoolName": "Trường Đại học ABC",
+  "timezone": "Asia/Ho_Chi_Minh",
+  "defaultLanguage": "vi",
+  "maintenanceMode": false,
+  "passwordPolicy": {
+    "minLength": 8,
+    "requireUppercase": true,
+    "requireNumber": true,
+    "requireSpecialChar": true
+  }
+}
+```
+
+### 38.3. Cấu hình email SMTP
+
+```http
+PUT /admin/integrations/smtp
+```
+
+```json
+{
+  "host": "smtp.example.edu.vn",
+  "port": 587,
+  "username": "noreply@example.edu.vn",
+  "password": "secret",
+  "fromEmail": "noreply@example.edu.vn",
+  "fromName": "LMS University"
+}
+```
+
+### 38.4. Cấu hình SSO
+
+```http
+PUT /admin/integrations/sso
+```
+
+```json
+{
+  "provider": "GOOGLE",
+  "enabled": true,
+  "clientId": "google_client_id",
+  "clientSecret": "google_client_secret",
+  "allowedDomains": ["university.edu.vn"]
+}
+```
+
+---
+
+## 39. Integration APIs
+
+### 39.1. Đồng bộ người dùng từ SIS
+
+```http
+POST /admin/integrations/sis/sync-users
+```
+
+```json
+{
+  "semesterId": "sem_2026_hk1",
+  "syncMode": "INCREMENTAL"
+}
+```
+
+### 39.2. Đồng bộ lớp học phần từ SIS
+
+```http
+POST /admin/integrations/sis/sync-course-sections
+```
+
+### 39.3. Đồng bộ điểm sang SIS
+
+```http
+POST /academic/integrations/sis/sync-grades
+```
+
+```json
+{
+  "sectionId": "sec_001"
+}
+```
+
+### 39.4. Kiểm tra trạng thái job đồng bộ
+
+```http
+GET /integrations/jobs/{jobId}
+```
+
+### 39.5. Webhook nhận sự kiện lớp học online
+
+```http
+POST /webhooks/online-meeting/{provider}
+```
+
+---
+
+## 40. Dashboard APIs theo vai trò
+
+### 40.1. Dashboard sinh viên
+
+```http
+GET /student/dashboard
+```
+
+Trả về:
+
+- Môn đang học.
+- Deadline sắp tới.
+- Quiz đang mở.
+- Điểm mới.
+- Cảnh báo chuyên cần.
+- Thông báo mới.
+
+### 40.2. Dashboard giảng viên
+
+```http
+GET /lecturer/dashboard
+```
+
+Trả về:
+
+- Lớp đang dạy.
+- Bài tập cần chấm.
+- Quiz đang diễn ra.
+- Sinh viên rủi ro.
+- Lịch dạy.
+- Thông báo lớp.
+
+### 40.3. Dashboard admin
+
+```http
+GET /admin/dashboard
+```
+
+Trả về:
+
+- Người dùng toàn hệ thống.
+- Lớp/môn/học kỳ.
+- Hoạt động hệ thống.
+- Dung lượng.
+- Cảnh báo lỗi.
+- Báo cáo tổng quan.
+
+### 40.4. Dashboard khoa/phòng đào tạo
+
+```http
+GET /academic/dashboard
+```
+
+Trả về:
+
+- Lớp theo khoa.
+- Tiến độ giảng dạy.
+- Điểm/chuyên cần.
+- Cảnh báo lớp/sinh viên.
+- Tải giảng viên.
+
+### 40.5. Dashboard cố vấn học tập
+
+```http
+GET /advisor/dashboard
+```
+
+Trả về:
+
+- Sinh viên phụ trách.
+- Sinh viên rủi ro.
+- Lịch tư vấn.
+- Cảnh báo mới.
+- Báo cáo lớp cố vấn.
+
+---
+
+## 41. Permission Matrix tổng quan API
+
+| Nhóm API | Student | Lecturer | Admin | Academic Staff | Advisor |
+|---|---:|---:|---:|---:|---:|
+| Auth/Profile | R/W cá nhân | R/W cá nhân | R/W cá nhân | R/W cá nhân | R/W cá nhân |
+| User Management | No | R SV lớp mình | Full | R/W phạm vi khoa | R SV phụ trách |
+| Roles/Permissions | No | No | Full | No/Hạn chế | No |
+| Organization | R hạn chế | R | Full | R/W phạm vi | R |
+| Academic Year/Semester | R | R | Full | R/W phạm vi | R |
+| Course Catalog | R | R | Full | R/W phạm vi | R |
+| Course Sections | R lớp mình | R/W lớp dạy | Full | R/W phạm vi | R |
+| Enrollment | R cá nhân | R lớp dạy | Full | R/W phạm vi | R SV phụ trách |
+| Content/Lessons | R | R/W lớp dạy | Full/Moderate | Review | R tiến độ |
+| Assignments | Submit | R/W/Grade | Full | Monitor | Monitor |
+| Quiz/Exam | Attempt | R/W/Grade | Full | Review/Monitor | Monitor |
+| Gradebook | R cá nhân | R/W lớp dạy | Full | Approve/Lock | R SV phụ trách |
+| Attendance | Check-in | R/W lớp dạy | Full | Monitor | Monitor |
+| Online Classes | Join | R/W lớp dạy | Full | Monitor | R |
+| Forum | R/W | Moderate lớp | Full Moderate | Monitor | Monitor |
+| Notifications | Receive | Send lớp | Full | Send phạm vi | Send nhóm phụ trách |
+| Reports | Cá nhân | Lớp dạy | Full | Phạm vi khoa | SV phụ trách |
+| System Settings | No | No | Full | No | No |
+| Audit Logs | No | Hạn chế | Full | Hạn chế | No |
+
+---
+
+## 42. API checklist theo chức năng của 5 đối tượng
+
+### 42.1. Sinh viên
+
+- Đăng nhập, đổi mật khẩu, quản lý hồ sơ.
+- Xem học phần đã ghi danh.
+- Xem bài giảng, tài liệu, video.
+- Ghi chú, bookmark, đánh dấu hoàn thành bài học.
+- Nộp bài tập cá nhân/nhóm.
+- Làm quiz/thi online.
+- Xem điểm, feedback, rubric.
+- Gửi phúc khảo.
+- Điểm danh QR/mã lớp/online.
+- Xem lịch học, lịch thi, deadline.
+- Tham gia lớp học online.
+- Thảo luận forum, nhắn tin.
+- Làm khảo sát, gửi phản hồi.
+- Gửi ticket/yêu cầu hỗ trợ.
+
+### 42.2. Giảng viên
+
+- Quản lý lớp được phân công.
+- Tạo chương, bài học, tài liệu, video.
+- Tạo bài tập, rubric, chấm bài.
+- Tạo ngân hàng câu hỏi, quiz, đề thi.
+- Chấm tự luận, xử lý sự cố thi.
+- Quản lý bảng điểm, công bố điểm.
+- Tạo và quản lý điểm danh.
+- Tạo buổi học online, upload recording.
+- Quản lý forum, thông báo lớp.
+- Chia nhóm sinh viên, peer review.
+- Xem báo cáo lớp, tiến độ, rủi ro.
+
+### 42.3. Admin
+
+- Quản lý người dùng, role, permission.
+- Quản lý cơ cấu trường: khoa, bộ môn, ngành, lớp.
+- Quản lý học kỳ, năm học.
+- Quản lý môn học, lớp học phần, ghi danh.
+- Kiểm duyệt nội dung, forum.
+- Quản lý cấu hình hệ thống, file, email, SSO.
+- Quản lý backup, audit log, bảo mật.
+- Xem báo cáo toàn hệ thống.
+- Quản lý tích hợp SIS, Zoom/Meet/Teams, Turnitin.
+
+### 42.4. Khoa/Bộ môn/Phòng đào tạo
+
+- Quản lý chương trình đào tạo.
+- Quản lý môn học theo khoa/bộ môn.
+- Tạo/mở/đóng lớp học phần.
+- Phân công giảng viên/trợ giảng.
+- Theo dõi tiến độ lớp, hoạt động giảng viên.
+- Duyệt đề cương, đề thi, điểm.
+- Theo dõi điểm, chuyên cần, sinh viên rủi ro.
+- Quản lý khảo sát đánh giá chất lượng.
+- Xuất báo cáo đào tạo.
+
+### 42.5. Cố vấn học tập
+
+- Xem danh sách sinh viên phụ trách.
+- Xem hồ sơ học tập, điểm, chuyên cần, tiến độ.
+- Theo dõi cảnh báo học vụ.
+- Tạo/cập nhật/đóng cảnh báo.
+- Tạo lịch hẹn tư vấn.
+- Ghi biên bản tư vấn.
+- Tạo kế hoạch học tập cá nhân.
+- Gửi thông báo/nhắn tin cho sinh viên.
+- Theo dõi đăng ký học phần, nợ môn, quá tải tín chỉ.
+- Xuất báo cáo cố vấn.
+
+---
+
+## 43. Gợi ý cấu trúc Swagger/OpenAPI
+
+Nên tách tags như sau:
+
+```yaml
+tags:
+  - Auth
+  - Profile
+  - Admin Users
+  - Roles Permissions
+  - Organization
+  - Academic Year Semester
+  - Course Catalog
+  - Curriculum
+  - Course Sections
+  - Enrollments
+  - Course Content
+  - Assignments
+  - Rubrics
+  - Quizzes Exams
+  - Question Banks
+  - Gradebook
+  - Grade Appeals
+  - Attendance
+  - Online Classes
+  - Forums
+  - Messaging
+  - Notifications
+  - Calendar
+  - Groups
+  - Surveys
+  - Advisor
+  - Academic Staff
+  - Analytics
+  - Reports
+  - Files
+  - Audit Logs
+  - System Settings
+  - Integrations
+```
+
+---
+
+## 44. Nguyên tắc bảo mật API
+
+1. Tất cả API trừ login/forgot-password/reset-password phải yêu cầu JWT.
+2. Backend phải kiểm tra quyền bằng RBAC và phạm vi dữ liệu.
+3. Sinh viên chỉ được truy cập dữ liệu của chính mình hoặc lớp đã ghi danh.
+4. Giảng viên chỉ được sửa lớp được phân công.
+5. Academic Staff chỉ được quản lý dữ liệu trong phạm vi khoa/bộ môn/phòng được cấp.
+6. Advisor chỉ được xem sinh viên phụ trách.
+7. Admin có toàn quyền nhưng mọi thao tác quan trọng phải ghi audit log.
+8. File upload phải kiểm tra MIME type, extension, dung lượng và virus scan nếu có.
+9. Điểm đã khóa không được sửa nếu không có quyền mở khóa.
+10. Các API nhạy cảm cần rate limit và audit log.
+
+---
+
+## 45. Gợi ý rate limit
+
+| Nhóm API | Giới hạn đề xuất |
+|---|---:|
+| Login | 5 lần/phút/IP |
+| Forgot password | 3 lần/giờ/email |
+| Upload file | 30 request/phút/user |
+| Quiz answer autosave | 120 request/phút/user |
+| Notification read | 300 request/phút/user |
+| Report export | 10 job/giờ/user |
+| Admin bulk import | 5 job/giờ/admin |
+
+---
+
+## 46. Gợi ý event nội bộ
+
+Hệ thống nên phát event để xử lý bất đồng bộ:
+
+| Event | Khi phát sinh | Consumer |
+|---|---|---|
+| `UserCreated` | Tạo user | Email welcome |
+| `EnrollmentCreated` | Ghi danh | Notification |
+| `LessonCompleted` | Hoàn thành bài học | Analytics |
+| `AssignmentSubmitted` | Sinh viên nộp bài | Lecturer notification |
+| `AssignmentGraded` | Chấm bài | Student notification |
+| `QuizSubmitted` | Nộp quiz | Auto grading |
+| `GradePublished` | Công bố điểm | Notification |
+| `AttendanceCheckedIn` | Điểm danh | Attendance analytics |
+| `AcademicAlertCreated` | Cảnh báo học vụ | Advisor notification |
+| `ReportExportRequested` | Xuất báo cáo | Queue worker |
+
+---
+
+## 47. Kết luận
+
+File API_SPEC.md này bao phủ đầy đủ các nhóm API chính cho hệ thống LMS đại học 5 đối tượng:
+
+- Sinh viên.
+- Giảng viên.
+- Quản trị viên hệ thống.
+- Khoa/Bộ môn/Phòng đào tạo.
+- Cố vấn học tập.
+
+Khi triển khai thực tế, nên chuyển tài liệu này thành:
+
+1. Swagger/OpenAPI YAML hoặc JSON.
+2. Postman Collection.
+3. API contract giữa Frontend và Backend.
+4. Test cases API cho QA.
+5. RBAC permission seed trong database.
 
 ---
 
