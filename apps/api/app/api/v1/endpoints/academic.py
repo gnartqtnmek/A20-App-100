@@ -13,6 +13,7 @@ from app.schemas.sprint67 import (
     GradeApprovalAction,
     GradeApprovalCreate,
     LecturerAssignmentCreate,
+    QualitySurveyCreate,
     SectionUpdate,
 )
 from app.services.sprint67_service import (
@@ -27,8 +28,10 @@ from app.services.sprint67_service import (
     list_curriculum_entries,
     list_exam_approvals,
     list_grade_approvals,
+    list_quality_surveys,
     list_sections,
     update_section,
+    create_quality_survey,
 )
 
 router = APIRouter(prefix="/academic", tags=["Academic Staff"])
@@ -104,12 +107,24 @@ async def post_grade_approval(
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, object]:
     scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
-    return {"item": await create_grade_approval(payload, current_user.id, db, scope_department_id=scope_department_id)}
+    return {
+        "item": await create_grade_approval(
+            payload,
+            current_user.id,
+            db,
+            scope_department_id=scope_department_id,
+            requester_role=current_user.role,
+        )
+    }
 
 
 @router.get("/grade-approvals", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
-async def get_grade_approvals(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
-    return {"items": await list_grade_approvals(db)}
+async def get_grade_approvals(
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, object]:
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {"items": await list_grade_approvals(db, department_id=scope_department_id)}
 
 
 @router.patch("/grade-approvals/{approval_id}", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
@@ -119,7 +134,16 @@ async def patch_grade_approval(
     current_user: User = Depends(require_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, object]:
-    return {"item": await action_grade_approval(approval_id, payload, current_user.id, db)}
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {
+        "item": await action_grade_approval(
+            approval_id,
+            payload,
+            current_user.id,
+            db,
+            scope_department_id=scope_department_id,
+        )
+    }
 
 
 @router.post("/exam-approvals", dependencies=[Depends(require_roles(UserRole.LECTURER, UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
@@ -129,12 +153,24 @@ async def post_exam_approval(
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, object]:
     scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
-    return {"item": await create_exam_approval(payload, current_user.id, db, scope_department_id=scope_department_id)}
+    return {
+        "item": await create_exam_approval(
+            payload,
+            current_user.id,
+            db,
+            scope_department_id=scope_department_id,
+            requester_role=current_user.role,
+        )
+    }
 
 
 @router.get("/exam-approvals", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
-async def get_exam_approvals(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
-    return {"items": await list_exam_approvals(db)}
+async def get_exam_approvals(
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, object]:
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {"items": await list_exam_approvals(db, department_id=scope_department_id)}
 
 
 @router.patch("/exam-approvals/{approval_id}", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
@@ -144,12 +180,44 @@ async def patch_exam_approval(
     current_user: User = Depends(require_current_user),
     db: AsyncSession = Depends(get_db),
 ) -> dict[str, object]:
-    return {"item": await action_exam_approval(approval_id, payload, current_user.id, db)}
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {
+        "item": await action_exam_approval(
+            approval_id,
+            payload,
+            current_user.id,
+            db,
+            scope_department_id=scope_department_id,
+        )
+    }
 
 
 @router.get("/reports/training", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
-async def get_training_report(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
-    return {"items": await get_academic_report(db)}
+async def get_training_report(
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, object]:
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {"items": await get_academic_report(db, department_id=scope_department_id)}
+
+
+@router.get("/surveys", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
+async def get_quality_surveys(
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, object]:
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {"items": await list_quality_surveys(db, department_id=scope_department_id)}
+
+
+@router.post("/surveys", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))])
+async def post_quality_survey(
+    payload: QualitySurveyCreate,
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> dict[str, object]:
+    scope_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+    return {"item": await create_quality_survey(payload, current_user.id, db, department_id=scope_department_id)}
 
 
 @router.post("/sections/{section_id}/open", dependencies=[Depends(require_roles(UserRole.ACADEMIC_STAFF, UserRole.ADMIN))], response_model=MessageResponse)

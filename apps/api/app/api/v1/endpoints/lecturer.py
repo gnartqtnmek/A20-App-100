@@ -28,6 +28,7 @@ from app.schemas.lms import (
     SubmissionGradeRequest,
     SubmissionOut,
 )
+from app.schemas.sprint67 import ForumTopicCreate, ForumTopicModeration, ForumTopicOut, LiveClassSessionCreate, LiveClassSessionOut
 from app.services.lms_service import (
     add_quiz_question,
     create_assignment,
@@ -51,6 +52,13 @@ from app.services.lms_service import (
     mark_attendance,
     update_assignment,
     update_lesson,
+)
+from app.services.sprint67_service import (
+    create_forum_topic,
+    create_live_class_session,
+    list_lecturer_forum_topics,
+    list_live_class_sessions,
+    moderate_forum_topic,
 )
 
 router = APIRouter(prefix="/lecturer", tags=["Lecturer LMS"])
@@ -263,3 +271,49 @@ async def get_section_attendance_records(
     db: AsyncSession = Depends(get_db),
 ) -> list[AttendanceRecordOut]:
     return await list_attendance_for_section(section_id, current_user.id, db)
+
+
+@router.post("/live-sessions", response_model=LiveClassSessionOut)
+async def post_live_session(
+    payload: LiveClassSessionCreate,
+    current_user: User = Depends(require_roles(UserRole.LECTURER)),
+    db: AsyncSession = Depends(get_db),
+) -> LiveClassSessionOut:
+    return await create_live_class_session(payload, current_user.id, db)
+
+
+@router.get("/sections/{section_id}/live-sessions", response_model=list[LiveClassSessionOut])
+async def get_live_sessions(
+    section_id: str,
+    current_user: User = Depends(require_roles(UserRole.LECTURER)),
+    db: AsyncSession = Depends(get_db),
+) -> list[LiveClassSessionOut]:
+    return await list_live_class_sessions(section_id, current_user.id, db)
+
+
+@router.get("/sections/{section_id}/forum-topics", response_model=list[ForumTopicOut])
+async def get_forum_topics(
+    section_id: str,
+    current_user: User = Depends(require_roles(UserRole.LECTURER)),
+    db: AsyncSession = Depends(get_db),
+) -> list[ForumTopicOut]:
+    return await list_lecturer_forum_topics(section_id, current_user.id, db)
+
+
+@router.post("/forum-topics", response_model=ForumTopicOut)
+async def post_forum_topic(
+    payload: ForumTopicCreate,
+    current_user: User = Depends(require_roles(UserRole.LECTURER)),
+    db: AsyncSession = Depends(get_db),
+) -> ForumTopicOut:
+    return await create_forum_topic(payload, current_user, db)
+
+
+@router.patch("/forum-topics/{topic_id}", response_model=ForumTopicOut)
+async def patch_forum_topic(
+    topic_id: str,
+    payload: ForumTopicModeration,
+    current_user: User = Depends(require_roles(UserRole.LECTURER)),
+    db: AsyncSession = Depends(get_db),
+) -> ForumTopicOut:
+    return await moderate_forum_topic(topic_id, payload, current_user.id, db)

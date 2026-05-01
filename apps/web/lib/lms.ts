@@ -294,6 +294,50 @@ export type SupportRequestItem = {
   created_at: string;
 };
 
+export type ForumTopicItem = {
+  id: string;
+  section_id: string;
+  created_by?: string | null;
+  title: string;
+  content: string;
+  status: string;
+  is_pinned: boolean;
+  replies_count: number;
+  created_at: string;
+};
+
+export type LiveClassSessionItem = {
+  id: string;
+  section_id: string;
+  lecturer_id?: string | null;
+  title: string;
+  scheduled_at: string;
+  platform: string;
+  meeting_url: string;
+  recording_url: string;
+  status: string;
+  created_at: string;
+};
+
+export type EnrollmentActionResult = {
+  requested: number;
+  success: number;
+  skipped: number;
+  action_type: string;
+  target_section_id: string;
+  reason: string;
+};
+
+export type QualitySurveyItem = {
+  id: string;
+  title: string;
+  category: string;
+  department_id?: string | null;
+  status: string;
+  responses_count: number;
+  created_at: string;
+};
+
 export type NotificationItem = {
   id: string;
   user_id: string;

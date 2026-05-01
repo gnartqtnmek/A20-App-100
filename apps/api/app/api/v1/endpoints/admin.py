@@ -11,6 +11,8 @@ from app.schemas.sprint67 import (
     CourseUpdate,
     DepartmentCreate,
     DepartmentUpdate,
+    EnrollmentActionRequest,
+    EnrollmentActionResult,
     ProgramCreate,
     ProgramUpdate,
     RolePermissionUpdateRequest,
@@ -28,6 +30,7 @@ from app.services.sprint67_service import (
     delete_course,
     delete_department,
     delete_program,
+    execute_enrollment_action,
     get_roles_and_permissions,
     get_system_report,
     list_courses,
@@ -251,3 +254,12 @@ async def put_section(
 @router.get("/reports/system", dependencies=[Depends(require_roles(UserRole.ADMIN))])
 async def get_admin_system_report(db: AsyncSession = Depends(get_db)) -> dict[str, object]:
     return {"items": await get_system_report(db)}
+
+
+@router.post("/enrollments/actions", dependencies=[Depends(require_roles(UserRole.ADMIN))], response_model=EnrollmentActionResult)
+async def post_enrollment_action(
+    payload: EnrollmentActionRequest,
+    current_user: User = Depends(require_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> EnrollmentActionResult:
+    return await execute_enrollment_action(payload, current_user.id, db)

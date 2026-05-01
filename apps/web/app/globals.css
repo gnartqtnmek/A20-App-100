@@ -3,43 +3,72 @@
 @tailwind utilities;
 
 :root {
-  --bg-main: #f5fbff;
-  --text-main: #0a1020;
+  --bg-main: #faf9fe;
+  --bg-surface: #ffffff;
+  --bg-subtle: #f4f3f8;
+  --text-main: #1a1c1f;
+  --text-muted: #43474f;
+  --line: #e2e2e7;
+  --line-strong: #c3c6d0;
+  --brand: #1a4173;
+  --brand-hover: #224779;
+  --brand-soft: #d5e3ff;
+  --ok: #2e7d32;
+  --warn: #b26a00;
+  --danger: #ba1a1a;
 }
 
 html,
 body {
   margin: 0;
   min-height: 100%;
+  background: var(--bg-main);
 }
 
 body {
-  font-family: var(--font-body), "Trebuchet MS", "Segoe UI", sans-serif;
+  font-family: var(--font-body), "Inter", "Segoe UI", sans-serif;
   color: var(--text-main);
-  background: radial-gradient(circle at 12% 12%, rgba(56, 189, 248, 0.25), transparent 35%),
-    radial-gradient(circle at 88% 18%, rgba(253, 186, 59, 0.3), transparent 30%),
-    radial-gradient(circle at 78% 85%, rgba(251, 113, 133, 0.25), transparent 36%),
-    var(--bg-main);
+  background: var(--bg-main);
 }
 
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-heading), "Avenir Next", sans-serif;
+  font-family: var(--font-heading), "Inter", sans-serif;
 }
 
-.bg-brainio {
-  background: linear-gradient(135deg, #dff4ff 0%, #ebfff4 40%, #fff3dc 100%);
+input,
+textarea,
+select,
+button {
+  font-family: inherit;
 }
 
-.dark .bg-brainio {
-  background: linear-gradient(150deg, #0c152b 0%, #0f1f35 45%, #22293a 100%);
+.brainio-page-bg {
+  background: var(--bg-main);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-main: #0b1328;
-    --text-main: #eff6ff;
-  }
+.brainio-card {
+  border: 1px solid var(--line);
+  background: var(--bg-surface);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.brainio-card-soft {
+  border: 1px solid var(--line);
+  background: var(--bg-subtle);
+}
+
+.brainio-input {
+  border: 1px solid var(--line-strong);
+  background: #ffffff;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.brainio-input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(26, 65, 115, 0.18);
 }

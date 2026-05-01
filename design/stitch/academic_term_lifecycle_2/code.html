@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LMS Admin Console - Semester Lifecycle</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-bright": "#faf9fd",
+                        "primary-container": "#1a4173",
+                        "success": "#2e7d32",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-container": "#606365",
+                        "on-primary-container": "#7493c5",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-container": "#e39e62",
+                        "background": "#faf9fd",
+                        "surface-variant": "#e3e2e6",
+                        "surface-container-low": "#f4f3f7",
+                        "tertiary-fixed": "#ffdcc2",
+                        "surface-container-highest": "#e3e2e6",
+                        "on-surface-variant": "#43474f",
+                        "outline-variant": "#c3c6d0",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface-container-lowest": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "on-primary": "#ffffff",
+                        "secondary-fixed": "#e1e3e5",
+                        "tertiary-container": "#643500",
+                        "surface-container": "#eeedf2",
+                        "tertiary": "#442200",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-surface": "#1a1c1f",
+                        "on-secondary-fixed": "#191c1e",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-dim": "#dad9de",
+                        "surface-container-high": "#e8e8ec",
+                        "secondary-container": "#dee0e2",
+                        "inverse-on-surface": "#f1f0f5",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-primary-fixed-variant": "#264775",
+                        "outline": "#737780",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#2e1500",
+                        "info": "#0288d1",
+                        "primary": "#001733",
+                        "surface-tint": "#405f8e",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "surface": "#faf9fe",
+                        "secondary": "#5c5f61",
+                        "inverse-primary": "#a8c8fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "base": "4px",
+                        "sidebar-width": "260px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "xs": "8px",
+                        "gutter": "24px",
+                        "container_max": "1440px",
+                        "sm": "16px",
+                        "xl": "48px",
+                        "sidebar_width": "260px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-lg": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- SideNavBar (Authority Source: JSON) -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-slate-50 border-r border-slate-200 flex flex-col h-full py-6 font-inter text-sm font-medium">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-bold text-blue-950">UniAdmin</h1>
+<p class="text-xs text-slate-500">Global Root</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">group</span>
+                User Management
+            </a>
+<a class="flex items-center gap-3 bg-white text-blue-900 border-l-4 border-blue-900 px-4 py-3 font-bold transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">school</span>
+                Course Catalog
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+                Institutions
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">payments</span>
+                Finance &amp; Billing
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+                System Logs
+            </a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 hover:text-blue-900 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined">admin_panel_settings</span>
+                Security
+            </a>
+</nav>
+<div class="px-4 mt-auto space-y-1 border-t border-slate-200 pt-4">
+<button class="w-full text-left flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-100 rounded-lg transition-all">
+<span class="material-symbols-outlined">contact_support</span>
+                Support
+            </button>
+<button class="w-full text-left flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-100 rounded-lg transition-all">
+<span class="material-symbols-outlined">logout</span>
+                Logout
+            </button>
+</div>
+</aside>
+<!-- TopAppBar (Authority Source: JSON) -->
+<header class="fixed top-0 right-0 left-64 h-14 bg-white border-b border-slate-200 z-40 flex justify-between items-center px-6 py-2 font-inter text-sm antialiased tracking-tight">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-96">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-1.5 bg-slate-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-blue-900/10" placeholder="Search systems or terms..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2 border-r border-slate-200 pr-4 mr-2">
+<button class="px-3 py-1.5 rounded-lg text-blue-900 font-bold hover:bg-slate-50 transition-colors">System Status</button>
+<button class="px-3 py-1.5 rounded-lg text-slate-500 hover:bg-slate-50 transition-colors">Quick Action</button>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-1.5 text-slate-500 hover:bg-slate-50 rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+<button class="p-1.5 text-slate-500 hover:bg-slate-50 rounded-full"><span class="material-symbols-outlined">settings</span></button>
+<button class="p-1.5 text-slate-500 hover:bg-slate-50 rounded-full"><span class="material-symbols-outlined">help</span></button>
+<img alt="Admin Avatar" class="w-8 h-8 rounded-full border border-slate-200 ml-2" data-alt="professional headshot of a male administrator in a light blue shirt with a clean modern office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-QeAJjzDlqavil1YiipG66UIqNoihrjc0R98W2d0y2V_DDy0Pl3wA1HehYfyAj7PNksvRdSanvCMk6RfkCwM4z-Y0TteCvqQ8GyjaEPzjrMQKIxPXVujlcGB7Ha3Suow--GtTXlXyDmt6sbudDTGNBe9yiwbtTGRW8WRdZu7766aQ3xRTI1DQE_ZAo20LFa6gfIoqAmq6Wg9PbrmqAHqWq1fbxiIbss3mVjGjw85ouce0XedSkdesnlvbZ6lhv1NAF8jsq7FDXog"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 pt-14 p-8 min-h-screen">
+<!-- Header Section -->
+<div class="mb-10 flex justify-between items-end">
+<div>
+<h2 class="text-h1 font-h1 text-primary">Academic Term Lifecycle</h2>
+<p class="text-body-lg text-secondary mt-2">Manage enrollment windows, census dates, and university session transitions.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 bg-surface-container-highest border border-outline-variant px-5 py-2.5 rounded hover:bg-surface-variant transition-colors text-body-md font-medium">
+<span class="material-symbols-outlined">sync_alt</span>
+                    Transition Semester
+                </button>
+<button class="flex items-center gap-2 bg-primary text-on-primary px-5 py-2.5 rounded shadow-sm hover:opacity-90 transition-opacity text-body-md font-medium">
+<span class="material-symbols-outlined">add</span>
+                    Add New Term
+                </button>
+</div>
+</div>
+<!-- Academic Timeline & Cards (Bento-inspired) -->
+<div class="bento-grid">
+<!-- Summary Stats -->
+<div class="col-span-12 lg:col-span-3 bg-white border border-outline-variant rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-container"></div>
+<p class="text-label-caps text-secondary uppercase tracking-widest mb-4">Current Term</p>
+<h3 class="text-h2 text-primary">Fall 2024</h3>
+<div class="mt-6 flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="text-body-md text-secondary">Enrollment</span>
+<span class="px-2 py-1 bg-success/10 text-success text-xs font-bold rounded">OPEN</span>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5">
+<div class="bg-success h-1.5 rounded-full" style="width: 85%"></div>
+</div>
+<p class="text-xs text-secondary italic">85% of target capacity reached</p>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-3 bg-white border border-outline-variant rounded-xl p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-tertiary-container"></div>
+<p class="text-label-caps text-secondary uppercase tracking-widest mb-4">Next Key Date</p>
+<h3 class="text-h2 text-primary">Oct 15, 2024</h3>
+<div class="mt-6 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant">event_upcoming</span>
+</div>
+<div>
+<p class="text-body-md font-bold text-primary">Census Date</p>
+<p class="text-xs text-secondary">Fall 2024 Mid-Term</p>
+</div>
+</div>
+</div>
+<!-- Main Lifecycle Timeline -->
+<div class="col-span-12 lg:col-span-6 bg-white border border-outline-variant rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-h3 text-primary">Term Sequencing</h3>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined">filter_list</span></button>
+<button class="p-1 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined">more_vert</span></button>
+</div>
+</div>
+<div class="relative pl-8 space-y-8 before:content-[''] before:absolute before:left-3.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-surface-container">
+<!-- Term Node: Active -->
+<div class="relative">
+<div class="absolute -left-[29px] top-1.5 w-5 h-5 rounded-full bg-primary border-4 border-surface-container-lowest"></div>
+<div class="flex justify-between items-start">
+<div>
+<h4 class="text-body-lg font-bold text-primary">Fall 2024</h4>
+<p class="text-body-md text-secondary">Aug 20, 2024 - Dec 15, 2024</p>
+</div>
+<span class="px-3 py-1 bg-primary-container text-on-primary-container text-xs font-bold rounded-full">ACTIVE</span>
+</div>
+</div>
+<!-- Term Node: Scheduled -->
+<div class="relative">
+<div class="absolute -left-[29px] top-1.5 w-5 h-5 rounded-full bg-secondary-fixed-dim border-4 border-surface-container-lowest"></div>
+<div class="flex justify-between items-start opacity-70">
+<div>
+<h4 class="text-body-lg font-bold text-primary">Spring 2025</h4>
+<p class="text-body-md text-secondary">Jan 12, 2025 - May 18, 2025</p>
+</div>
+<span class="px-3 py-1 bg-surface-container-high text-secondary text-xs font-bold rounded-full">SCHEDULED</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Detailed Term Management Table -->
+<div class="col-span-12 bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="p-6 border-b border-outline-variant bg-surface-container-low flex justify-between items-center">
+<h3 class="text-h3 text-primary">Manage All Academic Terms</h3>
+<div class="flex items-center gap-4">
+<div class="flex rounded-md shadow-sm">
+<button class="px-4 py-1.5 bg-white border border-outline-variant rounded-l text-xs font-bold text-primary">All</button>
+<button class="px-4 py-1.5 bg-white border-y border-r border-outline-variant text-xs font-bold text-secondary hover:bg-surface-container">Active</button>
+<button class="px-4 py-1.5 bg-white border-y border-r border-outline-variant rounded-r text-xs font-bold text-secondary hover:bg-surface-container">Archived</button>
+</div>
+</div>
+</div>
+<table class="w-full text-left">
+<thead class="bg-surface-container-lowest border-b border-outline-variant">
+<tr>
+<th class="px-6 py-4 text-label-caps text-secondary font-bold uppercase tracking-wider">Term Name</th>
+<th class="px-6 py-4 text-label-caps text-secondary font-bold uppercase tracking-wider">Status</th>
+<th class="px-6 py-4 text-label-caps text-secondary font-bold uppercase tracking-wider">Enrollment Window</th>
+<th class="px-6 py-4 text-label-caps text-secondary font-bold uppercase tracking-wider">Census Date</th>
+<th class="px-6 py-4 text-label-caps text-secondary font-bold uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-5">
+<span class="text-body-md font-bold text-primary">Fall 2024</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-success">
+<span class="w-2 h-2 rounded-full bg-success"></span> Active
+                                </span>
+</td>
+<td class="px-6 py-5">
+<p class="text-body-md text-primary">Apr 01 - Aug 25, 2024</p>
+<p class="text-xs text-secondary mt-1">Status: Closed</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-body-md text-primary">Oct 15, 2024</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary-container hover:underline text-xs font-bold">Manage Dates</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-5">
+<span class="text-body-md font-bold text-primary">Spring 2025</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-info">
+<span class="w-2 h-2 rounded-full bg-info"></span> Scheduled
+                                </span>
+</td>
+<td class="px-6 py-5">
+<p class="text-body-md text-primary">Oct 01 - Jan 15, 2025</p>
+<p class="text-xs text-success font-bold mt-1">Status: Opening Soon</p>
+</td>
+<td class="px-6 py-5">
+<span class="text-body-md text-primary">Feb 20, 2025</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-primary-container hover:underline text-xs font-bold">Configure Window</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-bright transition-colors">
+<td class="px-6 py-5">
+<span class="text-body-md font-bold text-primary">Summer 2024</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1.5 text-xs font-bold text-secondary">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Archived
+                                </span>
+</td>
+<td class="px-6 py-5 text-secondary opacity-60">
+<p class="text-body-md">Mar 01 - May 25, 2024</p>
+</td>
+<td class="px-6 py-5 text-secondary opacity-60">
+<span class="text-body-md">Jun 10, 2024</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-secondary hover:underline text-xs font-bold">View History</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Transition Wizard Panel -->
+<div class="col-span-12 lg:col-span-5 bg-white border border-outline-variant rounded-xl p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-12 h-12 rounded bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-3xl">magic_button</span>
+</div>
+<div>
+<h3 class="text-h3 text-primary">Transition Term</h3>
+<p class="text-xs text-secondary">Follow the wizard to close current and open next.</p>
+</div>
+</div>
+<div class="space-y-6">
+<div class="p-4 bg-surface-container rounded border border-outline-variant border-dashed">
+<p class="text-label-caps text-secondary mb-3">Step 1: Closing Audit</p>
+<div class="flex justify-between items-center mb-2">
+<span class="text-body-md text-primary">Grade submissions complete?</span>
+<span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-body-md text-primary">Incomplete petitions resolved?</span>
+<span class="material-symbols-outlined text-error" style="font-variation-settings: 'FILL' 1;">cancel</span>
+</div>
+</div>
+<div class="space-y-4">
+<label class="block">
+<span class="text-label-caps text-secondary block mb-2">Target Term</span>
+<select class="w-full bg-surface-container-lowest border-outline-variant rounded p-3 text-body-md focus:ring-primary focus:border-primary">
+<option>Spring 2025 (Scheduled)</option>
+<option>Summer 2025 (Draft)</option>
+</select>
+</label>
+<div class="flex items-start gap-3 p-3 bg-error-container/20 rounded">
+<span class="material-symbols-outlined text-error mt-0.5">warning</span>
+<p class="text-xs text-on-error-container leading-relaxed">
+                                Transitioning will archive all Fall 2024 active course shells. This action is recorded in the system logs and cannot be undone via this wizard.
+                            </p>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-4 rounded-lg font-bold hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+                        Execute Transition
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Configuration Helper / Card -->
+<div class="col-span-12 lg:col-span-7 bg-white border border-outline-variant rounded-xl overflow-hidden flex flex-col md:flex-row">
+<div class="md:w-1/2 p-8">
+<h3 class="text-h3 text-primary mb-4">Term Standards</h3>
+<p class="text-body-md text-secondary mb-6">Standardize your semester lengths and census calculations across the university system.</p>
+<ul class="space-y-4">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container">calendar_month</span>
+<div>
+<p class="text-body-md font-bold text-primary">Standard Length</p>
+<p class="text-xs text-secondary">16 Weeks Academic + 1 Finals Week</p>
+</div>
+</li>
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary-container">analytics</span>
+<div>
+<p class="text-body-md font-bold text-primary">Census Buffer</p>
+<p class="text-xs text-secondary">T+15 Days from Term Start</p>
+</div>
+</li>
+</ul>
+<button class="mt-8 text-primary-container font-bold text-body-md hover:underline flex items-center gap-1">
+                        Edit Global Settings
+                        <span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<div class="md:w-1/2 bg-slate-900 relative p-8 flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 opacity-20">
+<img alt="Background decoration" class="w-full h-full object-cover grayscale" data-alt="abstract architectural patterns of a modern university building with clean lines and glass reflections" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC1yKUXSiCjrTJZbOMiqcgEE7YbGvpjWft2lXMuN_knnPzqkizJkZlxEPOuZwiLe0WMmGSp9jgcp02-7hTeMwpWo3bUce4KPD9nQNlEfVbuhFj6G5IamexMz454AvDb4F5pGaYTYDlptB87of73Abp6q6miAiTl9JR8w1teG-SZwsv1wVKTC5eKsT7YF9A6c6_YdQmZgFFLAz4-OcN--5JGklTDHDibk_Ajc3MNtTVWLXavw3ifbxOVBW33K_HxDoqn5I3lYKbOTqk"/>
+</div>
+<div class="relative z-10 text-center">
+<div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-4 backdrop-blur-sm">
+<span class="material-symbols-outlined text-white text-3xl">lightbulb</span>
+</div>
+<h4 class="text-white font-bold text-lg">Pro Tip</h4>
+<p class="text-slate-300 text-sm mt-2">Opening enrollment 3 months prior to start date increases early bird registration by 14%.</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

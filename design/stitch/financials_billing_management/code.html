@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#a8c8fd",
+                    "background": "#faf9fd",
+                    "on-surface-variant": "#43474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e8e8ec",
+                    "info": "#0288d1",
+                    "surface-tint": "#405f8e",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-fixed": "#191c1e",
+                    "on-error": "#ffffff",
+                    "surface": "#faf9fe",
+                    "on-primary-fixed-variant": "#264775",
+                    "inverse-surface": "#2f3034",
+                    "surface-container": "#eeedf2",
+                    "surface-dim": "#dad9de",
+                    "primary-fixed-dim": "#a8c8fd",
+                    "surface-bright": "#faf9fd",
+                    "primary": "#001733",
+                    "outline-variant": "#c3c6d0",
+                    "on-primary-fixed": "#001b3b",
+                    "surface-container-low": "#f4f3f7",
+                    "on-secondary-fixed-variant": "#444749",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#442200",
+                    "on-secondary-container": "#606365",
+                    "success": "#2e7d32",
+                    "on-tertiary-container": "#e39e62",
+                    "inverse-on-surface": "#f1f0f5",
+                    "surface-variant": "#e3e2e6",
+                    "secondary-fixed-dim": "#c4c7c9",
+                    "tertiary": "#442200",
+                    "on-surface": "#1a1c1f",
+                    "tertiary-fixed-dim": "#f6bb8a",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e3e2e6",
+                    "primary-container": "#1a4173",
+                    "on-background": "#1a1c1f",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#dee0e2",
+                    "outline": "#737780",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#8caee7",
+                    "secondary-fixed": "#e1e3e5",
+                    "on-tertiary-fixed-variant": "#663d17",
+                    "tertiary-fixed": "#ffdcc2",
+                    "secondary": "#5c5f61",
+                    "on-tertiary-fixed": "#2e1500"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sidebar-width": "260px",
+                    "base": "4px",
+                    "sm": "16px",
+                    "xs": "8px",
+                    "xl": "48px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "sidebar_width": "260px",
+                    "lg": "32px",
+                    "md": "24px",
+                    "container_max": "1440px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "stats-display": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h1": ["Inter"],
+                    "h3": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-8 py-3 sticky top-0 z-50 bg-white border-b border-slate-200">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-[#002b57] uppercase tracking-wider">Academic Portal</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 font-medium font-['Inter'] text-sm tracking-tight hover:text-[#002b57] transition-all duration-150" href="#">Institutional News</a>
+<a class="text-slate-500 font-medium font-['Inter'] text-sm tracking-tight hover:text-[#002b57] transition-all duration-150" href="#">Academic Calendar</a>
+<a class="text-slate-500 font-medium font-['Inter'] text-sm tracking-tight hover:text-[#002b57] transition-all duration-150" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-outline text-sm mr-2" data-icon="search">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-body-md" placeholder="Search records..." type="text"/>
+</div>
+<button class="bg-[#002b57] text-white px-4 py-2 rounded-lg font-['Inter'] text-sm font-semibold hover:opacity-90 transition-opacity">Create New</button>
+<div class="flex gap-2 ml-4">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="apps">apps</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col pt-16 z-40 bg-slate-50 border-r border-slate-200 w-72">
+<div class="px-6 py-8 flex flex-col items-center border-b border-slate-200 mb-4">
+<div class="w-16 h-16 rounded-full bg-[#002b57] flex items-center justify-center mb-3">
+<img alt="University Seal" class="w-10 h-10 object-contain" data-alt="University crest logo featuring a shield and olive branches in white on a deep navy background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBt9ducr5yZEzqhmvj8WcMEZA5SVdS4NEed2_PsXLV_0-Ro_hsKDD0Ovzbyt-ko8r33hXyGAUgcRNcUSJgT0I05fvBmvehc8KdsJSvTN7ZNS4ykrseAdt7cVcJ_IOPZaq6mgUkjp0iNMpJzE6tpI0voL9R3EYBJmQR09A55SOe_c43oJyFpYjwSBRXZeJEHKu3yxrdaIkLohDuxFOhecvl4_QAmY2bo-LhsGcua_A7n0-qlOsTELQxYiyuON74o4T2QB_krguEAuEs"/>
+</div>
+<h2 class="text-lg font-bold text-[#002b57]">Staff Portal</h2>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Institutional Management</p>
+</div>
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 border-l-4 border-transparent font-['Inter'] text-xs font-semibold uppercase tracking-widest hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 bg-white text-[#002b57] border-l-4 border-[#002b57] px-4 py-3 shadow-sm font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+                Financials
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 border-l-4 border-transparent font-['Inter'] text-xs font-semibold uppercase tracking-widest hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+                Degree Audits
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 border-l-4 border-transparent font-['Inter'] text-xs font-semibold uppercase tracking-widest hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+                Curriculum
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 border-l-4 border-transparent font-['Inter'] text-xs font-semibold uppercase tracking-widest hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="campaign">campaign</span>
+                Communications
+            </a>
+</nav>
+<div class="mt-auto border-t border-slate-200 p-4">
+<button class="w-full bg-surface-container-high text-[#002b57] py-2 rounded-lg font-semibold text-xs uppercase tracking-widest mb-4 hover:bg-slate-200 transition-colors">
+                System Support
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-2 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                    Sign Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="pl-72 pt-4">
+<div class="max-w-[1440px] mx-auto p-8">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-h1 text-h1 text-primary">Financial &amp; Billing Management</h1>
+<p class="font-body-lg text-body-lg text-secondary">Oversee tuition collections, scholarship disbursements, and outstanding balances.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 border border-primary text-primary px-4 py-2 rounded-lg font-semibold text-sm hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="upload_file">upload_file</span>
+                        Export Statement
+                    </button>
+<button class="flex items-center gap-2 bg-primary text-white px-6 py-2 rounded-lg font-semibold text-sm hover:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Generate Invoice
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Metrics -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter mb-8">
+<!-- Large Metric Card -->
+<div class="md:col-span-2 bg-white rounded-xl border border-outline-variant p-md relative overflow-hidden flex flex-col justify-between min-h-[180px]">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Total Revenue (FY24)</span>
+<h2 class="font-stats-display text-stats-display text-primary mt-2">$24,842,900.00</h2>
+</div>
+<div class="flex items-center gap-2 mt-4 text-success">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span class="text-sm font-bold">+12.4% vs last year</span>
+</div>
+</div>
+<!-- Balance Metric Card -->
+<div class="bg-white rounded-xl border border-outline-variant p-md relative overflow-hidden flex flex-col justify-between">
+<div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Outstanding Balances</span>
+<h2 class="font-stats-display text-[28px] leading-tight text-primary mt-2">$1,205,450.00</h2>
+</div>
+<div class="text-sm font-medium text-error mt-4">
+                        Requires urgent attention (842 students)
+                    </div>
+</div>
+<!-- Scholarship Metric Card -->
+<div class="bg-white rounded-xl border border-outline-variant p-md relative overflow-hidden flex flex-col justify-between">
+<div class="absolute top-0 left-0 w-full h-1 bg-info"></div>
+<div>
+<span class="font-label-caps text-label-caps text-secondary uppercase">Scholarships Disbursed</span>
+<h2 class="font-stats-display text-[28px] leading-tight text-primary mt-2">$4,320,000.00</h2>
+</div>
+<div class="text-sm font-medium text-secondary mt-4">
+                        95% allocation complete
+                    </div>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Student Financial Records Table (Main Area) -->
+<div class="lg:col-span-2 bg-white rounded-xl border border-outline-variant p-md">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-h3 text-h3 text-primary">Student Financial Records</h3>
+<div class="flex gap-2">
+<select class="text-xs border-outline-variant rounded-lg font-medium text-on-surface-variant focus:ring-primary">
+<option>Semester: Fall 2024</option>
+<option>Semester: Summer 2024</option>
+</select>
+<button class="material-symbols-outlined text-outline p-1 rounded hover:bg-slate-50" data-icon="filter_list">filter_list</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="pb-3 font-label-caps text-label-caps text-secondary uppercase px-2">Student Name</th>
+<th class="pb-3 font-label-caps text-label-caps text-secondary uppercase px-2">ID Number</th>
+<th class="pb-3 font-label-caps text-label-caps text-secondary uppercase px-2">Amount Due</th>
+<th class="pb-3 font-label-caps text-label-caps text-secondary uppercase px-2">Status</th>
+<th class="pb-3 font-label-caps text-label-caps text-secondary uppercase px-2 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-on-surface">
+<tr class="border-b border-outline-variant/50 hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-2">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full" data-alt="Close up professional headshot of a young student with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgBwehlzDLguSBfhVGpdpPH7AoH6pGhoKQHS-KZ9p5rdetKmAeLD-t4gR9en3Hb0t9O543D3yQ9Gm7XHqlrgYu69ZTBbmoZZWGXkzrAknMmdjFNZAfZLzraTVu_O98NIags_6yYd6qw9esNaWPldDbDClX3R0J944u0r7JgDUrVYjEYr33bhwVtPuZPm2KHYOk6yyt9dQj_4tDGm3tqT4bKPAn5pXox8NGojbXiJuLSCVi2JHGiKrBy3yw4eWPbcPms5TlJ2lKX8E"/>
+<span class="font-semibold">Elena Anderson</span>
+</div>
+</td>
+<td class="py-4 px-2 text-secondary">#ST-94821</td>
+<td class="py-4 px-2 font-bold">$12,400.00</td>
+<td class="py-4 px-2">
+<span class="bg-success/10 text-success px-3 py-1 rounded-full text-xs font-bold uppercase">Paid</span>
+</td>
+<td class="py-4 px-2 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-2">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full" data-alt="Close up professional headshot of a young adult student in a university library setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBolD5aOGURsf6nWMnPxSvJZaZY6lJgQFsbG_C11Q-bsD8E_c4axpSjb6CNRmE114TuS08Lz--mmQCyL_otiG_6YnL6UrJ-0DZY2RcvbrUdcFv-zKPxuVVjPGkFmHZIwMMmqPr5Oc-S-ERq57F8NAVaw90qHUDxnBokgo77gcE3pl7KXSxtOJHwNsD9Nzr8_VNN353Y79fHboeQ3ufOOCaFQtw7w9fEniy3waCjV2gLma-G3Cl23OCl2QGC4QD2YcSF_x1TPFzED9g"/>
+<span class="font-semibold">Marcus Johnson</span>
+</div>
+</td>
+<td class="py-4 px-2 text-secondary">#ST-88210</td>
+<td class="py-4 px-2 font-bold">$8,250.00</td>
+<td class="py-4 px-2">
+<span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-xs font-bold uppercase">Pending</span>
+</td>
+<td class="py-4 px-2 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-2">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full" data-alt="Portrait of a diverse university student on a modern campus walkway with soft sunlight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBvQHeNCFH38cZRNjO-jm_q4Thi8lczZmsI9FwTK9KRlyewHrNU7DEJWWpT5MjMW8IIgY7cb3wtCAnMXULd7EzzdKCNpimW4ZwH50GBNhaIVX8YHbNxgTKGTb7ZtUDJVStiVxKu1Spo0tvzOig64SFLMsZ-yr0MMg0-wv1HthoP8k2EQtFFFlVTDyODDbi8AOwzzlIlLu-MesIhH4iNthJR0VCEYDu2toxrj744axH4Cvolx4Z6h0okBZMawgl6OG_Z0-m_AE1R6s"/>
+<span class="font-semibold">Sarah Ramsey</span>
+</div>
+</td>
+<td class="py-4 px-2 text-secondary">#ST-74319</td>
+<td class="py-4 px-2 font-bold">$15,900.00</td>
+<td class="py-4 px-2">
+<span class="bg-error/10 text-error px-3 py-1 rounded-full text-xs font-bold uppercase">Overdue</span>
+</td>
+<td class="py-4 px-2 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant/50 hover:bg-slate-50/50 transition-colors">
+<td class="py-4 px-2">
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full" data-alt="Close up professional headshot of an international student wearing glasses in an academic office" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBAoYFUrPp2T3264EiV-R1J7BmRSGmODTkbIcCG_Dhe_2NM3hOFuz3WPD99esvrtiK-PQBZgmOAUQW4wd0QtTjqRBvWYIoZOP-Rcyv09yvtGZ7YOXTrHxYCe0ksU_2xnNo1OEa_ZuunWJRR5Lp_W7KP2pzATLo5fjjWV1h1MvIAB9C6Hw6uwr1DQM7ROOI5Lq0Y51OBOjYzKG7-axUSoKAw8VXVlGJb7MSjP4zs2SeltbdHGhomUqxICM2fOujPxKfBAXNzvGeupqs"/>
+<span class="font-semibold">Liam Thompson</span>
+</div>
+</td>
+<td class="py-4 px-2 text-secondary">#ST-99102</td>
+<td class="py-4 px-2 font-bold">$0.00</td>
+<td class="py-4 px-2">
+<span class="bg-success/10 text-success px-3 py-1 rounded-full text-xs font-bold uppercase">Paid</span>
+</td>
+<td class="py-4 px-2 text-right">
+<button class="material-symbols-outlined text-outline hover:text-primary transition-colors" data-icon="more_vert">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="mt-6 flex justify-center">
+<button class="text-primary font-semibold text-sm hover:underline">View All Student Records</button>
+</div>
+</div>
+<!-- Side Panel: Quick Actions & Recent Activity -->
+<div class="flex flex-col gap-gutter">
+<!-- Quick Actions Card -->
+<div class="bg-white rounded-xl border border-outline-variant p-md">
+<h3 class="font-h3 text-h3 text-primary mb-4">Quick Actions</h3>
+<div class="grid grid-cols-2 gap-3">
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 border border-outline-variant rounded-lg hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-primary" data-icon="receipt_long">receipt_long</span>
+<span class="text-[11px] font-bold uppercase text-secondary group-hover:text-primary">Process Refund</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 border border-outline-variant rounded-lg hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-primary" data-icon="edit_calendar">edit_calendar</span>
+<span class="text-[11px] font-bold uppercase text-secondary group-hover:text-primary">Payment Plan</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 border border-outline-variant rounded-lg hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-primary" data-icon="school">school</span>
+<span class="text-[11px] font-bold uppercase text-secondary group-hover:text-primary">Apply Grant</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-2 p-4 bg-slate-50 border border-outline-variant rounded-lg hover:bg-slate-100 transition-colors group">
+<span class="material-symbols-outlined text-primary" data-icon="contact_support">contact_support</span>
+<span class="text-[11px] font-bold uppercase text-secondary group-hover:text-primary">Send Notice</span>
+</button>
+</div>
+</div>
+<!-- Recent Transactions Card -->
+<div class="bg-white rounded-xl border border-outline-variant p-md flex-1">
+<h3 class="font-h3 text-h3 text-primary mb-4">Recent Activity</h3>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Payment Received</p>
+<p class="text-xs text-secondary">$5,200.00 from Elena Anderson</p>
+<p class="text-[10px] text-outline mt-1 uppercase">2 minutes ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-info/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-info text-sm" data-icon="description">description</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Invoice Generated</p>
+<p class="text-xs text-secondary">Housing Fee for Fall Semester</p>
+<p class="text-[10px] text-outline mt-1 uppercase">1 hour ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-8 h-8 rounded-full bg-error/10 flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-error text-sm" data-icon="error">error</span>
+</div>
+<div>
+<p class="text-sm font-semibold">Overdue Alert</p>
+<p class="text-xs text-secondary">32 students reached 30+ days</p>
+<p class="text-[10px] text-outline mt-1 uppercase">3 hours ago</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 border-t border-outline-variant text-xs font-bold uppercase text-secondary hover:text-primary">View Full Audit Log</button>
+</div>
+</div>
+</div>
+<!-- Footer Stats (Asymmetric Layout) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mt-8">
+<div class="md:col-span-2 bg-primary text-white rounded-xl p-lg flex flex-col md:flex-row justify-between items-center">
+<div class="mb-4 md:mb-0">
+<h4 class="font-h3 text-h3">Operational Efficiency</h4>
+<p class="text-on-primary-container text-sm opacity-80 mt-1">Average time to process manual refunds has decreased by 18% this month.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="text-right">
+<span class="text-2xl font-bold">1.4 Days</span>
+<p class="text-[10px] uppercase tracking-widest opacity-60">Avg Process Time</p>
+</div>
+<div class="w-px h-10 bg-white/20"></div>
+<div class="text-right">
+<span class="text-2xl font-bold">99.2%</span>
+<p class="text-[10px] uppercase tracking-widest opacity-60">Accuracy Rate</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container rounded-xl p-md border border-outline-variant flex items-center justify-center text-center">
+<div>
+<p class="font-label-caps text-label-caps text-secondary mb-2 uppercase">System Status</p>
+<div class="flex items-center gap-2 text-success font-bold">
+<span class="w-2 h-2 bg-success rounded-full"></span>
+                            All systems operational
+                        </div>
+<p class="text-[10px] text-outline mt-2 italic">Last sync: 12:05 PM GMT</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

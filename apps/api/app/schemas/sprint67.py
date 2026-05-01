@@ -334,6 +334,84 @@ class SupportRequestOut(BaseModel):
     created_at: datetime
 
 
+class ForumTopicCreate(BaseModel):
+    section_id: str
+    title: str = Field(min_length=1, max_length=180)
+    content: str = ""
+
+
+class ForumTopicModeration(BaseModel):
+    status: str | None = None
+    is_pinned: bool | None = None
+
+
+class ForumTopicOut(BaseModel):
+    id: str
+    section_id: str
+    created_by: str | None = None
+    title: str
+    content: str
+    status: str
+    is_pinned: bool
+    replies_count: int
+    created_at: datetime
+
+
+class LiveClassSessionCreate(BaseModel):
+    section_id: str
+    title: str = Field(min_length=1, max_length=180)
+    scheduled_at: datetime
+    platform: str = Field(default="zoom", min_length=1, max_length=64)
+    meeting_url: str = ""
+    recording_url: str = ""
+
+
+class LiveClassSessionOut(BaseModel):
+    id: str
+    section_id: str
+    lecturer_id: str | None = None
+    title: str
+    scheduled_at: datetime
+    platform: str
+    meeting_url: str
+    recording_url: str
+    status: str
+    created_at: datetime
+
+
+class EnrollmentActionRequest(BaseModel):
+    student_ids: list[str] = Field(default_factory=list)
+    target_section_id: str
+    action_type: str = Field(pattern="^(enroll|drop|move)$")
+    reason: str = ""
+
+
+class EnrollmentActionResult(BaseModel):
+    requested: int
+    success: int
+    skipped: int
+    action_type: str
+    target_section_id: str
+    reason: str
+
+
+class QualitySurveyCreate(BaseModel):
+    title: str = Field(min_length=1, max_length=180)
+    category: str = Field(default="course", min_length=1, max_length=64)
+    status: str = Field(default="open", min_length=1, max_length=32)
+    responses_count: int = Field(default=0, ge=0)
+
+
+class QualitySurveyOut(BaseModel):
+    id: str
+    title: str
+    category: str
+    department_id: str | None = None
+    status: str
+    responses_count: int
+    created_at: datetime
+
+
 class NotificationCreate(BaseModel):
     user_id: str
     title: str = Field(min_length=1, max_length=160)

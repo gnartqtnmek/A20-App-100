@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Course Catalog | Academic Admin</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474f",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-dim": "#dad9de",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-tertiary-container": "#e39e62",
+                        "error-container": "#ffdad6",
+                        "on-secondary-container": "#606365",
+                        "inverse-primary": "#a8c8fd",
+                        "surface-bright": "#faf9fe",
+                        "on-primary-container": "#7493c5",
+                        "inverse-surface": "#2f3034",
+                        "on-error": "#ffffff",
+                        "primary-container": "#1a4173",
+                        "secondary": "#5c5f61",
+                        "primary": "#001733",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "surface-container-low": "#f4f3f7",
+                        "on-secondary-fixed-variant": "#444749",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "surface-container-highest": "#e2e2e7",
+                        "secondary-container": "#dee0e2",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-container": "#eeedf2",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d0",
+                        "on-tertiary-fixed": "#2e1500",
+                        "surface": "#faf9fe",
+                        "tertiary": "#442200",
+                        "tertiary-container": "#442200",
+                        "background": "#faf9fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "on-surface": "#1a1c1f",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "info": "#0288d1",
+                        "on-primary-fixed-variant": "#264775",
+                        "outline": "#737780",
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-tint": "#405f8e",
+                        "inverse-on-surface": "#f1f0f5",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdcc2",
+                        "success": "#2e7d32",
+                        "on-background": "#1a1c1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container_max": "1440px",
+                        "lg": "32px",
+                        "sm": "16px",
+                        "xs": "8px",
+                        "gutter": "24px",
+                        "sidebar_width": "260px",
+                        "md": "24px",
+                        "base": "4px",
+                        "xl": "48px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e2e2e7; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background text-on-background overflow-hidden flex h-screen">
+<!-- SideNavBar -->
+<aside class="flex flex-col h-screen overflow-y-auto bg-[#1A4173] text-white fixed left-0 top-0 h-full w-72 flex flex-col border-r border-white/10 shadow-2xl z-50">
+<div class="px-6 py-8 flex flex-col gap-2">
+<h1 class="text-lg font-black uppercase text-white tracking-widest">Institution Admin</h1>
+<p class="font-['Inter'] text-sm font-medium tracking-wide text-white/60">Global Controller</p>
+</div>
+<nav class="flex-1 flex flex-col mt-4">
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">User Management</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 bg-white/10 border-l-4 border-white text-white transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Course Catalog</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Audit Logs</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">System Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-white/10 pb-6">
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-4 text-white/70 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-['Inter'] text-sm font-medium tracking-wide">Log Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 ml-72 overflow-y-auto">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-8 py-3 sticky top-0 z-40 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-8">
+<span class="text-xl font-bold tracking-tighter text-[#1A4173] dark:text-white">Academic Admin</span>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-primary-container transition-all" placeholder="Search catalog, faculty, or IDs..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-500 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors text-slate-500 rounded-full">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-slate-200"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="font-['Inter'] text-sm tracking-tight font-medium text-primary">Dr. Julianne Vane</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Registrar</p>
+</div>
+<img alt="Administrator Profile Avatar" class="h-10 w-10 rounded-full border-2 border-primary-container shadow-sm object-cover" data-alt="professional portrait of a senior academic administrator in a modern minimalist office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ_2dnUf0u_lT-4k6ZluupeIuBTaJ5SvUl30DLhFPJsEOmGzrGWR2pazbbsfjBZ-eN-v9hpFrTpep5ez-nu0iE15l03OworhR2qxK_Nf5GpLUScASYfnt_DU7pX_zQdlhdvYt0DPyadm65nhOyGQpfvh4BDcVFV9C84AX4-6XC_HCZP5p-7DSMVpbSlsJq67one2pde8M8m_-226NkHP2KAkQGOfjMJR1EXQuTKrlaRR4VMXGpj5MZLxK2zy7tv1x8CBzwbz4pZj0"/>
+</div>
+</div>
+</header>
+<!-- Catalog Body -->
+<section class="p-8 max-w-container_max mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex text-xs font-label-caps text-on-surface-variant mb-2 gap-2 uppercase tracking-widest">
+<span class="hover:text-primary cursor-pointer">Repository</span>
+<span>/</span>
+<span class="text-primary font-bold">Course Catalog</span>
+</nav>
+<h2 class="font-h1 text-h1 text-primary">Academic Inventory</h2>
+</div>
+<button class="flex items-center gap-2 bg-[#1A4173] text-white px-6 py-3 rounded hover:opacity-90 active:scale-[0.98] transition-all font-medium text-sm">
+<span class="material-symbols-outlined text-sm">add</span>
+                    Register New Course
+                </button>
+</div>
+<!-- Bento Stats -->
+<div class="grid grid-cols-12 gap-gutter mb-8">
+<div class="col-span-12 md:col-span-4 bg-white border border-outline-variant p-gutter rounded relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[4px] bg-[#1A4173]"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Total Active Courses</p>
+<div class="flex items-baseline gap-2">
+<span class="font-stats-display text-stats-display text-primary">1,482</span>
+<span class="text-success text-xs font-bold">+12% vs LY</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-2">Across 24 departments</p>
+</div>
+<div class="col-span-12 md:col-span-4 bg-white border border-outline-variant p-gutter rounded relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[4px] bg-tertiary-fixed-dim"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Pending Approval</p>
+<div class="flex items-baseline gap-2">
+<span class="font-stats-display text-stats-display text-tertiary">28</span>
+<span class="text-error text-xs font-bold">Priority</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-2">14 syllabus reviews required</p>
+</div>
+<div class="col-span-12 md:col-span-4 bg-white border border-outline-variant p-gutter rounded relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-[4px] bg-primary-fixed-dim"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4 uppercase">Credit Distribution</p>
+<div class="flex items-center gap-4 mt-2">
+<div class="flex-1 h-3 bg-surface-container-low rounded-full overflow-hidden flex">
+<div class="bg-[#1A4173] w-[60%]" title="3 Credits"></div>
+<div class="bg-primary-fixed-dim w-[25%]" title="4 Credits"></div>
+<div class="bg-outline-variant w-[15%]" title="Other"></div>
+</div>
+</div>
+<div class="flex justify-between text-[10px] font-bold text-on-surface-variant mt-3 uppercase">
+<span>3-Credit (60%)</span>
+<span>4-Credit (25%)</span>
+</div>
+</div>
+</div>
+<!-- Filters & Data Area -->
+<div class="bg-white border border-outline-variant rounded">
+<!-- Table Controls -->
+<div class="px-gutter py-4 border-b border-outline-variant flex flex-wrap gap-4 items-center justify-between">
+<div class="flex gap-3 overflow-x-auto pb-1 md:pb-0">
+<div class="flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-500 uppercase">Department</label>
+<select class="bg-surface-container-low border-none rounded text-sm px-3 py-1.5 min-w-[160px] focus:ring-2 focus:ring-primary-container">
+<option>All Departments</option>
+<option>Computer Science</option>
+<option>Economics</option>
+<option>Humanities</option>
+<option>Physics</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-500 uppercase">Level</label>
+<select class="bg-surface-container-low border-none rounded text-sm px-3 py-1.5 min-w-[120px] focus:ring-2 focus:ring-primary-container">
+<option>All Levels</option>
+<option>Undergraduate</option>
+<option>Graduate</option>
+<option>Doctoral</option>
+</select>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-500 uppercase">Status</label>
+<div class="flex gap-1 bg-surface-container-low p-1 rounded">
+<button class="px-3 py-1 text-xs font-semibold bg-white text-primary rounded shadow-sm">Active</button>
+<button class="px-3 py-1 text-xs font-semibold text-slate-500 hover:text-primary">Archived</button>
+</div>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="flex items-center gap-1 px-4 py-2 border border-outline-variant rounded text-xs font-bold text-on-surface-variant hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+                            Advanced Filters
+                        </button>
+<button class="flex items-center gap-1 px-4 py-2 border border-outline-variant rounded text-xs font-bold text-on-surface-variant hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">file_download</span>
+                            Export
+                        </button>
+</div>
+</div>
+<!-- Course Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-lowest">
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant">
+<div class="flex items-center gap-1">Subject Code <span class="material-symbols-outlined text-xs">unfold_more</span></div>
+</th>
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant">Course Title</th>
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant">Department</th>
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant text-center">Credits</th>
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant">Prerequisites</th>
+<th class="px-gutter py-4 font-label-caps text-label-caps text-slate-500 uppercase border-b border-outline-variant">Status</th>
+<th class="px-gutter py-4 border-b border-outline-variant"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-slate-50/50 transition-colors group">
+<td class="px-gutter py-5">
+<span class="font-bold text-primary px-2 py-1 bg-primary-fixed rounded text-xs">CS-402</span>
+</td>
+<td class="px-gutter py-5">
+<div>
+<p class="font-body-md text-primary font-semibold">Advanced Machine Learning</p>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Syllabus v3.2 Updated Apr 2024</p>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="font-body-md text-on-surface-variant">Computer Science</span>
+</td>
+<td class="px-gutter py-5 text-center">
+<span class="font-body-md font-bold text-primary">4.0</span>
+</td>
+<td class="px-gutter py-5">
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">CS-201</span>
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">MATH-302</span>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                        Active
+                                    </span>
+</td>
+<td class="px-gutter py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors group">
+<td class="px-gutter py-5">
+<span class="font-bold text-primary px-2 py-1 bg-primary-fixed rounded text-xs">ECON-215</span>
+</td>
+<td class="px-gutter py-5">
+<div>
+<p class="font-body-md text-primary font-semibold">Microeconomic Theory II</p>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Syllabus v1.0 Updated Jan 2024</p>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="font-body-md text-on-surface-variant">Economics</span>
+</td>
+<td class="px-gutter py-5 text-center">
+<span class="font-body-md font-bold text-primary">3.0</span>
+</td>
+<td class="px-gutter py-5">
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">ECON-101</span>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary-fixed text-tertiary">
+                                        Pending
+                                    </span>
+</td>
+<td class="px-gutter py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors group">
+<td class="px-gutter py-5">
+<span class="font-bold text-primary px-2 py-1 bg-primary-fixed rounded text-xs">PHYS-101</span>
+</td>
+<td class="px-gutter py-5">
+<div>
+<p class="font-body-md text-primary font-semibold">Introductory Mechanics</p>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Syllabus v4.1 Updated Sep 2023</p>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="font-body-md text-on-surface-variant">Physics</span>
+</td>
+<td class="px-gutter py-5 text-center">
+<span class="font-body-md font-bold text-primary">4.0</span>
+</td>
+<td class="px-gutter py-5">
+<span class="text-[10px] text-slate-400 italic">None</span>
+</td>
+<td class="px-gutter py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                        Active
+                                    </span>
+</td>
+<td class="px-gutter py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors group">
+<td class="px-gutter py-5">
+<span class="font-bold text-primary px-2 py-1 bg-primary-fixed rounded text-xs">HUM-330</span>
+</td>
+<td class="px-gutter py-5">
+<div>
+<p class="font-body-md text-primary font-semibold">Post-Modern Narratives</p>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Syllabus v2.0 Updated Dec 2023</p>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="font-body-md text-on-surface-variant">Humanities</span>
+</td>
+<td class="px-gutter py-5 text-center">
+<span class="font-body-md font-bold text-primary">3.0</span>
+</td>
+<td class="px-gutter py-5">
+<div class="flex flex-wrap gap-1">
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">HUM-101</span>
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">ENG-205</span>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                        Active
+                                    </span>
+</td>
+<td class="px-gutter py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50/50 transition-colors group">
+<td class="px-gutter py-5">
+<span class="font-bold text-primary px-2 py-1 bg-primary-fixed rounded text-xs">CS-110</span>
+</td>
+<td class="px-gutter py-5">
+<div>
+<p class="font-body-md text-primary font-semibold">Object Oriented Design</p>
+<p class="text-[11px] text-on-surface-variant mt-0.5">Syllabus v5.0 Updated Oct 2023</p>
+</div>
+</td>
+<td class="px-gutter py-5">
+<span class="font-body-md text-on-surface-variant">Computer Science</span>
+</td>
+<td class="px-gutter py-5 text-center">
+<span class="font-body-md font-bold text-primary">4.0</span>
+</td>
+<td class="px-gutter py-5">
+<span class="text-[10px] font-bold border border-outline-variant px-1.5 py-0.5 rounded text-on-surface-variant">CS-101</span>
+</td>
+<td class="px-gutter py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error-container text-on-error-container">
+                                        Suspended
+                                    </span>
+</td>
+<td class="px-gutter py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-gutter py-4 border-t border-outline-variant flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium">Showing 1 to 5 of 1,482 courses</p>
+<div class="flex items-center gap-1">
+<button class="p-2 border border-outline-variant rounded disabled:opacity-30 disabled:cursor-not-allowed hover:bg-slate-50 transition-colors" disabled="">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-[#1A4173] text-white text-xs font-bold rounded">1</button>
+<button class="w-8 h-8 flex items-center justify-center text-xs font-bold text-on-surface-variant hover:bg-slate-50 rounded transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center text-xs font-bold text-on-surface-variant hover:bg-slate-50 rounded transition-colors">3</button>
+<span class="px-2 text-slate-300">...</span>
+<button class="w-8 h-8 flex items-center justify-center text-xs font-bold text-on-surface-variant hover:bg-slate-50 rounded transition-colors">297</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Side Utility Rail (Optional, added for professional layout) -->
+<aside class="fixed right-0 top-16 bottom-0 w-80 bg-surface-container-low border-l border-outline-variant p-gutter hidden xl:block overflow-y-auto">
+<h3 class="font-h3 text-primary mb-6">Recent Activities</h3>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-xl">upload_file</span>
+</div>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-tighter">Bulk Import Success</p>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">24 courses added to Faculty of Arts catalog.</p>
+<p class="text-[10px] text-slate-400 mt-2 uppercase font-bold">2 hours ago</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded bg-tertiary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-white text-xl">pending_actions</span>
+</div>
+<div>
+<p class="text-xs font-bold text-primary uppercase tracking-tighter">New Approval Request</p>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">Syllabus review required for 'Introduction to AI' (CS-199).</p>
+<p class="text-[10px] text-slate-400 mt-2 uppercase font-bold">5 hours ago</p>
+</div>
+</div>
+</div>
+<div class="mt-xl">
+<h3 class="font-h3 text-primary mb-6">Course Health</h3>
+<div class="bg-white p-4 border border-outline-variant rounded">
+<p class="text-[10px] font-bold text-slate-500 uppercase mb-4">Prerequisite Mapping</p>
+<div class="relative h-32 w-full">
+<img alt="Course prerequisite health graph" class="w-full h-full object-cover" data-alt="a clean professional line graph showing trends in academic course completions and prerequisite compliance over two semesters" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2mxm0VhCSO108HJUt-1EzOfJj293ptDO3McdVfOJ-8v-xGsJKk07Ps6CuaKSnJwi4hRTOw04qACqjR9wlFNvoFJ7N9slgoPvhRuoZkgNQGVQ1eihX7zw0ZfytsCkZlJjV9g-WznGO5C4CDiRXicwDhkPu9wLYHAhoJsmWlx80MFAdiQcU36KML_Z_fi0zkgtb4fpitIaHE9WE0gUAbsNbXgTD5k7prnvHY_gDbGx1RKet8r1IZPJxE0qwr-RneElkCPudBK_bO28"/>
+</div>
+<div class="mt-4 flex justify-between">
+<div>
+<p class="text-xl font-bold text-primary">94%</p>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Compliance</p>
+</div>
+<div class="text-right">
+<p class="text-xl font-bold text-error">12</p>
+<p class="text-[10px] text-on-surface-variant uppercase font-bold">Orphaned</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Academic Core - Messaging</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#e39e62",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "background": "#faf9fd",
+                        "surface-container-highest": "#e3e2e6",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d0",
+                        "on-error": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "surface-container": "#eeedf2",
+                        "surface-dim": "#dad9de",
+                        "surface-bright": "#faf9fe",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed": "#001b3b",
+                        "on-secondary-container": "#606365",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "on-primary-container": "#8caee7",
+                        "tertiary-fixed": "#ffdcc2",
+                        "secondary": "#5c5f61",
+                        "surface-variant": "#e3e2e6",
+                        "on-surface-variant": "#43474f",
+                        "inverse-on-surface": "#f1f0f5",
+                        "success": "#2e7d32",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-surface": "#1a1c1f",
+                        "primary": "#001733",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#442200",
+                        "inverse-surface": "#2f3034",
+                        "tertiary-container": "#643500",
+                        "secondary-container": "#dee0e2",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "primary-fixed": "#d5e3ff",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed-variant": "#444749",
+                        "on-primary-fixed-variant": "#264775",
+                        "info": "#0288d1",
+                        "outline": "#737780",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f4f3f8",
+                        "primary-container": "#1a4173",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-tertiary": "#ffffff",
+                        "surface-tint": "#405f8e",
+                        "on-secondary": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface": "#faf9fe"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "16px",
+                        "lg": "32px",
+                        "container_max": "1440px",
+                        "xs": "8px",
+                        "sidebar-width": "260px",
+                        "xl": "48px",
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "sidebar_width": "260px",
+                        "md": "24px",
+                        "base": "4px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf9fd;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background">
+<!-- SideNavBar Component -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-200 dark:border-slate-800 bg-[#002b57] dark:bg-slate-950 font-inter antialiased tracking-tight flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="school">school</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-white">Academic Core</h1>
+<p class="text-[10px] text-white/60 uppercase tracking-widest">Student Portal</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span>Achievements</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span>Community</span>
+</a>
+<!-- Active State for Messaging -->
+<a class="relative flex items-center gap-3 px-4 py-3 bg-white/10 text-white before:absolute before:left-0 before:w-1 before:h-8 before:bg-white before:rounded-r-full transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span>Messaging</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<button class="w-full mb-6 py-3 px-4 bg-white/10 text-white rounded-lg text-sm font-semibold hover:bg-white/20 transition-all">
+                View Grades
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span>Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Component -->
+<header class="fixed top-0 right-0 left-64 h-16 border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-40 flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<h2 class="font-h2 text-h2 text-primary">Messaging</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container border-none rounded-full text-sm w-64 focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search conversations..." type="text"/>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 text-slate-500">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-all duration-200 text-slate-500">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full object-cover border border-slate-200" data-alt="Close-up portrait of a friendly male university student with a professional but approachable look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBHk9MOROssT9kpaOEfrABLudKYxlTPpRQObp3Vc1-ANJZW34lPPpz71IRVDsGE7A14FBcXuJS-Rv2JdWHGYwUcz2RDGXluSGe5U06OZ9qaybu0ndD136ajGZuYATbk2TDqNYWhpsPMdyWdXfqtzk9iNLP8QP3IObfHd597xLspByJqfcc5vv_c4swNTFxomdPXfDWn2H2Bff34y34oaC_3BtWXOzbcy6mrkXxyFp4DcOVrq0KOTQPrV6Yx44TsDpVfSIKwWz6OsIo"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen p-8 max-w-[1440px]">
+<!-- Header Actions -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+<div>
+<p class="font-body-md text-secondary">Manage your academic correspondence and system alerts.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-semibold text-primary hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="file_download">file_download</span>
+                    Export
+                </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-primary text-white rounded-lg font-semibold shadow-sm hover:opacity-90 active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+                    Compose Message
+                </button>
+</div>
+</div>
+<!-- System Alerts Bento Grid -->
+<section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+<!-- Alert Card 1: Critical -->
+<div class="bg-white border-l-4 border-error p-6 rounded-xl shadow-sm border border-slate-200 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="flex items-center gap-2 text-error font-semibold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]" data-icon="report">report</span>
+                            System Alert
+                        </span>
+<span class="text-[10px] text-secondary">2 hours ago</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">Tuition Deadline</h3>
+<p class="text-body-md text-secondary">Final payment for the Winter Semester is due by Friday, November 15th at 5:00 PM.</p>
+</div>
+<button class="mt-6 text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+                    Pay Now <span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Alert Card 2: Info -->
+<div class="bg-white border-l-4 border-info p-6 rounded-xl shadow-sm border border-slate-200">
+<div class="flex items-center justify-between mb-4">
+<span class="flex items-center gap-2 text-info font-semibold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]" data-icon="info">info</span>
+                        Registration
+                    </span>
+<span class="text-[10px] text-secondary">1 day ago</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">Spring Enrollment</h3>
+<p class="text-body-md text-secondary">Course registration for Spring 2025 opens next Monday. Review your degree audit today.</p>
+<div class="mt-6 flex gap-2">
+<span class="px-2 py-1 bg-surface-container rounded text-[10px] font-bold text-secondary">ACADEMIC</span>
+<span class="px-2 py-1 bg-surface-container rounded text-[10px] font-bold text-secondary">REGISTRAR</span>
+</div>
+</div>
+<!-- Alert Card 3: Success -->
+<div class="bg-white border-l-4 border-success p-6 rounded-xl shadow-sm border border-slate-200">
+<div class="flex items-center justify-between mb-4">
+<span class="flex items-center gap-2 text-success font-semibold text-xs uppercase tracking-wider">
+<span class="material-symbols-outlined text-[18px]" data-icon="check_circle">check_circle</span>
+                        Grades Posted
+                    </span>
+<span class="text-[10px] text-secondary">3 days ago</span>
+</div>
+<h3 class="font-h3 text-h3 text-primary mb-2">CS402 Final Results</h3>
+<p class="text-body-md text-secondary">Your final grade for Advanced Algorithms (CS402) has been officially recorded in the portal.</p>
+<button class="mt-6 text-sm font-bold text-primary flex items-center gap-1 hover:underline">
+                    View Transcript
+                </button>
+</div>
+</section>
+<!-- Messages Section -->
+<section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-slate-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div class="flex items-center gap-6">
+<button class="font-semibold text-primary border-b-2 border-primary pb-4 -mb-4 transition-all">All Messages</button>
+<button class="font-medium text-secondary pb-4 -mb-4 hover:text-primary transition-all">Unread</button>
+<button class="font-medium text-secondary pb-4 -mb-4 hover:text-primary transition-all">Sent</button>
+<button class="font-medium text-secondary pb-4 -mb-4 hover:text-primary transition-all">Archived</button>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 hover:bg-slate-50 rounded-lg text-slate-500">
+<span class="material-symbols-outlined text-[20px]" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-2 hover:bg-slate-50 rounded-lg text-slate-500">
+<span class="material-symbols-outlined text-[20px]" data-icon="sort">sort</span>
+</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-left border-b border-slate-200">
+<th class="px-6 py-3 font-label-caps text-label-caps text-secondary uppercase tracking-widest w-12">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Sender</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Subject</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Status</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-secondary uppercase tracking-widest text-right">Date</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Message Row: Unread -->
+<tr class="hover:bg-slate-50 transition-colors cursor-pointer group bg-blue-50/30">
+<td class="px-6 py-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">Dr</div>
+<span class="font-semibold text-primary">Dr. Julian Vance</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-primary">Feedback on Thesis Proposal</span>
+<span class="text-xs text-secondary line-clamp-1">I've reviewed your latest draft and have a few suggestions regarding the methodology...</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-fixed text-on-primary-fixed">
+                                    Unread
+                                </span>
+</td>
+<td class="px-6 py-4 text-right text-xs font-bold text-primary">
+                                09:42 AM
+                            </td>
+</tr>
+<!-- Message Row: Open -->
+<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<img alt="Sender Avatar" class="w-8 h-8 rounded-full object-cover" data-alt="Portrait of a young female administrator in professional attire" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNbewgoztRYcH_0RIRyrxQEEnfIq_heUqi1LGB7TDfoXSzBOQHF3eRaR7jUMvP-vbwpwrs0Ph9hSWjPJtpsOtLkePqcoaLvUs77oAeAZI9DoJhbMqkuFp6n8cBeLS69c5n6vbxJJuGll1b5sQbp9GJC2F89IoU4FK8wxI0whGxlpsZpOvntvbBoQJjvsjYO8-pWv1u7XPj8OkVxburYl9IrgRJXQeIl5osI4Y0GMYnz4WExuZ6SHUeW6sm3MZC4odirregosH-NRc"/>
+<span class="font-medium text-primary">Sarah Jenkins</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-medium text-primary">Library Book Overdue Notice</span>
+<span class="text-xs text-secondary line-clamp-1">"The Art of Game Design" is now 2 days overdue. Please return it to avoid further fines.</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                                    Open
+                                </span>
+</td>
+<td class="px-6 py-4 text-right text-xs text-secondary">
+                                Yesterday
+                            </td>
+</tr>
+<!-- Message Row: Read -->
+<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3 opacity-70">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold text-xs text-secondary">SA</div>
+<span class="font-medium text-primary">Student Association</span>
+</div>
+</td>
+<td class="px-6 py-4 opacity-70">
+<div class="flex flex-col">
+<span class="font-medium text-primary">Monthly Newsletter - October</span>
+<span class="text-xs text-secondary line-clamp-1">Check out the upcoming campus events, club highlights, and student discounts...</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-fixed text-on-secondary-fixed-variant">
+                                    Read
+                                </span>
+</td>
+<td class="px-6 py-4 text-right text-xs text-secondary opacity-70">
+                                Oct 24
+                            </td>
+</tr>
+<!-- Message Row: Read -->
+<tr class="hover:bg-slate-50 transition-colors cursor-pointer group">
+<td class="px-6 py-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3 opacity-70">
+<div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center font-bold text-xs text-secondary">IT</div>
+<span class="font-medium text-primary">IT Support Desk</span>
+</div>
+</td>
+<td class="px-6 py-4 opacity-70">
+<div class="flex flex-col">
+<span class="font-medium text-primary">Ticket #49201 Resolved</span>
+<span class="text-xs text-secondary line-clamp-1">Your request regarding the VPN connectivity issues has been successfully closed.</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-secondary-fixed text-on-secondary-fixed-variant">
+                                    Read
+                                </span>
+</td>
+<td class="px-6 py-4 text-right text-xs text-secondary opacity-70">
+                                Oct 22
+                            </td>
+</tr>
+<!-- Message Row: Unread -->
+<tr class="hover:bg-slate-50 transition-colors cursor-pointer group bg-blue-50/30">
+<td class="px-6 py-4">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" type="checkbox"/>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-white flex items-center justify-center font-bold text-xs">FA</div>
+<span class="font-semibold text-primary">Financial Aid Office</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="font-bold text-primary">Scholarship Opportunity: STEM Excellence</span>
+<span class="text-xs text-secondary line-clamp-1">Based on your academic performance, you are invited to apply for the annual...</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-primary-fixed text-on-primary-fixed">
+                                    Unread
+                                </span>
+</td>
+<td class="px-6 py-4 text-right text-xs font-bold text-primary">
+                                Oct 20
+                            </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between">
+<span class="text-xs text-secondary font-medium uppercase tracking-widest">Showing 1-10 of 42 messages</span>
+<div class="flex gap-2">
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 border border-slate-200 rounded-lg hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Spacer for Bottom Nav -->
+<div class="h-20 md:hidden"></div>
+</main>
+<!-- BottomNavBar Component (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 z-50 flex justify-around items-center px-4">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Awards</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#002b57] dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 rounded-xl px-4 py-1 scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Forum</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="text-[10px] font-bold uppercase tracking-widest">Chat</span>
+</a>
+</nav>
+</body></html>

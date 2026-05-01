@@ -20,16 +20,19 @@ from app.models import (
     CurriculumEntry,
     Department,
     Enrollment,
+    ForumTopic,
     Grade,
     GradeApproval,
     Lesson,
     LecturerAssignment,
+    LiveClassSession,
     Notification,
     Permission,
     Program,
     Quiz,
     QuizAttempt,
     QuizQuestion,
+    QualitySurvey,
     RiskAlert,
     Role,
     RolePermission,
@@ -555,6 +558,50 @@ async def _seed_sprint67_data(
         )
         await db.flush()
 
+    forum_topic = await db.scalar(select(ForumTopic).where(ForumTopic.section_id == section_id))
+    if not forum_topic:
+        db.add(
+            ForumTopic(
+                section_id=section_id,
+                created_by=users[UserRole.STUDENT].id,
+                title="Need clarification on week 2 assignment",
+                content="Can we submit with both external link and attached file?",
+                status="open",
+                is_pinned=False,
+                replies_count=4,
+            )
+        )
+        await db.flush()
+
+    live_session = await db.scalar(select(LiveClassSession).where(LiveClassSession.section_id == section_id))
+    if not live_session:
+        db.add(
+            LiveClassSession(
+                section_id=section_id,
+                lecturer_id=users[UserRole.LECTURER].id,
+                title="Week 2 Live Q&A",
+                scheduled_at=datetime.utcnow() + timedelta(days=3),
+                platform="Zoom",
+                meeting_url="https://zoom.example.com/brainio-week2",
+                recording_url="",
+                status="scheduled",
+            )
+        )
+        await db.flush()
+
+    survey = await db.scalar(select(QualitySurvey).where(QualitySurvey.department_id == department_id))
+    if not survey:
+        db.add(
+            QualitySurvey(
+                title="Course feedback 2026A",
+                category="course",
+                department_id=department_id,
+                status="open",
+                responses_count=120,
+            )
+        )
+        await db.flush()
+
     grade_approval = await db.scalar(select(GradeApproval).where(GradeApproval.section_id == section_id))
     if not grade_approval:
         db.add(
@@ -613,7 +660,7 @@ def main() -> None:
     asyncio.run(run_seed())
     print(
         "Seed completed: roles, permissions, demo users, departments, programs, courses, "
-        "sections, lessons, assignments, submissions, quizzes, grades, attendance, notifications"
+        "sections, lessons, assignments, submissions, quizzes, grades, attendance, notifications, forum, live classes, surveys"
     )
 
 

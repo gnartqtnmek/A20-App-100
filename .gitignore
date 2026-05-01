@@ -5,6 +5,8 @@
 backend/.env
 agent/.env
 frontend/.env*.local
+.pip-audit-cache
+.venv-audit-test
 
 # Python
 __pycache__/

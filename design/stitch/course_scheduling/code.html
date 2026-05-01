@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dad9de",
+                        "on-primary-fixed": "#001b3b",
+                        "tertiary-fixed": "#ffdcc2",
+                        "secondary": "#5c5f61",
+                        "on-background": "#1a1c1f",
+                        "inverse-on-surface": "#f1f0f5",
+                        "tertiary": "#442200",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f4f3f7",
+                        "tertiary-container": "#643500",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-surface": "#1a1c1f",
+                        "primary": "#001733",
+                        "inverse-surface": "#2f3034",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-fixed-variant": "#264775",
+                        "info": "#0288d1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "outline-variant": "#c3c6d0",
+                        "surface-container-highest": "#e3e2e6",
+                        "background": "#faf9fd",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary-container": "#606365",
+                        "success": "#2e7d32",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "inverse-primary": "#a8c8fd",
+                        "surface-bright": "#faf9fe",
+                        "on-tertiary-container": "#bc875a",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface": "#faf9fe",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-container": "#8caee7",
+                        "on-error": "#ffffff",
+                        "primary-container": "#1a4173",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "outline": "#737780",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "surface-tint": "#405f8e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "xl": "48px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "xs": "8px",
+                        "container_max": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #c3c6d0; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background">
+<!-- Global Side Navigation -->
+<aside class="w-72 h-screen fixed left-0 top-0 border-r border-slate-200 bg-slate-50 flex flex-col h-full py-6">
+<div class="px-8 mb-8">
+<span class="text-xl font-black text-blue-950 uppercase tracking-wider">Academic Admin</span>
+<p class="text-xs text-slate-500 mt-1">Staff Portal v2.4</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all ml-0" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="how_to_reg">how_to_reg</span>
+<span class="font-medium">Enrollment</span>
+</a>
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="inventory_2">inventory_2</span>
+<span class="font-medium">Records</span>
+</a>
+<a class="flex items-center bg-blue-100/50 text-blue-900 border-l-4 border-blue-900 px-4 py-3 ml-0" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="calendar_today">calendar_today</span>
+<span class="font-medium">Scheduling</span>
+</a>
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="query_stats">query_stats</span>
+<span class="font-medium">Reports</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-medium">Settings</span>
+</a>
+<a class="flex items-center text-slate-600 px-4 py-3 hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="contact_support">contact_support</span>
+<span class="font-medium">Help Center</span>
+</a>
+<div class="mt-6 pt-6 border-t border-slate-200 px-4">
+<div class="flex items-center gap-3">
+<img class="w-10 h-10 rounded-full border border-outline-variant" data-alt="Professional portrait of a university administrator in a blazer with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDQC4OPyHkqHTaSne-V19lqwdZOzraRCzKpDT3K4sbK9jhzCAcF6t286-Mt33nTxLvYsJzDPqkMiliyxjekwgeMwL0U4jI56b8petfBjh5gPNS1T9TsjX-_SusntwKR1Osfprose5o5nv7V7tf_VmDiJsXhSHrUh_rI9Z3BBBaVIBUMQRFLeEVZtpraeQY_z1arMNHu9i4ukGPub8tddot-8W2cAvAnH987jSr2-bvdBuu6Nyd1XO8EtbervlESX-U_yPVldfsSBkc"/>
+<div class="overflow-hidden">
+<p class="text-xs font-bold text-on-surface truncate">Dr. Julian Vance</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Academic Dean</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="h-16 w-full sticky top-0 z-50 bg-white/90 backdrop-blur-sm border-b border-slate-200 flex items-center justify-between px-8 w-full max-w-[1440px] ml-72">
+<div class="flex items-center gap-6">
+<span class="font-bold text-blue-950 text-lg">Nexus LMS</span>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm" data-icon="search">search</span>
+<input class="bg-surface-container-low border-none rounded-lg pl-10 pr-4 py-1.5 text-body-md focus:ring-2 focus:ring-primary/20 w-64" placeholder="Search courses or rooms..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-50 rounded-full text-slate-600 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-2 hover:bg-slate-50 rounded-full text-slate-600">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+</button>
+<button class="p-2 hover:bg-slate-50 rounded-full text-slate-600">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-lg font-label-caps flex items-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Entry
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-72 p-8 max-w-[1440px] flex gap-6">
+<!-- Left: Work Area (Calendar & Sections) -->
+<div class="flex-1 space-y-6">
+<!-- Header & Filter Row -->
+<div class="flex items-end justify-between">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Course Scheduling</h1>
+<p class="text-on-surface-variant font-body-md">Spring Semester 2024 • Humanities Department</p>
+</div>
+<div class="flex gap-2">
+<div class="bg-surface-container-high p-1 rounded-lg flex">
+<button class="px-4 py-1.5 bg-white shadow-sm rounded-md text-sm font-semibold text-primary">Grid View</button>
+<button class="px-4 py-1.5 text-sm font-semibold text-on-surface-variant">List View</button>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-6">
+<!-- Unassigned Sections List -->
+<div class="col-span-4 space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-h3 text-h3">Unassigned Sections</h3>
+<span class="bg-primary-container text-on-primary-container px-2 py-0.5 rounded text-xs font-bold">12 Pending</span>
+</div>
+<div class="space-y-3 custom-scrollbar overflow-y-auto max-h-[calc(100vh-280px)] pr-2">
+<!-- Section Card -->
+<div class="bg-white border border-outline-variant p-4 rounded-xl border-t-4 border-t-info hover:shadow-md transition-shadow cursor-grab active:cursor-grabbing">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-info">HIST-201</span>
+<span class="material-symbols-outlined text-slate-300 text-lg" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<h4 class="font-bold text-on-surface text-body-md leading-tight">Advanced European History</h4>
+<div class="mt-3 flex items-center gap-4 text-xs text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="groups">groups</span>
+<span>45 Students</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span>3 hrs/wk</span>
+</div>
+</div>
+</div>
+<!-- Section Card -->
+<div class="bg-white border border-outline-variant p-4 rounded-xl border-t-4 border-t-tertiary-container hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-on-tertiary-container">PHIL-105</span>
+<span class="material-symbols-outlined text-slate-300 text-lg" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<h4 class="font-bold text-on-surface text-body-md leading-tight">Introduction to Ethics</h4>
+<div class="mt-3 flex items-center gap-4 text-xs text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="groups">groups</span>
+<span>120 Students</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span>4 hrs/wk</span>
+</div>
+</div>
+</div>
+<!-- Section Card -->
+<div class="bg-white border border-outline-variant p-4 rounded-xl border-t-4 border-t-primary-container hover:shadow-md transition-shadow cursor-grab">
+<div class="flex justify-between items-start mb-2">
+<span class="font-label-caps text-on-primary-container">ECON-302</span>
+<span class="material-symbols-outlined text-slate-300 text-lg" data-icon="drag_indicator">drag_indicator</span>
+</div>
+<h4 class="font-bold text-on-surface text-body-md leading-tight">Macroeconomic Theory</h4>
+<div class="mt-3 flex items-center gap-4 text-xs text-on-surface-variant">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="groups">groups</span>
+<span>60 Students</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="timer">timer</span>
+<span>3 hrs/wk</span>
+</div>
+</div>
+</div>
+<!-- Section Card (Ghost) -->
+<div class="border-2 border-dashed border-outline-variant p-4 rounded-xl flex items-center justify-center bg-slate-50 opacity-60">
+<p class="text-xs font-bold text-slate-400 uppercase tracking-widest">+ Import Batch</p>
+</div>
+</div>
+</div>
+<!-- Weekly Grid View -->
+<div class="col-span-8">
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden flex flex-col h-full">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between">
+<div class="flex items-center gap-4">
+<button class="p-1 hover:bg-slate-100 rounded">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<span class="font-bold text-on-surface">Room: 402B - Main Hall</span>
+<button class="p-1 hover:bg-slate-100 rounded">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="flex items-center gap-2 text-xs text-on-surface-variant">
+<span class="material-symbols-outlined text-sm" data-icon="meeting_room">meeting_room</span>
+<span>Cap: 50 | Tech-Tier: A</span>
+</div>
+</div>
+<!-- Calendar Grid -->
+<div class="flex-1 grid grid-cols-6 border-b border-outline-variant">
+<!-- Time Column -->
+<div class="bg-surface-container-lowest border-r border-outline-variant text-[10px] uppercase font-bold text-slate-400 p-2 space-y-[4.5rem] pt-12 text-right pr-3">
+<div>08:00 AM</div>
+<div>09:00 AM</div>
+<div>10:00 AM</div>
+<div>11:00 AM</div>
+<div>12:00 PM</div>
+<div>01:00 PM</div>
+<div>02:00 PM</div>
+</div>
+<!-- Days -->
+<div class="col-span-5 grid grid-cols-5 h-[500px] relative">
+<!-- Day Headers -->
+<div class="absolute top-0 left-0 right-0 h-10 border-b border-outline-variant grid grid-cols-5 bg-white z-10">
+<div class="flex items-center justify-center font-label-caps text-on-surface-variant">Mon</div>
+<div class="flex items-center justify-center font-label-caps text-on-surface-variant">Tue</div>
+<div class="flex items-center justify-center font-label-caps text-on-surface-variant">Wed</div>
+<div class="flex items-center justify-center font-label-caps text-on-surface-variant">Thu</div>
+<div class="flex items-center justify-center font-label-caps text-on-surface-variant">Fri</div>
+</div>
+<!-- Vertical Grid Lines -->
+<div class="border-r border-outline-variant h-full"></div>
+<div class="border-r border-outline-variant h-full"></div>
+<div class="border-r border-outline-variant h-full"></div>
+<div class="border-r border-outline-variant h-full"></div>
+<div class="h-full"></div>
+<!-- Entries -->
+<!-- Mon 09:00 - 10:30 -->
+<div class="absolute top-20 left-[2%] w-[16%] bg-primary-fixed text-on-primary-fixed p-2 rounded-lg border-l-4 border-primary shadow-sm z-20">
+<p class="text-[10px] font-bold">LIT-101</p>
+<p class="text-[9px] opacity-80 leading-tight">Intro to Poetry</p>
+</div>
+<!-- Tue 11:00 - 12:30 Conflict -->
+<div class="absolute top-[12.5rem] left-[22%] w-[16%] bg-error-container text-on-error-container p-2 rounded-lg border-l-4 border-error shadow-sm z-20">
+<div class="flex items-center justify-between">
+<p class="text-[10px] font-bold">BIO-204</p>
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+</div>
+<p class="text-[9px] opacity-80 leading-tight">Genetics Lab</p>
+</div>
+<!-- Wed 08:30 - 10:00 -->
+<div class="absolute top-16 left-[42%] w-[16%] bg-secondary-container text-on-secondary-container p-2 rounded-lg border-l-4 border-secondary shadow-sm z-20">
+<p class="text-[10px] font-bold">MATH-401</p>
+<p class="text-[9px] opacity-80 leading-tight">Calc III</p>
+</div>
+<!-- Thu 09:00 - 11:00 -->
+<div class="absolute top-20 left-[62%] w-[16%] bg-primary-fixed text-on-primary-fixed p-2 rounded-lg border-l-4 border-primary shadow-sm z-20">
+<p class="text-[10px] font-bold">SOC-202</p>
+<p class="text-[9px] opacity-80 leading-tight">Urban Sociology</p>
+</div>
+<!-- Fri 13:00 - 14:30 Overlap Conflict -->
+<div class="absolute top-[21.5rem] left-[82%] w-[16%] bg-error-container text-on-error-container p-2 rounded-lg border-l-4 border-error shadow-sm z-20">
+<p class="text-[10px] font-bold">ART-105</p>
+<p class="text-[9px] opacity-80 leading-tight">Color Theory</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right: Utility Sidebar (Conflict Detection) -->
+<div class="w-80 space-y-6">
+<!-- Conflict Sidebar -->
+<div class="bg-white border border-outline-variant rounded-xl p-5">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-error" data-icon="report">report</span>
+<h3 class="font-h3 text-on-surface">Conflict Monitor</h3>
+</div>
+<div class="space-y-4">
+<!-- Conflict Item -->
+<div class="p-3 rounded-lg bg-surface-container-low border-l-4 border-error">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-black uppercase text-error">Double Booking</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Tue, 11:15 AM</span>
+</div>
+<p class="text-xs font-bold text-on-surface mb-1">BIO-204 vs CHEM-102</p>
+<p class="text-[11px] text-on-surface-variant">Both sections assigned to Room 402B. Room capacity exceeded by 15.</p>
+<button class="mt-3 text-[11px] font-bold text-primary hover:underline flex items-center gap-1">
+                            Resolve Conflict
+                            <span class="material-symbols-outlined text-[12px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<!-- Conflict Item -->
+<div class="p-3 rounded-lg bg-surface-container-low border-l-4 border-error">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[10px] font-black uppercase text-error">Instructor Clash</span>
+<span class="text-[10px] text-on-surface-variant font-medium">Fri, 01:00 PM</span>
+</div>
+<p class="text-xs font-bold text-on-surface mb-1">Dr. Aris (ART-105)</p>
+<p class="text-[11px] text-on-surface-variant">Instructor is simultaneously teaching PSY-300 in Building C.</p>
+<button class="mt-3 text-[11px] font-bold text-primary hover:underline flex items-center gap-1">
+                            Open Instructor Schedule
+                            <span class="material-symbols-outlined text-[12px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="mt-6 pt-6 border-t border-outline-variant">
+<div class="bg-surface-container p-3 rounded-lg flex items-center gap-3">
+<div class="h-8 w-8 rounded-full bg-success/20 flex items-center justify-center">
+<span class="material-symbols-outlined text-success text-sm" data-icon="check_circle" data-weight="fill">check_circle</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Auto-Optimizer</p>
+<p class="text-[10px] text-on-surface-variant">Ready to process 8 unassigned</p>
+</div>
+</div>
+<button class="w-full mt-3 bg-primary-container text-on-primary-container py-2.5 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90 active:scale-95 transition-all">
+                        Run Smart Assign
+                    </button>
+</div>
+</div>
+<!-- Stats & Quick View -->
+<div class="bg-primary text-on-primary rounded-xl p-5 overflow-hidden relative">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="school">school</span>
+</div>
+<p class="text-[10px] uppercase font-bold tracking-widest opacity-60">Completion Rate</p>
+<p class="text-stats-display font-stats-display mt-1">84%</p>
+<div class="mt-4 w-full bg-white/20 h-1.5 rounded-full">
+<div class="bg-white h-1.5 rounded-full w-[84%]"></div>
+</div>
+<p class="text-[11px] mt-4 opacity-80 leading-relaxed">
+                    142/168 sections have been successfully assigned for Spring '24.
+                </p>
+</div>
+<!-- Mini Calendar View Decorative -->
+<div class="bg-white border border-outline-variant rounded-xl p-5">
+<h4 class="text-xs font-bold text-on-surface uppercase mb-4 tracking-tight">System Status</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Database Sync</span>
+<span class="text-success flex items-center gap-1 font-bold">
+<span class="w-1.5 h-1.5 bg-success rounded-full"></span> Live
+                        </span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Waitlist Load</span>
+<span class="text-on-surface font-bold">Medium</span>
+</div>
+<div class="flex items-center justify-between text-xs">
+<span class="text-on-surface-variant">Last Update</span>
+<span class="text-on-surface font-bold">2m ago</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+</button>
+</body></html>

@@ -1,6 +1,3 @@
-from typing import Any
-
-from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -9,7 +6,7 @@ class Settings(BaseSettings):
 
     app_name: str = "Brainio LMS API"
     app_env: str = "development"
-    cors_origins: list[str] = ["http://127.0.0.1:3000"]
+    cors_origins: str = "http://127.0.0.1:3000"
 
     database_url: str = "postgresql+asyncpg://postgres:postgres@127.0.0.1:55432/brainio"
     redis_url: str = "redis://127.0.0.1:56379/0"
@@ -20,12 +17,9 @@ class Settings(BaseSettings):
     jwt_refresh_token_expire_minutes: int = 60 * 24 * 7
     password_min_length: int = 8
 
-    @field_validator("cors_origins", mode="before")
-    @classmethod
-    def parse_cors_origins(cls, value: Any) -> Any:
-        if isinstance(value, str):
-            return [item.strip() for item in value.split(",") if item.strip()]
-        return value
+    @property
+    def cors_origins_list(self) -> list[str]:
+        return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
 
 settings = Settings()

@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-dim": "#dad9de",
+                        "on-primary-fixed": "#001b3b",
+                        "tertiary-fixed": "#ffdcc2",
+                        "secondary": "#5c5f61",
+                        "on-background": "#1a1c1f",
+                        "inverse-on-surface": "#f1f0f5",
+                        "tertiary": "#442200",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "surface-container-low": "#f4f3f7",
+                        "tertiary-container": "#643500",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-surface": "#1a1c1f",
+                        "primary": "#001733",
+                        "inverse-surface": "#2f3034",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-fixed-variant": "#264775",
+                        "info": "#0288d1",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "outline-variant": "#c3c6d0",
+                        "surface-container-highest": "#e3e2e6",
+                        "background": "#faf9fd",
+                        "on-surface-variant": "#43474f",
+                        "on-secondary-container": "#606365",
+                        "success": "#2e7d32",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "inverse-primary": "#a8c8fd",
+                        "surface-bright": "#faf9fe",
+                        "on-tertiary-container": "#bc875a",
+                        "primary-fixed": "#d5e3ff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface": "#faf9fe",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-container": "#8caee7",
+                        "on-error": "#ffffff",
+                        "primary-container": "#1a4173",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "outline": "#737780",
+                        "on-tertiary": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "surface-tint": "#405f8e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max": "1440px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "xl": "48px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "xs": "8px",
+                        "container_max": "1440px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h2": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen">
+<!-- SideNavBar -->
+<aside class="w-72 h-screen fixed left-0 top-0 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 flex flex-col py-6 z-50">
+<div class="px-6 mb-8">
+<h1 class="text-xl font-black text-blue-950 dark:text-white uppercase tracking-wider">Nexus LMS</h1>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest mt-1">Staff Portal v2.4</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all ml-4 mr-4 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span class="font-medium">Dashboard</span>
+</a>
+<a class="flex items-center text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all ml-4 mr-4 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">how_to_reg</span>
+<span class="font-medium">Enrollment</span>
+</a>
+<a class="flex items-center text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all ml-4 mr-4 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-medium">Records</span>
+</a>
+<a class="flex items-center text-slate-600 dark:text-slate-400 px-4 py-3 hover:bg-slate-100 dark:hover:bg-slate-900 transition-all ml-4 mr-4 rounded-lg" href="#">
+<span class="material-symbols-outlined mr-3">calendar_today</span>
+<span class="font-medium">Scheduling</span>
+</a>
+<!-- Active State: Reports -->
+<a class="flex items-center bg-blue-100/50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-300 border-l-4 border-blue-900 dark:border-blue-500 px-4 py-3 ml-0" href="#">
+<span class="material-symbols-outlined mr-3">query_stats</span>
+<span class="font-medium">Reports</span>
+</a>
+</nav>
+<div class="px-6 mt-auto space-y-4">
+<button class="w-full bg-blue-900 text-white py-3 px-4 rounded-lg font-bold text-sm flex items-center justify-center gap-2 active:scale-[0.98] transition-transform">
+<span class="material-symbols-outlined">add</span>
+                New Entry
+            </button>
+<div class="pt-6 border-t border-slate-200 dark:border-slate-800 space-y-1">
+<a class="flex items-center text-slate-500 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="text-sm">Settings</span>
+</a>
+<a class="flex items-center text-slate-500 px-4 py-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors" href="#">
+<span class="material-symbols-outlined mr-3">contact_support</span>
+<span class="text-sm">Help Center</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-72 min-h-screen">
+<!-- TopAppBar -->
+<header class="h-16 w-full sticky top-0 z-40 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800 shadow-sm dark:shadow-none">
+<div class="flex items-center justify-between px-8 h-full max-w-[1440px] mx-auto">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full focus-within:ring-2 focus-within:ring-blue-900/20 rounded-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-md text-sm focus:ring-0" placeholder="Search reports, data points, or faculty..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-md">
+<span class="material-symbols-outlined">mail</span>
+</button>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Dr. Sarah Jenkins</p>
+<p class="text-[10px] text-slate-500">Academic Dean</p>
+</div>
+<img alt="Academic Dean Avatar" class="h-10 w-10 rounded-full object-cover ring-2 ring-blue-900/10" data-alt="professional portrait of a middle-aged female academic with glasses in a modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBb4ONZL2wJFdGwjtvWQcn0k4KCWVtUmtacyVPfczr1bzQQ2J8TSrJ5r63uq66FiGb1XMmPgQ41NQfJOxDcJpsMzAnBl1nCDmInk_jrBoLFma-PK6VCRovuwq7lsneRDyNBN0hMKf9QXNUZt5j0_LKrMXw-3IDSzoffU8BvbIz-fVJZIrleXsnHHFxpHqWJkDRam0Xt6vikr9RhA5ngeN3qGuwgqyAihSTBfbq_FAl56Q8DLtxKXv5Z9qbYWBrsYwrZnlMtYyFqhFw"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 max-w-[1440px] mx-auto">
+<!-- Header Section -->
+<div class="mb-10">
+<nav aria-label="Breadcrumb" class="flex mb-4">
+<ol class="flex items-center space-x-2 text-xs font-label-caps text-slate-500 uppercase tracking-widest">
+<li>Academic Admin</li>
+<li><span class="material-symbols-outlined text-sm mx-1">chevron_right</span></li>
+<li class="text-blue-900 font-bold">Reports &amp; Export Center</li>
+</ol>
+</nav>
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h1 text-h1 text-on-surface mb-2 tracking-tight">Academic Reports</h2>
+<p class="text-slate-500 max-w-2xl font-body-lg">Generate comprehensive data exports for university leadership. Select report templates, filter by parameters, and choose your preferred output format.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-outline-variant text-on-surface rounded-lg font-medium text-sm hover:bg-slate-50 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">history</span>
+                            Export History
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-blue-900 text-white rounded-lg font-medium text-sm hover:bg-blue-950 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-sm">schedule</span>
+                            Schedule recurring
+                        </button>
+</div>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Report Selection Panel (Left Column) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Report Templates -->
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<div class="p-6 border-b border-outline-variant bg-slate-50/50">
+<h3 class="font-h3 text-h3 text-on-surface">Available Report Templates</h3>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-px bg-outline-variant">
+<!-- Template Card 1 -->
+<label class="group relative bg-white p-6 cursor-pointer hover:bg-blue-50/30 transition-colors">
+<input checked="" class="absolute right-6 top-6 h-5 w-5 text-blue-900 focus:ring-blue-900/20" name="report_type" type="radio"/>
+<div class="mb-4 text-blue-900">
+<span class="material-symbols-outlined text-3xl">trending_up</span>
+</div>
+<h4 class="font-bold text-lg text-on-surface mb-1">Enrollment Trends</h4>
+<p class="text-sm text-slate-500 mb-4">Year-over-year comparison of student intake, retention rates, and demographic shifts.</p>
+<div class="flex gap-2">
+<span class="bg-blue-100 text-blue-900 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Demographics</span>
+<span class="bg-blue-100 text-blue-900 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Growth</span>
+</div>
+</label>
+<!-- Template Card 2 -->
+<label class="group relative bg-white p-6 cursor-pointer hover:bg-blue-50/30 transition-colors">
+<input class="absolute right-6 top-6 h-5 w-5 text-blue-900 focus:ring-blue-900/20" name="report_type" type="radio"/>
+<div class="mb-4 text-tertiary">
+<span class="material-symbols-outlined text-3xl">badge</span>
+</div>
+<h4 class="font-bold text-lg text-on-surface mb-1">Faculty Load Summary</h4>
+<p class="text-sm text-slate-500 mb-4">Detailed analysis of teaching hours, research credits, and administrative duties per department.</p>
+<div class="flex gap-2">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">HR</span>
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Logistics</span>
+</div>
+</label>
+<!-- Template Card 3 -->
+<label class="group relative bg-white p-6 cursor-pointer hover:bg-blue-50/30 transition-colors">
+<input class="absolute right-6 top-6 h-5 w-5 text-blue-900 focus:ring-blue-900/20" name="report_type" type="radio"/>
+<div class="mb-4 text-success">
+<span class="material-symbols-outlined text-3xl">bar_chart_4_bars</span>
+</div>
+<h4 class="font-bold text-lg text-on-surface mb-1">Grade Distribution</h4>
+<p class="text-sm text-slate-500 mb-4">Statistical spread of academic performance across courses, highlighting anomalies and GPA averages.</p>
+<div class="flex gap-2">
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Academic</span>
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">KPIs</span>
+</div>
+</label>
+<!-- Template Card 4 -->
+<label class="group relative bg-white p-6 cursor-pointer hover:bg-blue-50/30 transition-colors">
+<input class="absolute right-6 top-6 h-5 w-5 text-blue-900 focus:ring-blue-900/20" name="report_type" type="radio"/>
+<div class="mb-4 text-error">
+<span class="material-symbols-outlined text-3xl">monetization_on</span>
+</div>
+<h4 class="font-bold text-lg text-on-surface mb-1">Financial Oversight</h4>
+<p class="text-sm text-slate-500 mb-4">Budget allocation vs. actual spend across departments, grants, and operational costs.</p>
+<div class="flex gap-2">
+<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Finance</span>
+<span class="bg-red-100 text-red-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">Audit</span>
+</div>
+</label>
+</div>
+</div>
+<!-- Configuration Parameters -->
+<div class="bg-white rounded-xl border border-outline-variant p-8 shadow-sm">
+<div class="flex items-center gap-3 mb-8">
+<div class="p-2 bg-blue-900 text-white rounded-lg">
+<span class="material-symbols-outlined">tune</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-on-surface">Report Parameters</h3>
+<p class="text-xs text-slate-500 uppercase tracking-widest font-bold">Refine your data set</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Date Range -->
+<div class="space-y-3">
+<label class="text-xs font-bold text-on-surface uppercase tracking-wider block">Academic Period</label>
+<div class="grid grid-cols-2 gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">calendar_month</span>
+<input class="w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg text-sm focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900" type="date"/>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">calendar_month</span>
+<input class="w-full pl-10 pr-3 py-2 border border-outline-variant rounded-lg text-sm focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900" type="date"/>
+</div>
+</div>
+</div>
+<!-- Department Selection -->
+<div class="space-y-3">
+<label class="text-xs font-bold text-on-surface uppercase tracking-wider block">Department / College</label>
+<select class="w-full px-4 py-2 border border-outline-variant rounded-lg text-sm focus:ring-2 focus:ring-blue-900/10 focus:border-blue-900">
+<option>All University Departments</option>
+<option>College of Engineering</option>
+<option>School of Medicine</option>
+<option>Faculty of Humanities</option>
+<option>Natural Sciences</option>
+</select>
+</div>
+<!-- Data Granularity -->
+<div class="space-y-3">
+<label class="text-xs font-bold text-on-surface uppercase tracking-wider block">Data Granularity</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="text-blue-900" name="granularity" type="radio"/>
+<span class="text-sm">Summary</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-blue-900" name="granularity" type="radio"/>
+<span class="text-sm">Detailed</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="text-blue-900" name="granularity" type="radio"/>
+<span class="text-sm">Raw Data</span>
+</label>
+</div>
+</div>
+<!-- Advanced Filters -->
+<div class="space-y-3">
+<label class="text-xs font-bold text-on-surface uppercase tracking-wider block">Advanced Filters</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-3 py-1 bg-slate-100 text-slate-700 text-xs rounded-full border border-slate-200 hover:border-blue-900 transition-colors">Excl. Withdrawals</button>
+<button class="px-3 py-1 bg-slate-100 text-slate-700 text-xs rounded-full border border-slate-200 hover:border-blue-900 transition-colors">Active Only</button>
+<button class="px-3 py-1 bg-blue-900 text-white text-xs rounded-full border border-blue-900">Tenured Track</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Export & Preview Panel (Right Column) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Export Format Card -->
+<div class="bg-white rounded-xl border border-outline-variant p-8 shadow-sm">
+<h3 class="font-bold text-on-surface mb-6">Choose Export Format</h3>
+<div class="space-y-3 mb-8">
+<label class="flex items-center justify-between p-4 border border-outline-variant rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center">
+<span class="material-symbols-outlined">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-bold text-sm">PDF Document</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Formal Reporting</p>
+</div>
+</div>
+<input checked="" class="text-blue-900" name="format" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-4 border border-outline-variant rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center">
+<span class="material-symbols-outlined">table_view</span>
+</div>
+<div>
+<p class="font-bold text-sm">Excel Spreadsheet</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">Data Analysis</p>
+</div>
+</div>
+<input class="text-blue-900" name="format" type="radio"/>
+</label>
+<label class="flex items-center justify-between p-4 border border-outline-variant rounded-xl cursor-pointer hover:bg-slate-50 transition-colors group">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+<span class="material-symbols-outlined">csv</span>
+</div>
+<div>
+<p class="font-bold text-sm">CSV File</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-widest">External Systems</p>
+</div>
+</div>
+<input class="text-blue-900" name="format" type="radio"/>
+</label>
+</div>
+<button class="w-full bg-blue-900 text-white py-4 rounded-xl font-bold flex items-center justify-center gap-3 active:scale-[0.98] transition-transform shadow-lg shadow-blue-900/20">
+<span class="material-symbols-outlined">download</span>
+                            Generate &amp; Export Report
+                        </button>
+<p class="text-[10px] text-slate-400 text-center mt-4">Typical generation time: <span class="font-bold">45-90 seconds</span></p>
+</div>
+<!-- Quick Analytics Context -->
+<div class="bg-blue-900 rounded-xl p-8 text-white relative overflow-hidden">
+<!-- Decorative bg -->
+<div class="absolute top-0 right-0 -mr-12 -mt-12 w-48 h-48 bg-blue-800 rounded-full blur-3xl opacity-50"></div>
+<div class="relative z-10">
+<h4 class="text-xs font-bold uppercase tracking-widest opacity-70 mb-6">Last 30 Days Activity</h4>
+<div class="space-y-6">
+<div>
+<p class="text-3xl font-black mb-1">128</p>
+<p class="text-xs opacity-80 uppercase tracking-wider">Reports Generated</p>
+</div>
+<div>
+<p class="text-3xl font-black mb-1">4.2GB</p>
+<p class="text-xs opacity-80 uppercase tracking-wider">Data Exported</p>
+</div>
+<div>
+<p class="text-3xl font-black mb-1">99.8%</p>
+<p class="text-xs opacity-80 uppercase tracking-wider">Generation Success Rate</p>
+</div>
+</div>
+<div class="mt-8 pt-8 border-t border-blue-800">
+<a class="text-xs font-bold flex items-center gap-2 hover:translate-x-1 transition-transform" href="#">
+                                    VIEW FULL AUDIT LOG
+                                    <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Recent Activity Table Section -->
+<div class="mt-12">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-h2 text-h2 text-on-surface">Recent Exports</h3>
+<button class="text-blue-900 text-sm font-bold hover:underline">Clear History</button>
+</div>
+<div class="bg-white rounded-xl border border-outline-variant overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-outline-variant">
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest">Report Name</th>
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest">Date Generated</th>
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest">Department</th>
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest">Format</th>
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-xs font-label-caps text-slate-500 uppercase tracking-widest text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">trending_up</span>
+<span class="font-bold text-sm">Fall_2023_Enrollment_Final</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 24, 2023 • 09:15 AM</td>
+<td class="px-6 py-4 text-sm font-medium">University-Wide</td>
+<td class="px-6 py-4">
+<span class="bg-red-50 text-red-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">PDF</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-success"></div>
+<span class="text-xs font-medium text-success">Completed</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-900 hover:bg-blue-50 p-2 rounded transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">bar_chart_4_bars</span>
+<span class="font-bold text-sm">Q3_Grades_Engineering</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 22, 2023 • 02:45 PM</td>
+<td class="px-6 py-4 text-sm font-medium">Engineering</td>
+<td class="px-6 py-4">
+<span class="bg-green-50 text-green-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">XLSX</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-success"></div>
+<span class="text-xs font-medium text-success">Completed</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-900 hover:bg-blue-50 p-2 rounded transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-slate-400">badge</span>
+<span class="font-bold text-sm">Faculty_Hours_Full_Year</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-slate-500">Oct 20, 2023 • 11:20 AM</td>
+<td class="px-6 py-4 text-sm font-medium">Humanities</td>
+<td class="px-6 py-4">
+<span class="bg-blue-50 text-blue-700 px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">CSV</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="h-2 w-2 rounded-full bg-error"></div>
+<span class="text-xs font-medium text-error">Failed</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-blue-900 hover:bg-blue-50 p-2 rounded transition-colors">
+<span class="material-symbols-outlined">refresh</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="mt-20 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8">
+<div class="max-w-[1440px] mx-auto flex justify-between items-center">
+<p class="text-xs text-slate-500">© 2024 Nexus LMS Academic Systems. All Rights Reserved.</p>
+<div class="flex gap-6">
+<a class="text-xs text-slate-500 hover:text-blue-900 transition-colors" href="#">Privacy Policy</a>
+<a class="text-xs text-slate-500 hover:text-blue-900 transition-colors" href="#">Terms of Service</a>
+<a class="text-xs text-slate-500 hover:text-blue-900 transition-colors" href="#">Security Audit</a>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

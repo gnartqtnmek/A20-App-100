@@ -6,19 +6,20 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          mint: "#4BE39E",
-          sky: "#38BDF8",
-          sun: "#FDBA3B",
-          rose: "#FB7185",
-          night: "#0A1020"
-        }
+        primary: "#1a4173",
+        "primary-container": "#1a4173",
+        background: "#faf9fe",
+        surface: "#faf9fe",
+        success: "#2e7d32",
+        info: "#0288d1",
+        error: "#ba1a1a",
+        outline: "#c3c6d0"
       },
       boxShadow: {
-        glass: "0 20px 60px rgba(8, 24, 52, 0.2)"
+        soft: "0 4px 12px rgba(0,0,0,0.05)"
       },
       borderRadius: {
-        soft: "1.25rem"
+        soft: "0.75rem"
       }
     }
   },

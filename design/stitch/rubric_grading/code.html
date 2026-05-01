@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "surface-container-low": "#f4f3f8",
+                        "surface": "#faf9fe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-surface": "#1a1c1f",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "background": "#faf9fd",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-container": "#7493c5",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "primary": "#001733",
+                        "outline-variant": "#c3c6d0",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-container-highest": "#e2e2e7",
+                        "primary-fixed": "#d5e3ff",
+                        "success": "#2e7d32",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-container": "#e39e62",
+                        "on-error-container": "#93000a",
+                        "info": "#0288d1",
+                        "secondary": "#5c5f61",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-container": "#442200",
+                        "surface-tint": "#405f8e",
+                        "surface-bright": "#faf9fd",
+                        "on-secondary-container": "#606365",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "secondary-fixed": "#e1e3e5",
+                        "outline": "#737780",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed-variant": "#264775",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "tertiary": "#442200",
+                        "inverse-on-surface": "#f1f0f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "xl": "48px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "lg": "32px",
+                        "container-max": "1440px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "sidebar_width": "260px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"],
+                        "stats-display": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-50 border-r border-slate-200 flex flex-col h-full py-6 px-4 gap-2">
+<div class="px-4 mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-[#002b57] flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-white" data-icon="account_balance">account_balance</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#002b57]">Academic Core</h1>
+<p class="text-[11px] font-semibold text-slate-500 tracking-widest uppercase">Lecturer Portal</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 hover:translate-x-1 transition-all duration-150 rounded-md" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Lesson Editor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 hover:translate-x-1 transition-all duration-150 rounded-md" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_add">assignment_add</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Assignment Builder</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 hover:translate-x-1 transition-all duration-150 rounded-md" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Submission Review</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white text-[#002b57] border-l-4 border-[#002b57] shadow-sm font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Rubric Grading</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 pt-4 border-t border-slate-200">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Help Center</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 w-[calc(100%-256px)] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 flex justify-between items-center h-16 px-8">
+<div class="flex items-center gap-8">
+<h2 class="text-lg font-black tracking-tight text-[#002b57]">Academic Core</h2>
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Dashboard</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Courses</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Calendar</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 scale-75" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-100 border-none rounded-md text-xs w-64 focus:ring-1 focus:ring-[#002b57]" placeholder="Search resources..." type="text"/>
+</div>
+<button class="p-2 text-slate-400 hover:bg-slate-50 rounded-md transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="flex items-center gap-3 border-l border-slate-200 pl-4 ml-2">
+<div class="text-right">
+<p class="text-xs font-bold text-[#002b57]">Dr. Julian Vane</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-tighter">Senior Lecturer</p>
+</div>
+<img alt="Lecturer Profile" class="w-8 h-8 rounded-full border border-slate-200" data-alt="professional portrait of a male lecturer in a dark blazer with a neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAVgCPs8keSQ1QKSzEEW2-At_7s-5JCw3cSPQ0P4H-OVg0iGDOv1ZYuf1tAxwxTo1l-XBLNU-3TSCEh1Ib6t-G5Ya4gJ6dSZMwh5gx2H89L2WV3-0svqprA-eO1Ou40drC5U8r0iiMw9MrQxDFQ5cl8eYfq-WNGBT_sYtD7VwazAlA610VRq3iD93ZRcHs5gLMAAmqzf4jLoayHNGmwz8WeEoQsO5eLy_UdX3q14TejV6xZOe5pyMlq4Pk422Ci3wQIqxLXmnaZQ6U"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-[1440px] mx-auto p-gutter">
+<!-- Breadcrumbs & Actions -->
+<div class="flex justify-between items-center mb-8">
+<div>
+<div class="flex items-center gap-2 text-slate-400 text-xs font-medium mb-1">
+<span>Courses</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span>CS101: Introduction to Computer Science</span>
+<span class="material-symbols-outlined text-[10px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-[#002b57]">Assignment 03 Grading</span>
+</div>
+<h2 class="font-h1 text-h1 text-primary">Rubric Grading: Mid-term Project</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline text-secondary font-label-caps text-label-caps rounded-lg hover:bg-surface-container transition-colors">Save Draft</button>
+<button class="px-6 py-2 bg-[#002b57] text-on-primary font-label-caps text-label-caps rounded-lg shadow-md hover:bg-primary-container transition-all">Submit Final Grade</button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Column: Student Work & Metadata -->
+<div class="col-span-12 lg:col-span-4 space-y-gutter">
+<!-- Student Work Summary Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<div class="h-1 bg-[#002b57]"></div>
+<div class="p-md">
+<div class="flex items-center gap-4 mb-6">
+<img alt="Student Avatar" class="w-14 h-14 rounded-full" data-alt="close up headshot of a college student smiling naturally with soft outdoor lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDYD9oPNDaMQsG3M9-vy-fCaDH-161lO3_RS6fVMO-qV7xvlE7A6kJBVmg6Kdso011rbkDXUiA053lBA3bEhRmtAqj95vdHX-Zq4w9FGJA7KS4wfKhKbaYDOYbwlRfjtjhwVRzCcVO_WyQinycBSmG64JHZUkAVgIg8I1liFR51MBF05UfRIyP2QAS-Tzrs10-zWM9YHOYVFWg70N66bce9NqdmDCSq4Ra7QzzFPcgILAuYRS62ycW1W2CvkZl9_jhgakY2LkRz6hg"/>
+<div>
+<h3 class="font-h3 text-h3 text-on-surface">Alex Thompson</h3>
+<p class="font-body-md text-body-md text-secondary">Student ID: 2024-00129</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="font-label-caps text-[10px] text-secondary uppercase mb-1">Submission Status</p>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">On Time</span>
+</div>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="font-label-caps text-[10px] text-secondary uppercase mb-1">Attempt</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-info" data-icon="history">history</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">1 of 3</span>
+</div>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="font-label-caps text-[10px] text-secondary uppercase mb-1">Files Submitted</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-secondary" data-icon="attach_file">attach_file</span>
+<span class="font-body-md text-body-md font-semibold text-on-surface">3 Files</span>
+</div>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-outline-variant">
+<p class="font-label-caps text-[10px] text-secondary uppercase mb-1">Similarity Index</p>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-sm text-error" data-icon="visibility">visibility</span>
+<span class="font-body-md text-body-md font-semibold text-error">4% (Low)</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Submitted Files List -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md">
+<h4 class="font-label-caps text-label-caps text-secondary mb-4 uppercase">Submitted Artifacts</h4>
+<div class="space-y-3">
+<div class="flex items-center justify-between p-3 border border-outline-variant rounded-lg hover:border-primary-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-10 bg-error-container/20 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-error" data-icon="description">description</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Research_Paper_Final.pdf</p>
+<p class="text-[10px] text-secondary">2.4 MB • Oct 24, 11:45 PM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="open_in_new">open_in_new</span>
+</div>
+<div class="flex items-center justify-between p-3 border border-outline-variant rounded-lg hover:border-primary-container transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<div class="w-8 h-10 bg-info/10 flex items-center justify-center rounded">
+<span class="material-symbols-outlined text-info" data-icon="code">code</span>
+</div>
+<div>
+<p class="text-xs font-bold text-on-surface">Source_Code_Archive.zip</p>
+<p class="text-[10px] text-secondary">15.8 MB • Oct 24, 11:46 PM</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary transition-colors" data-icon="download">download</span>
+</div>
+</div>
+</div>
+<!-- Return File Upload -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md border-dashed border-2">
+<div class="flex flex-col items-center text-center py-4">
+<span class="material-symbols-outlined text-4xl text-slate-300 mb-2" data-icon="upload_file">upload_file</span>
+<h4 class="text-sm font-bold text-on-surface">Return Feedback File</h4>
+<p class="text-[11px] text-secondary mt-1 mb-4">Annotated documents or grading keys</p>
+<button class="text-xs font-bold text-[#002b57] hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                                Click to upload or drag &amp; drop
+                            </button>
+</div>
+</div>
+</div>
+<!-- Right Column: Rubric & Feedback -->
+<div class="col-span-12 lg:col-span-8 space-y-gutter">
+<!-- Grading Rubric Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-on-surface">Grading Rubric</h3>
+<div class="bg-primary-container text-white px-4 py-2 rounded-lg flex items-center gap-2">
+<span class="text-xs font-medium opacity-80">TOTAL SCORE:</span>
+<span class="text-lg font-black">88 / 100</span>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Criterion: Correctness -->
+<div class="space-y-3 p-4 bg-surface rounded-lg border border-outline-variant border-l-4 border-l-success">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-bold text-on-surface">Correctness (40%)</h4>
+<p class="text-xs text-secondary">Accuracy of algorithms and implementation logic.</p>
+</div>
+<div class="flex items-center gap-2">
+<input class="w-16 h-10 text-center font-bold border-outline-variant rounded-lg focus:ring-[#002b57] focus:border-[#002b57]" type="number" value="36"/>
+<span class="text-xs font-bold text-secondary">/ 40</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Needs Improvement</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Satisfactory</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border-2 border-[#002b57] bg-[#002b57]/10 text-[#002b57]">Excellent</button>
+</div>
+</div>
+<!-- Criterion: Clarity -->
+<div class="space-y-3 p-4 bg-surface rounded-lg border border-outline-variant border-l-4 border-l-info">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-bold text-on-surface">Clarity (25%)</h4>
+<p class="text-xs text-secondary">Readability of code and clear documentation/comments.</p>
+</div>
+<div class="flex items-center gap-2">
+<input class="w-16 h-10 text-center font-bold border-outline-variant rounded-lg focus:ring-[#002b57] focus:border-[#002b57]" type="number" value="20"/>
+<span class="text-xs font-bold text-secondary">/ 25</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Unclear</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border-2 border-[#002b57] bg-[#002b57]/10 text-[#002b57]">Good</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Superior</button>
+</div>
+</div>
+<!-- Criterion: Creativity -->
+<div class="space-y-3 p-4 bg-surface rounded-lg border border-outline-variant border-l-4 border-l-tertiary-fixed-dim">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-bold text-on-surface">Creativity (20%)</h4>
+<p class="text-xs text-secondary">Innovative approach to problem solving and optimization.</p>
+</div>
+<div class="flex items-center gap-2">
+<input class="w-16 h-10 text-center font-bold border-outline-variant rounded-lg focus:ring-[#002b57] focus:border-[#002b57]" type="number" value="18"/>
+<span class="text-xs font-bold text-secondary">/ 20</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Standard</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border-2 border-[#002b57] bg-[#002b57]/10 text-[#002b57]">Original</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Exceptional</button>
+</div>
+</div>
+<!-- Criterion: Format -->
+<div class="space-y-3 p-4 bg-surface rounded-lg border border-outline-variant border-l-4 border-l-secondary">
+<div class="flex justify-between items-start">
+<div>
+<h4 class="font-body-lg font-bold text-on-surface">Format (15%)</h4>
+<p class="text-xs text-secondary">Compliance with file naming conventions and submission structure.</p>
+</div>
+<div class="flex items-center gap-2">
+<input class="w-16 h-10 text-center font-bold border-outline-variant rounded-lg focus:ring-[#002b57] focus:border-[#002b57]" type="number" value="14"/>
+<span class="text-xs font-bold text-secondary">/ 15</span>
+</div>
+</div>
+<div class="flex gap-2 pt-2">
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border border-outline-variant bg-surface-container hover:bg-slate-200 transition-colors">Non-compliant</button>
+<button class="px-3 py-1.5 text-[10px] font-bold rounded-full border-2 border-[#002b57] bg-[#002b57]/10 text-[#002b57]">Correct</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Overall Feedback Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-md">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-primary" data-icon="forum">forum</span>
+<h3 class="font-h3 text-h3 text-on-surface">Overall Feedback</h3>
+</div>
+<textarea class="w-full bg-surface border border-outline-variant rounded-xl p-4 font-body-md text-body-md focus:ring-2 focus:ring-[#002b57] focus:border-transparent resize-none" placeholder="Enter detailed feedback for Alex Thompson..." rows="5"></textarea>
+<div class="mt-4 flex items-center gap-4">
+<button class="flex items-center gap-2 text-xs font-bold text-primary hover:bg-slate-100 px-3 py-2 rounded-md transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="mic">mic</span>
+                                Attach Voice Note
+                            </button>
+<button class="flex items-center gap-2 text-xs font-bold text-primary hover:bg-slate-100 px-3 py-2 rounded-md transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="auto_awesome">auto_awesome</span>
+                                Generate from Rubric
+                            </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- FAB (Suppressed on Details Page according to rules, but keeping context check) -->
+</body></html>

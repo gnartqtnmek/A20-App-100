@@ -23,11 +23,11 @@ ROLE_NAVIGATION: dict[UserRole, list[dict[str, str]]] = {
         {"key": "audit_security", "title": "Audit & Security", "description": "Review critical events", "route": "/dashboard/admin"},
     ],
     UserRole.ACADEMIC_STAFF: [
-        {"key": "faculty_dashboard", "title": "Faculty Dashboard", "description": "Track faculty training status", "route": "/dashboard/academic_staff"},
-        {"key": "curriculum", "title": "Curriculum", "description": "Map program and outcomes", "route": "/dashboard/academic_staff"},
-        {"key": "section_planning", "title": "Section Planning", "description": "Open and allocate sections", "route": "/dashboard/academic_staff"},
-        {"key": "teaching_load", "title": "Teaching Load", "description": "Balance lecturer workload", "route": "/dashboard/academic_staff"},
-        {"key": "academic_reports", "title": "Academic Reports", "description": "Publish quality reports", "route": "/dashboard/academic_staff"},
+        {"key": "faculty_dashboard", "title": "Faculty Dashboard", "description": "Track faculty training status", "route": "/dashboard/academic-staff"},
+        {"key": "curriculum", "title": "Curriculum", "description": "Map program and outcomes", "route": "/dashboard/academic-staff"},
+        {"key": "section_planning", "title": "Section Planning", "description": "Open and allocate sections", "route": "/dashboard/academic-staff"},
+        {"key": "teaching_load", "title": "Teaching Load", "description": "Balance lecturer workload", "route": "/dashboard/academic-staff"},
+        {"key": "academic_reports", "title": "Academic Reports", "description": "Publish quality reports", "route": "/dashboard/academic-staff"},
     ],
     UserRole.ADVISOR: [
         {"key": "student_success", "title": "Student Success", "description": "Monitor assigned students", "route": "/dashboard/advisor"},

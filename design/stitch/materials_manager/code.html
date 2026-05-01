@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Materials Manager - EduCore LMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#2f3034",
+                        "surface-container-high": "#e8e8ec",
+                        "on-surface": "#1a1c1f",
+                        "on-error": "#ffffff",
+                        "background": "#faf9fd",
+                        "inverse-primary": "#a8c8fd",
+                        "tertiary-container": "#442200",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface-tint": "#405f8e",
+                        "on-secondary-container": "#606365",
+                        "on-background": "#1a1c1f",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-tertiary-fixed": "#2e1500",
+                        "info": "#0288d1",
+                        "surface-bright": "#faf9fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container-low": "#f4f3f7",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#001733",
+                        "on-primary": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "surface-dim": "#dad9de",
+                        "surface-container": "#eeedf2",
+                        "error-container": "#ffdad6",
+                        "on-tertiary-container": "#bc875a",
+                        "secondary-fixed": "#e1e3e5",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-container": "#7493c5",
+                        "success": "#2e7d32",
+                        "secondary": "#5c5f61",
+                        "primary-container": "#002b57",
+                        "tertiary-fixed": "#ffdcc2",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "surface-container-highest": "#e2e2e7",
+                        "tertiary": "#442200",
+                        "outline-variant": "#c3c6d0",
+                        "surface": "#faf9fe",
+                        "inverse-on-surface": "#f1f0f5",
+                        "on-primary-fixed-variant": "#264775",
+                        "secondary-container": "#dee0e2",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "outline": "#737780",
+                        "primary-fixed": "#d5e3ff",
+                        "on-surface-variant": "#43474f",
+                        "on-primary-fixed": "#001b3b"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "base": "4px",
+                        "xs": "8px",
+                        "sidebar_width": "260px",
+                        "xl": "48px",
+                        "container_max": "1440px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "sm": "16px",
+                        "lg": "32px"
+                    },
+                    "fontFamily": {
+                        "stats-display": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; background-color: #faf9fd; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .active-pill { position: relative; }
+        .active-pill::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: #002b57; }
+    </style>
+</head>
+<body class="text-on-surface">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 flex flex-col z-50">
+<div class="px-6 py-8 flex flex-col gap-1">
+<h1 class="text-xl font-bold text-[#002b57] dark:text-white">EduCore LMS</h1>
+<p class="text-xs text-slate-500 font-medium">Lecturer Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">architecture</span>
+<span class="font-body-md text-body-md">Course Studio</span>
+</a>
+<!-- Active Tab: Materials -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#002b57]/5 text-[#002b57] dark:text-blue-300 border-l-4 border-[#002b57] font-semibold" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">book</span>
+<span class="font-body-md text-body-md">Materials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-body-md text-body-md">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="font-body-md text-body-md">Quiz Bank</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">grading</span>
+<span class="font-body-md text-body-md">Gradebook</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">co_present</span>
+<span class="font-body-md text-body-md">Attendance</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">forum</span>
+<span class="font-body-md text-body-md">Forum</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-200 dark:border-slate-800 py-4">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex justify-between items-center px-8">
+<div class="flex items-center gap-4">
+<span class="text-lg font-semibold text-slate-900 dark:text-white">Course Management</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative w-72 focus-within:ring-2 focus-within:ring-[#002b57]/20 rounded-lg">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full bg-slate-100 border-none rounded-lg py-2 pl-10 text-sm focus:ring-0" placeholder="Search materials..." type="text"/>
+</div>
+<div class="flex items-center gap-4 border-l border-slate-200 pl-6">
+<button class="text-slate-500 hover:bg-slate-50 p-2 rounded-full"><span class="material-symbols-outlined">notifications</span></button>
+<button class="text-slate-500 hover:bg-slate-50 p-2 rounded-full"><span class="material-symbols-outlined">apps</span></button>
+<div class="flex items-center gap-3 ml-2">
+<img alt="Lecturer Avatar" class="h-8 w-8 rounded-full object-cover" data-alt="professional portrait of a middle-aged academic lecturer in a minimalist studio setting, soft neutral lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPpVeTZCc77vXJFWWTczvmDlMsFX5-qPbojuSRHmIl5RZFAxNhgwfHhZ9eHIp_MtkR1g3sHHlbDY5K6x-ly2TmVJQTnSxnyHDMRBJf6MyiimB4FECDt4oajPkgoNFof4Ww67DqsNM8moPKGvLfvzFBt1SNSD33pqrXwj49piBCXqbCZyH8eP6KFKRxhVsA9x7mylnX3ZKFSjNjAICWTNaES0lyx7ghYvoV7L_4DSfvBh0DYK7ZC_1zPacNH4iXFV4Hzvncb3HZVxw"/>
+<button class="font-label-caps text-label-caps text-slate-500 uppercase tracking-widest hover:text-primary transition-colors">Sign Out</button>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-8 max-w-[1440px] mx-auto min-h-[calc(100vh-64px)]">
+<!-- Header Actions Area -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<nav class="flex items-center gap-2 text-xs text-slate-500 mb-2">
+<span>EduCore</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span>Materials</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-primary font-semibold">Spring 2024 Collection</span>
+</nav>
+<h2 class="font-h1 text-h1 text-primary">Materials Manager</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-outline-variant text-secondary font-semibold rounded hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-[20px]">file_download</span>
+<span class="text-body-md">Export List</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 bg-white border border-outline-variant text-secondary font-semibold rounded hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-[20px]">edit_square</span>
+<span class="text-body-md">Bulk Edit</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2 bg-primary-container text-white font-semibold rounded hover:bg-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+<span class="text-body-md">Upload Material</span>
+</button>
+</div>
+</div>
+<!-- Dashboard Layout: Filters Sidebar + Main List -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Category Rail -->
+<div class="col-span-3 space-y-lg">
+<div class="bg-white border border-outline-variant p-6 rounded-lg">
+<h4 class="font-label-caps text-label-caps text-secondary mb-4">CATEGORIES</h4>
+<ul class="space-y-1">
+<li>
+<a class="flex items-center justify-between p-2 rounded bg-primary/5 text-primary font-semibold group" href="#">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px] text-primary" style="font-variation-settings: 'FILL' 1;">folder</span>
+<span class="text-body-md">All Resources</span>
+</span>
+<span class="text-xs bg-primary/10 px-2 py-0.5 rounded-full">124</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between p-2 rounded text-secondary hover:bg-slate-50 transition-colors group" href="#">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">video_library</span>
+<span class="text-body-md">Video Lectures</span>
+</span>
+<span class="text-xs text-slate-400">28</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between p-2 rounded text-secondary hover:bg-slate-50 transition-colors group" href="#">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">picture_as_pdf</span>
+<span class="text-body-md">Course Readings</span>
+</span>
+<span class="text-xs text-slate-400">52</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between p-2 rounded text-secondary hover:bg-slate-50 transition-colors group" href="#">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">extension</span>
+<span class="text-body-md">SCORM Packages</span>
+</span>
+<span class="text-xs text-slate-400">12</span>
+</a>
+</li>
+<li>
+<a class="flex items-center justify-between p-2 rounded text-secondary hover:bg-slate-50 transition-colors group" href="#">
+<span class="flex items-center gap-3">
+<span class="material-symbols-outlined text-[20px]">archive</span>
+<span class="text-body-md">Archive</span>
+</span>
+</a>
+</li>
+</ul>
+</div>
+<div class="bg-primary text-white p-6 rounded-lg relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-h3 text-h3 mb-2">Storage Status</h4>
+<p class="text-xs text-on-primary-container mb-4">78% of 10GB used</p>
+<div class="h-1.5 w-full bg-white/20 rounded-full mb-4">
+<div class="h-1.5 bg-white rounded-full" style="width: 78%"></div>
+</div>
+<button class="text-xs font-bold underline hover:no-underline">Upgrade Storage</button>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[100px]">cloud</span>
+</div>
+</div>
+</div>
+<!-- Materials Table Container -->
+<div class="col-span-9">
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden">
+<!-- Table Header/Filters -->
+<div class="flex items-center justify-between p-4 border-b border-outline-variant bg-slate-50/50">
+<div class="flex items-center gap-4">
+<select class="text-xs border-outline-variant rounded bg-white py-1.5 pr-8 focus:ring-primary/20">
+<option>Show: 20 rows</option>
+<option>Show: 50 rows</option>
+</select>
+<span class="text-xs text-slate-400">Showing 1-20 of 124 materials</span>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-1.5 hover:bg-slate-100 rounded transition-colors text-primary border border-outline-variant">
+<span class="material-symbols-outlined text-[20px]">view_list</span>
+</button>
+<button class="p-1.5 hover:bg-slate-100 rounded transition-colors text-slate-400">
+<span class="material-symbols-outlined text-[20px]">grid_view</span>
+</button>
+</div>
+</div>
+<!-- Main Table -->
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50">
+<tr>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider">
+<div class="flex items-center gap-2">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<span>Material Name</span>
+</div>
+</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider">Type</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider">Visibility</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider">Modified</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<div class="p-2 bg-error-container/10 text-error rounded">
+<span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-primary">Advanced Quantum Physics_Notes_v2.pdf</p>
+<p class="text-xs text-slate-400">2.4 MB • Section 04</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded uppercase">PDF Document</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-success font-medium">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                                        Public
+                                    </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-600">Oct 24, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<div class="p-2 bg-info/10 text-info rounded">
+<span class="material-symbols-outlined text-[24px]">movie</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-primary">Laboratory_Safety_Briefing_2024.mp4</p>
+<p class="text-xs text-slate-400">450 MB • Mandatory</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded uppercase">Video</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+                                        Private
+                                    </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-600">Jan 12, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<div class="p-2 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded">
+<span class="material-symbols-outlined text-[24px]">extension</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-primary">Interactive_Module_Week3_BioChem.zip</p>
+<p class="text-xs text-slate-400">12.8 MB • SCORM 1.2</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded uppercase">SCORM</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-success font-medium">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                                        Public
+                                    </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-600">Feb 02, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<div class="p-2 bg-error-container/10 text-error rounded">
+<span class="material-symbols-outlined text-[24px]">picture_as_pdf</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-primary">Final_Exam_Study_Guide_Draft.pdf</p>
+<p class="text-xs text-slate-400">1.1 MB • Restricted</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded uppercase">PDF Document</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+<span class="material-symbols-outlined text-[16px]">visibility_off</span>
+                                        Private
+                                    </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-600">Yesterday</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<input class="rounded text-primary focus:ring-primary" type="checkbox"/>
+<div class="p-2 bg-success/10 text-success rounded">
+<span class="material-symbols-outlined text-[24px]">table_chart</span>
+</div>
+<div>
+<p class="font-semibold text-body-md text-primary">Student_Data_Set_Raw.xlsx</p>
+<p class="text-xs text-slate-400">84 KB • Homework Aid</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-secondary-container text-secondary text-[10px] font-bold rounded uppercase">Spreadsheet</span>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-xs text-success font-medium">
+<span class="material-symbols-outlined text-[16px]">visibility</span>
+                                        Public
+                                    </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-600">Feb 15, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Table Footer -->
+<div class="p-4 bg-slate-50 border-t border-outline-variant flex justify-between items-center">
+<div class="flex gap-2">
+<button class="px-3 py-1 bg-white border border-outline-variant rounded text-xs hover:bg-slate-100 disabled:opacity-50" disabled="">Previous</button>
+<button class="px-3 py-1 bg-primary text-white rounded text-xs">1</button>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded text-xs hover:bg-slate-100">2</button>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded text-xs hover:bg-slate-100">3</button>
+<span class="px-2 py-1 text-slate-400 text-xs">...</span>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded text-xs hover:bg-slate-100">7</button>
+<button class="px-3 py-1 bg-white border border-outline-variant rounded text-xs hover:bg-slate-100">Next</button>
+</div>
+<div class="text-xs text-slate-500">
+                            Items selected: <span class="text-primary font-bold">0</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity/Stats (Bento Style Sub-row) -->
+<div class="grid grid-cols-3 gap-6 mt-8">
+<div class="bg-white border border-outline-variant p-6 rounded-lg">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-info">history</span>
+<h4 class="font-label-caps text-label-caps text-secondary">RECENT UPLOADS</h4>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 bg-info rounded-full"></div>
+<span class="text-xs text-primary font-medium">Lecture_Slides_Week5.pptx</span>
+<span class="text-[10px] text-slate-400 ml-auto">2h ago</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="w-1.5 h-1.5 bg-slate-300 rounded-full"></div>
+<span class="text-xs text-primary font-medium">Reading_List_Revision.pdf</span>
+<span class="text-[10px] text-slate-400 ml-auto">5h ago</span>
+</div>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-6 rounded-lg">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-error">trending_up</span>
+<h4 class="font-label-caps text-label-caps text-secondary">MOST VIEWED</h4>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold text-slate-400 w-4">01</span>
+<span class="text-xs text-primary font-medium">Syllabus_Spring_2024.pdf</span>
+<span class="text-[10px] bg-success/10 text-success px-1.5 py-0.5 rounded ml-auto">1.2k</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-[10px] font-bold text-slate-400 w-4">02</span>
+<span class="text-xs text-primary font-medium">Intro_To_Physics_V1.mp4</span>
+<span class="text-[10px] bg-success/10 text-success px-1.5 py-0.5 rounded ml-auto">842</span>
+</div>
+</div>
+</div>
+<div class="bg-primary text-white p-6 rounded-lg flex flex-col justify-center items-center text-center">
+<span class="material-symbols-outlined text-[40px] mb-2 opacity-50">auto_awesome</span>
+<p class="text-xs font-medium mb-1">Generate AI Summaries</p>
+<p class="text-[10px] opacity-70 mb-4">Automatically create flashcards from your PDFs</p>
+<button class="bg-white text-primary text-[10px] font-bold px-4 py-1.5 rounded-full hover:bg-slate-100 transition-colors">Try Beta</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

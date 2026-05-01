@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e1e3e5",
+                        "primary-fixed": "#d5e3ff",
+                        "tertiary-container": "#442200",
+                        "on-surface-variant": "#43474f",
+                        "tertiary": "#442200",
+                        "on-surface": "#1a1c1f",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container": "#eeedf2",
+                        "secondary": "#5c5f61",
+                        "tertiary-fixed": "#ffdcc2",
+                        "background": "#faf9fd",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "surface-container-highest": "#e3e2e6",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "secondary-container": "#dee0e2",
+                        "info": "#0288d1",
+                        "on-primary-container": "#7493c5",
+                        "surface": "#faf9fe",
+                        "surface-bright": "#faf9fe",
+                        "inverse-surface": "#2f3034",
+                        "on-background": "#1a1c1f",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "primary": "#001733",
+                        "inverse-on-surface": "#f1f0f5",
+                        "outline-variant": "#c3c6d0",
+                        "on-tertiary-container": "#e39e62",
+                        "inverse-primary": "#a8c8fd",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "on-secondary": "#ffffff",
+                        "success": "#2e7d32",
+                        "on-secondary-container": "#606365",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#264775",
+                        "on-error-container": "#93000a",
+                        "outline": "#737780",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-secondary-fixed": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f4f3f8",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-tint": "#405f8e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "xl": "48px",
+                        "lg": "32px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "sidebar-width": "260px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "xs": "8px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- Global Side Navigation -->
+<aside class="h-screen w-64 border-r border-slate-200 fixed left-0 top-0 bg-white z-50 flex flex-col py-8">
+<div class="px-6 mb-10">
+<h1 class="text-lg font-black tracking-tighter text-blue-900">AcademicCore</h1>
+<p class="text-xs text-slate-500 font-medium tracking-wide">Student Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-body-md text-body-md">Home</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-body-md text-body-md">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-blue-900 bg-blue-50 border-l-4 border-blue-900 font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="play_lesson">play_lesson</span>
+<span class="font-body-md text-body-md">Lessons</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-body-md text-body-md">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Grades</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-100 pt-6">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-md text-body-md">Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="h-16 border-b border-slate-200 sticky top-0 z-40 bg-white/80 backdrop-blur-md flex items-center justify-between px-8 w-[calc(100%-16rem)] ml-64">
+<div class="flex items-center flex-1">
+<div class="relative w-96 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-900 transition-colors">search</span>
+<input class="w-full bg-slate-100 border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-blue-900/10 focus:bg-white transition-all" placeholder="Search courses, lessons, or notes..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 border-r border-slate-200 pr-6">
+<button class="text-slate-500 hover:text-blue-900 transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="text-slate-500 hover:text-blue-900 transition-colors">
+<span class="material-symbols-outlined">calendar_today</span>
+</button>
+<button class="text-slate-500 hover:text-blue-900 transition-colors">
+<span class="material-symbols-outlined">chat_bubble</span>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-sm font-semibold text-primary">Alex Sterling</p>
+<p class="text-[10px] uppercase tracking-widest text-slate-500">Undergraduate</p>
+</div>
+<img alt="Student Profile Avatar" class="w-10 h-10 rounded-full border-2 border-primary-fixed object-cover" data-alt="professional headshot of a young man with a friendly expression in a neutral studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAImX6gqZQoj2xUNp6QUB_XPpLgqw62GpeeSaOc71gqjGeN_TFi3BLgPGhjwwJxl5dv3BrFFVQQ2BfAXTw0bif5oAWFhD7WdUZkoLS8Too2aho3rrVK03_vrj6kKbLzSwPiYD-oQ5B4thZuOiDIPXCwiisHx3vDB62OxRg1VP9FGpEX8w65gZYgBAwKfk_8MrGVDJxCLshcsT1pqTL3ND7QaEHgWTJ6IFCcCI9ZMkvzLRK5vpxWatrX4t8ZBmxlAGBdY3_hKAuJGKw"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="ml-64 p-8 w-[calc(100%-16rem)]">
+<div class="max-w-container-max mx-auto">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-2 mb-6 text-slate-500">
+<span class="text-xs font-label-caps uppercase tracking-wider">Courses</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-xs font-label-caps uppercase tracking-wider">Adv. Macroeconomics</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-xs font-label-caps uppercase tracking-wider text-blue-900 font-bold">Lesson 04: Market Equilibrium</span>
+</nav>
+<div class="grid grid-cols-12 gap-8">
+<!-- Left Column: Video & Primary Content -->
+<div class="col-span-8 space-y-8">
+<!-- Hero Video Player Section -->
+<section class="bg-primary rounded-xl overflow-hidden shadow-xl aspect-video relative group border-b-4 border-blue-900">
+<img alt="Video Placeholder" class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700" data-alt="high resolution dashboard view of a lecture presentation on market equilibrium with colorful charts and data points" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDehC2GrpljhWgtgFFfOkHmFsfcoLxPu53kAR6rSwof0Ebkz6dxvKVJy1mLC9xEMK6AQ3YGgMLWv5jvSlwVHw4Bw_CDiRUV1yekJFemSZ18Yf53u9C_p7uHdG0JTr_6RrLpxZT1UYJq1wl6rheWPZIMIKTKK4rhdJn_Ua8xMNIj1w2zpvnK_GZZS9V5Hs7IRKGfrmTZeYhmZwTKDzTf6XtmiRM39fkTs62Z0aTannIhPeQc3_IcWTp7_VD-8JaRvLuHX9WaXER0J8o"/>
+<!-- Overlay UI -->
+<div class="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-all">
+<button class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined !text-5xl" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+</button>
+</div>
+<!-- Progress Bar & Controls -->
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+<div class="flex items-center gap-4 text-white mb-2">
+<span class="text-xs font-medium">12:45 / 45:00</span>
+<div class="flex-1 h-1.5 bg-white/20 rounded-full overflow-hidden">
+<div class="w-[28%] h-full bg-primary-fixed-dim"></div>
+</div>
+</div>
+<div class="flex items-center justify-between">
+<h2 class="text-white font-h2 text-h2">04. Understanding Supply &amp; Demand Curves</h2>
+<div class="flex items-center gap-4 text-white/80">
+<span class="material-symbols-outlined cursor-pointer hover:text-white">subtitles</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-white">settings</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-white">fullscreen</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Lesson Checklist & Description -->
+<section class="bg-white rounded-xl border border-outline-variant p-gutter shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-h3 text-h3 text-primary">Lesson Checklist</h3>
+<span class="px-3 py-1 bg-success/10 text-success text-xs font-bold rounded-full uppercase tracking-tighter">60% Complete</span>
+</div>
+<div class="overflow-hidden">
+<table class="w-full border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="text-left py-4 font-label-caps text-label-caps text-slate-500 uppercase">Module Task</th>
+<th class="text-center py-4 font-label-caps text-label-caps text-slate-500 uppercase">Format</th>
+<th class="text-center py-4 font-label-caps text-label-caps text-slate-500 uppercase">Duration</th>
+<th class="text-right py-4 font-label-caps text-label-caps text-slate-500 uppercase">Status</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-slate-50 group hover:bg-slate-50 transition-colors">
+<td class="py-5 font-body-md text-body-md text-primary font-semibold">Watch: Introduction to Equilibrium</td>
+<td class="py-5 text-center">
+<span class="material-symbols-outlined text-slate-400">videocam</span>
+</td>
+<td class="py-5 text-center text-body-md text-slate-500">12 min</td>
+<td class="py-5 text-right">
+<span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</td>
+</tr>
+<tr class="border-b border-slate-50 group hover:bg-slate-50 transition-colors">
+<td class="py-5 font-body-md text-body-md text-primary font-semibold">Read: Core Principles PDF (Ch. 4)</td>
+<td class="py-5 text-center">
+<span class="material-symbols-outlined text-slate-400">description</span>
+</td>
+<td class="py-5 text-center text-body-md text-slate-500">20 min</td>
+<td class="py-5 text-right">
+<span class="material-symbols-outlined text-success" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</td>
+</tr>
+<tr class="border-b border-slate-50 group hover:bg-slate-50 transition-colors">
+<td class="py-5 font-body-md text-body-md text-primary font-semibold">Practice: Equilibrium Problem Set</td>
+<td class="py-5 text-center">
+<span class="material-symbols-outlined text-slate-400">edit_note</span>
+</td>
+<td class="py-5 text-center text-body-md text-slate-500">15 min</td>
+<td class="py-5 text-right">
+<button class="px-4 py-1.5 border border-primary text-primary rounded font-semibold text-xs hover:bg-primary hover:text-white transition-all">Start Task</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>
+<!-- Right Column: Notes & Related -->
+<div class="col-span-4 space-y-8">
+<!-- Personal Notes Area -->
+<section class="bg-white rounded-xl border border-outline-variant shadow-sm h-[400px] flex flex-col overflow-hidden">
+<div class="p-6 border-b border-slate-100 flex items-center justify-between bg-surface-container-low">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-blue-900">note_alt</span>
+<h3 class="font-h3 text-h3 text-primary !text-lg">Personal Notes</h3>
+</div>
+<button class="text-blue-900 hover:bg-blue-50 p-1 rounded transition-colors">
+<span class="material-symbols-outlined">save</span>
+</button>
+</div>
+<div class="flex-1 p-6 relative">
+<textarea class="w-full h-full border-none p-0 focus:ring-0 text-sm font-body-md leading-relaxed text-slate-700 placeholder:text-slate-300 resize-none" placeholder="Click here to start typing your lesson notes..."></textarea>
+<div class="absolute bottom-4 right-4 flex items-center gap-2">
+<span class="text-[10px] text-slate-400 uppercase tracking-widest">Auto-saved 2m ago</span>
+</div>
+</div>
+<div class="p-3 bg-slate-50 border-t border-slate-100 flex gap-2 overflow-x-auto">
+<button class="px-3 py-1 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-500 hover:border-blue-900 transition-colors uppercase">#Supply</button>
+<button class="px-3 py-1 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-500 hover:border-blue-900 transition-colors uppercase">#Demand</button>
+<button class="px-3 py-1 bg-white border border-slate-200 rounded text-[10px] font-bold text-slate-500 hover:border-blue-900 transition-colors uppercase">#ExamPrep</button>
+</div>
+</section>
+<!-- Related Items Section -->
+<section class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="p-6 border-b border-slate-100">
+<h3 class="font-h3 text-h3 text-primary !text-lg">Supplementary</h3>
+</div>
+<div class="divide-y divide-slate-50">
+<!-- Quiz Item -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded bg-tertiary-fixed flex items-center justify-center text-on-tertiary-fixed-variant">
+<span class="material-symbols-outlined">quiz</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-semibold text-primary">Unit 4 Quiz</h4>
+<p class="text-xs text-slate-500">10 Questions • Graded</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-blue-900 transition-colors">arrow_forward</span>
+</div>
+<!-- Forum Item -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded bg-primary-fixed flex items-center justify-center text-on-primary-fixed-variant">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-semibold text-primary">Discussion Board</h4>
+<p class="text-xs text-slate-500">12 new responses</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-blue-900 transition-colors">arrow_forward</span>
+</div>
+<!-- Reference Item -->
+<div class="p-4 flex items-center gap-4 hover:bg-slate-50 transition-colors group cursor-pointer">
+<div class="w-12 h-12 rounded bg-surface-container-highest flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">library_books</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-semibold text-primary">Reading List</h4>
+<p class="text-xs text-slate-500">Case studies &amp; references</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-blue-900 transition-colors">arrow_forward</span>
+</div>
+</div>
+<button class="w-full py-4 bg-slate-50 text-xs font-bold text-slate-500 hover:text-blue-900 transition-colors uppercase tracking-widest border-t border-slate-100">
+                            View All Resources
+                        </button>
+</section>
+<!-- Instructor Card -->
+<div class="bg-blue-900 rounded-xl p-6 text-white shadow-lg relative overflow-hidden">
+<div class="relative z-10">
+<p class="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-300 mb-4">Course Instructor</p>
+<div class="flex items-center gap-4 mb-4">
+<img alt="Instructor Profile" class="w-14 h-14 rounded-lg object-cover ring-2 ring-blue-700" data-alt="professional portrait of a middle-aged female professor with glasses and a friendly, authoritative look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCddNhIb2Ja-47bXYju_OZG9oIq9jTGE0sIFshbC1gSixDySrrUsBN-2QZ0Gl06dLlSYvNRtaXj-BS1WHGMvmiYL4qFlCBgHu-8qFpUgwKsRQysCqD5pRO93gIReiXMGcbKPRgUQjkTyg_Po8uiRVo97Qp0gtAFumBWIqZNiYaHVnJw7icaOPcBbtGS48FMhSRM1bcaiB6P3dMjRAyo3bssWGUPRn8iLoVOYzieQduVQ_mntz0Wg6CcY9cLvUaELKulL4jOZHtYkYs"/>
+<div>
+<h4 class="font-bold text-base">Dr. Elena Rodriguez</h4>
+<p class="text-xs text-blue-200">Department of Economics</p>
+</div>
+</div>
+<button class="w-full py-2 bg-white/10 hover:bg-white/20 backdrop-blur-sm border border-white/20 rounded font-semibold text-xs transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">mail</span>
+                                Contact Professor
+                            </button>
+</div>
+<!-- Abstract Background Decoration -->
+<div class="absolute -right-4 -bottom-4 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
+<div class="absolute -left-4 -top-4 w-20 h-20 bg-blue-400/10 rounded-full blur-xl"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating Action Button for Support (Contextual) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined !text-3xl" style="font-variation-settings: 'FILL' 1;">help</span>
+</button>
+</body></html>

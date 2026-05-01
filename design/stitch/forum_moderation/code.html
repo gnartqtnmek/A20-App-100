@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Academic Core - Forum Moderation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "success": "#2e7d32",
+                        "surface-container-highest": "#e2e2e7",
+                        "primary-fixed": "#d5e3ff",
+                        "on-primary-fixed": "#001b3b",
+                        "on-primary-container": "#8caee7",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "surface-container": "#eeedf2",
+                        "surface-variant": "#e3e2e6",
+                        "outline-variant": "#c3c6d0",
+                        "primary": "#001733",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "error": "#ba1a1a",
+                        "secondary-container": "#dee0e2",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "background": "#faf9fd",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-surface": "#1a1c1f",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-low": "#f4f3f8",
+                        "surface": "#faf9fe",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed-variant": "#444749",
+                        "on-error": "#ffffff",
+                        "surface-bright": "#faf9fe",
+                        "tertiary": "#442200",
+                        "inverse-on-surface": "#f1f0f5",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "on-surface-variant": "#43474f",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed-variant": "#264775",
+                        "tertiary-container": "#643500",
+                        "outline": "#737780",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-primary": "#ffffff",
+                        "on-secondary-container": "#606365",
+                        "surface-tint": "#405f8e",
+                        "on-tertiary-fixed": "#2e1500",
+                        "secondary": "#5c5f61",
+                        "on-tertiary-container": "#bc875a",
+                        "on-error-container": "#93000a",
+                        "info": "#0288d1",
+                        "inverse-surface": "#2f3034",
+                        "on-background": "#1a1c1f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container_max": "1440px",
+                        "md": "24px",
+                        "base": "4px",
+                        "sidebar-width": "260px",
+                        "xl": "48px",
+                        "lg": "32px",
+                        "container-max": "1440px",
+                        "gutter": "24px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "xs": "8px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="fixed inset-y-0 left-0 flex flex-col z-40 h-screen w-64 bg-[#002b57] border-r border-white/10 font-['Inter'] antialiased tracking-tight text-sm">
+<div class="p-6">
+<div class="text-lg font-black tracking-widest uppercase text-white mb-8">Academic Core</div>
+<nav class="space-y-1">
+<!-- Navigation Tabs from JSON -->
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="quiz">quiz</span>
+                    Quiz Builder
+                </a>
+<!-- We map Forum Moderation to a custom active state for this view while maintaining JSON consistency -->
+<a class="flex items-center gap-3 px-4 py-3 bg-white/10 text-white border-l-4 border-white font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+                    Forum Moderation
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                    Gradebook Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-300 hover:bg-white/5 hover:text-white transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="how_to_reg">how_to_reg</span>
+                    Attendance Manager
+                </a>
+</nav>
+</div>
+<div class="mt-auto p-6 space-y-6">
+<button class="w-full bg-white/10 hover:bg-white/20 text-white font-semibold py-3 px-4 rounded transition-all duration-200 active:scale-[0.98]">
+                Create New Course
+            </button>
+<div class="flex items-center gap-3 pt-6 border-t border-white/10">
+<img alt="Lecturer Profile Picture" class="w-10 h-10 rounded-full object-cover border border-white/20" data-alt="professional headshot of a middle-aged academic lecturer in a library setting with soft bookshelf background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1DbHJDcdvzMHQ6F1rUoWmV5_j0tWXTFFqHw9HXGsxHNpHh4Ipo_RvIxqxJX5QIxhSjUDLWlQUBBIDP9GAu-2yWqPP_sC0fAwCPW_KttjMoaJwLcyc8tUxz2FqTCIwtw6hlazc1JlUXKY_nWqWH7TuqOBOLlTzAE_w7RAEmhQKDD2cxK7cL-ExvEtbE6C8D-7ZNASXixEhs8spatac-jSTO2aeDV6Vt_xWkJhYiUfpTlbWdcb78wlzx6aDPvbk3uIBK-ZnVyHFm4o"/>
+<div>
+<div class="text-white font-bold leading-tight">Dr. Julian Vance</div>
+<div class="text-slate-400 text-xs uppercase tracking-wider">Lecturer Portal</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 ml-64 min-h-screen">
+<!-- TopAppBar (Authority: JSON) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] h-16 z-30 bg-white/90 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-8 font-['Inter'] text-sm font-medium">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" style="font-size: 20px;">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-on-surface focus:ring-2 focus:ring-primary/20 transition-all" placeholder="Search discussions or users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 border-r border-slate-200 pr-6">
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+<div class="text-primary font-bold text-xl tracking-tight">Academic Core</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="pt-24 px-10 pb-16 max-w-[1440px] mx-auto">
+<!-- Page Header & Stats -->
+<div class="flex items-end justify-between mb-10">
+<div>
+<h1 class="font-h1 text-h1 text-primary mb-2">Forum Moderation</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Manage academic discourse and maintain community guidelines.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 px-6 py-3 bg-primary text-on-primary font-semibold rounded hover:shadow-lg transition-all active:scale-95">
+<span class="material-symbols-outlined" style="font-size: 20px;">add</span>
+                        New Discussion
+                    </button>
+</div>
+</div>
+<!-- Dashboard Stats Bento -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">ACTIVE TOPICS</p>
+<h3 class="font-stats-display text-stats-display text-primary">142</h3>
+<p class="text-xs text-success font-semibold mt-2 flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 14px;">trending_up</span> +12% this week
+                    </p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-error"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">REPORTED COMMENTS</p>
+<h3 class="font-stats-display text-stats-display text-error">08</h3>
+<p class="text-xs text-on-surface-variant mt-2 font-medium">Requires immediate action</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-tertiary-container"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">PENDING APPROVAL</p>
+<h3 class="font-stats-display text-stats-display text-primary">24</h3>
+<p class="text-xs text-on-surface-variant mt-2 font-medium">From external guest speakers</p>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-6 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-success"></div>
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-2">AVG. RESPONSE TIME</p>
+<h3 class="font-stats-display text-stats-display text-primary">2.4h</h3>
+<p class="text-xs text-success font-semibold mt-2">Top 5% of faculty</p>
+</div>
+</div>
+<!-- Moderation List Component -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden">
+<!-- Filters & Toolbar -->
+<div class="p-6 border-b border-outline-variant flex items-center justify-between bg-surface-container-low/30">
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 bg-primary text-white text-sm font-semibold rounded-full">All Discussions</button>
+<button class="px-4 py-2 hover:bg-surface-container-highest text-on-surface-variant text-sm font-medium rounded-full transition-colors">Reported</button>
+<button class="px-4 py-2 hover:bg-surface-container-highest text-on-surface-variant text-sm font-medium rounded-full transition-colors">Unresolved</button>
+<button class="px-4 py-2 hover:bg-surface-container-highest text-on-surface-variant text-sm font-medium rounded-full transition-colors">Course: CS101</button>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-xs font-semibold text-on-surface-variant tracking-wider">SORT BY:</span>
+<select class="bg-transparent border-none text-sm font-bold text-primary focus:ring-0 cursor-pointer">
+<option>Most Recent</option>
+<option>High Engagement</option>
+<option>Oldest</option>
+</select>
+</div>
+</div>
+<!-- Discussion Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-outline-variant">
+<th class="px-8 py-4 font-label-caps text-label-caps text-on-surface-variant">TOPIC &amp; COURSE</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">AUTHOR</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">ENGAGEMENT</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-on-surface-variant">STATE</th>
+<th class="px-8 py-4 font-label-caps text-label-caps text-on-surface-variant text-right">ACTIONS</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/30">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">forum</span>
+</div>
+<div>
+<p class="font-h3 text-body-lg text-primary font-bold group-hover:text-primary-container transition-colors">Challenges in Asynchronous Processing</p>
+<p class="text-xs text-on-surface-variant">Advanced Algorithms (CS402)</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Student Avatar" class="w-full h-full object-cover" data-alt="portrait of a young male university student in a casual sweatshirt with neutral studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC0nq4p9Rks4MD_O5xbtfoEcJ8jdJiCBzsS21d1dwE6LeQRAtNlESHgKd1z8-0pW0WhZV8mNbAaFjT9PQOPCpcE7FGT_P3UbYyLm3Wybbxk41i0D7WSi-LsPWALLR4VTM7vANYjYt1cYZPmv-OZcXQkfJep3TkErZybo4lQJH3NBnZOzzSSiOGvaXVGQeqcptIXxsAmS-1sTnASYeVlC3HzU7TSCu1qxoVSgjMpi_bnvACPGSQH2VtYNs7hG4nYL-9D4mwFCy4eRpU"/>
+</div>
+<span class="text-sm font-medium text-on-surface">Alex Mercer</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">chat_bubble</span>
+<span class="text-xs font-bold">24</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
+<span class="text-xs font-bold">1.2k</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-success/10 text-success text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-success"></span>
+                                        Active
+                                    </span>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-slate-200 rounded transition-colors text-on-surface-variant" title="Lock Topic">
+<span class="material-symbols-outlined" style="font-size: 18px;">lock</span>
+</button>
+<button class="p-2 hover:bg-slate-200 rounded transition-colors text-on-surface-variant" title="Pin Topic">
+<span class="material-symbols-outlined" style="font-size: 18px;">push_pin</span>
+</button>
+<button class="ml-2 px-4 py-1.5 bg-white border border-outline-variant text-primary text-xs font-bold rounded hover:bg-slate-50 transition-colors">
+                                            Moderate
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 2 (Reported) -->
+<tr class="hover:bg-slate-50 transition-colors group bg-error-container/5">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-error-container/40 flex items-center justify-center text-error">
+<span class="material-symbols-outlined">report</span>
+</div>
+<div>
+<p class="font-h3 text-body-lg text-primary font-bold">Midterm Grading Concerns</p>
+<p class="text-xs text-on-surface-variant">Intro to Ethics (PH101)</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden text-[8px] flex items-center justify-center text-slate-500 font-bold">
+                                            JD
+                                        </div>
+<span class="text-sm font-medium text-on-surface">Janine Doe</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">chat_bubble</span>
+<span class="text-xs font-bold">48</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
+<span class="text-xs font-bold">890</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-error/10 text-error text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-pulse"></span>
+                                        Reported
+                                    </span>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2">
+<button class="p-2 hover:bg-error/10 text-error rounded transition-colors" title="Delete">
+<span class="material-symbols-outlined" style="font-size: 18px;">delete</span>
+</button>
+<button class="px-4 py-1.5 bg-error text-white text-xs font-bold rounded hover:bg-error/90 transition-colors shadow-sm">
+                                            Review
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">help</span>
+</div>
+<div>
+<p class="font-h3 text-body-lg text-primary font-bold">Clarification on Project 2 Deadline</p>
+<p class="text-xs text-on-surface-variant">Software Engineering (CS303)</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Student Avatar" class="w-full h-full object-cover" data-alt="portrait of a smiling young woman with glasses in a minimalist modern indoor setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrdaY3E-OnRWW3uoQW9AQlvIg6Sqi8OZEIDKpa5KEF1ofpwZQbqodbvcwmeZ6FS9tQg5v1Esgs6oEIL_qteoeupRy5RsV7r7cmDH2YRXba13u4AtAX2_5ctt5TbVYWxKCSr-M9PbPrC6divp5egxCYAiyqzvJjSDw5aZLa-umm85ohH0dcHMXKZnMUM6JQnPVp04JAWElGXOFsbAx0O8_LMUlNCuxBqmoJd_sBcHO2ep_Jhk1oazdg5Zgs62GDeNpTf2frZruPHq4"/>
+</div>
+<span class="text-sm font-medium text-on-surface">Sarah Chen</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">chat_bubble</span>
+<span class="text-xs font-bold">12</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
+<span class="text-xs font-bold">450</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-primary/10 text-primary text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                                        Needs Reply
+                                    </span>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-slate-200 rounded transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 18px;">mail</span>
+</button>
+<button class="ml-2 px-4 py-1.5 bg-white border border-outline-variant text-primary text-xs font-bold rounded hover:bg-slate-50 transition-colors">
+                                            Moderate
+                                        </button>
+</div>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-8 py-5">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-on-surface-variant">
+<span class="material-symbols-outlined">event</span>
+</div>
+<div>
+<p class="font-h3 text-body-lg text-primary font-bold">Study Group for Finals</p>
+<p class="text-xs text-on-surface-variant">Modern History (HIST201)</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Student Avatar" class="w-full h-full object-cover" data-alt="portrait of a young black man with a friendly expression in a brightly lit academic hall" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDu5O6Vif_-3NEfnrF3fWG1FGKPn4CH3s2ullU9ZBc3lvXlcpXGZm51Rbn46PfPzhdB0v00c4GiVx_0imD6O-6SdN8cvbcSkrd4GNwAiDa1I-AJSmLPqpqUWq21EPQbxOaB8XBUrgf1Yoh3lAeuyBAQn6nQ_XGjhhnsuaRTrFo2lhAslgHIzr8ehviws_RkibV5EekHKp6uF4cHNuPayVF_qWuabimBsAj7Evp4bvJiT7kw2veSg4YYS8HnFuTbWJhPco3XiRS2N_8"/>
+</div>
+<span class="text-sm font-medium text-on-surface">Marcus T.</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<div class="flex gap-4">
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">chat_bubble</span>
+<span class="text-xs font-bold">89</span>
+</div>
+<div class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 16px;">visibility</span>
+<span class="text-xs font-bold">3.1k</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        Archived
+                                    </span>
+</td>
+<td class="px-8 py-5 text-right">
+<div class="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-slate-200 rounded transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 18px;">restore</span>
+</button>
+<button class="ml-2 px-4 py-1.5 bg-white border border-outline-variant text-primary text-xs font-bold rounded hover:bg-slate-50 transition-colors">
+                                            View
+                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="p-6 border-t border-outline-variant flex items-center justify-between">
+<p class="text-xs text-on-surface-variant font-medium">Showing 1-10 of 142 topics</p>
+<div class="flex items-center gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-slate-50 disabled:opacity-50 transition-colors" disabled="">
+<span class="material-symbols-outlined" style="font-size: 18px;">chevron_left</span>
+</button>
+<button class="w-8 h-8 flex items-center justify-center bg-primary text-white rounded text-xs font-bold">1</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-xs font-bold transition-colors">2</button>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-xs font-bold transition-colors">3</button>
+<span class="px-2">...</span>
+<button class="w-8 h-8 flex items-center justify-center hover:bg-slate-100 rounded text-xs font-bold transition-colors">15</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined" style="font-size: 18px;">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions Grid -->
+<div class="mt-12">
+<h2 class="font-h2 text-h2 text-primary mb-6">Moderator Tools</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-6 bg-white border border-outline-variant rounded-xl flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+<div class="w-12 h-12 rounded bg-primary-fixed-dim/20 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">rule</span>
+</div>
+<div>
+<h4 class="font-h3 text-primary text-sm font-bold mb-1">Forum Guidelines</h4>
+<p class="text-xs text-on-surface-variant">Update the global rules for student behavior and post content.</p>
+</div>
+</div>
+<div class="p-6 bg-white border border-outline-variant rounded-xl flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+<div class="w-12 h-12 rounded bg-primary-fixed-dim/20 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">history_edu</span>
+</div>
+<div>
+<h4 class="font-h3 text-primary text-sm font-bold mb-1">Moderation Logs</h4>
+<p class="text-xs text-on-surface-variant">View a detailed history of all moderation actions taken this semester.</p>
+</div>
+</div>
+<div class="p-6 bg-white border border-outline-variant rounded-xl flex items-start gap-4 hover:shadow-md transition-shadow cursor-pointer">
+<div class="w-12 h-12 rounded bg-primary-fixed-dim/20 flex items-center justify-center text-primary shrink-0">
+<span class="material-symbols-outlined">auto_awesome</span>
+</div>
+<div>
+<h4 class="font-h3 text-primary text-sm font-bold mb-1">AI Assistant Settings</h4>
+<p class="text-xs text-on-surface-variant">Configure automated flagging for spam or prohibited academic content.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

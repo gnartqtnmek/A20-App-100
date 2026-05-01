@@ -13,7 +13,9 @@ import type {
   CourseSummary,
   CurriculumItem,
   DepartmentItem,
+  EnrollmentActionResult,
   ExamApprovalItem,
+  ForumTopicItem,
   GradeItem,
   GradeApprovalItem,
   Lesson,
@@ -25,6 +27,7 @@ import type {
   Quiz,
   QuizAttemptResult,
   QuizQuestion,
+  QualitySurveyItem,
   RiskAlertItem,
   RoleItem,
   RoleReport,
@@ -35,6 +38,7 @@ import type {
   StudentTrackingItem,
   StudyPlanItem,
   Submission,
+  LiveClassSessionItem,
   SupportRequestItem,
   UploadedFileItem
 } from "./lms";
@@ -93,6 +97,17 @@ export async function meRequest(accessToken: string): Promise<AuthUser> {
     throw new Error("Unauthorized");
   }
   return (await response.json()) as AuthUser;
+}
+
+export function myProfile(accessToken: string) {
+  return apiFetch<AdminUserItem>("/api/v1/profile", accessToken);
+}
+
+export function updateMyProfile(payload: { full_name?: string }, accessToken: string) {
+  return apiFetch<AdminUserItem>("/api/v1/profile", accessToken, {
+    method: "PUT",
+    body: JSON.stringify(payload)
+  });
 }
 
 export async function fetchModules(role: RoleSlug, accessToken: string): Promise<ModuleItem[]> {
@@ -163,6 +178,17 @@ export function studentGrades(accessToken: string) {
 export function studentAttendance(accessToken: string, sectionId?: string) {
   const query = sectionId ? `?section_id=${sectionId}` : "";
   return apiFetch<AttendanceRecord[]>(`/api/v1/student/attendance${query}`, accessToken);
+}
+
+export function studentCommunityTopics(sectionId: string, accessToken: string) {
+  return apiFetch<ForumTopicItem[]>(`/api/v1/student/community/topics?section_id=${encodeURIComponent(sectionId)}`, accessToken);
+}
+
+export function studentCreateCommunityTopic(payload: { section_id: string; title: string; content: string }, accessToken: string) {
+  return apiFetch<ForumTopicItem>("/api/v1/student/community/topics", accessToken, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
 }
 
 export function lecturerSections(accessToken: string) {
@@ -286,6 +312,42 @@ export function lecturerAttendanceRecords(sectionId: string, accessToken: string
   return apiFetch<AttendanceRecord[]>(`/api/v1/lecturer/sections/${sectionId}/attendance`, accessToken);
 }
 
+export function lecturerLiveSessions(sectionId: string, accessToken: string) {
+  return apiFetch<LiveClassSessionItem[]>(`/api/v1/lecturer/sections/${sectionId}/live-sessions`, accessToken);
+}
+
+export function lecturerCreateLiveSession(
+  payload: { section_id: string; title: string; scheduled_at: string; platform: string; meeting_url: string; recording_url: string },
+  accessToken: string
+) {
+  return apiFetch<LiveClassSessionItem>("/api/v1/lecturer/live-sessions", accessToken, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function lecturerForumTopics(sectionId: string, accessToken: string) {
+  return apiFetch<ForumTopicItem[]>(`/api/v1/lecturer/sections/${sectionId}/forum-topics`, accessToken);
+}
+
+export function lecturerCreateForumTopic(payload: { section_id: string; title: string; content: string }, accessToken: string) {
+  return apiFetch<ForumTopicItem>("/api/v1/lecturer/forum-topics", accessToken, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function lecturerModerateForumTopic(
+  topicId: string,
+  payload: { status?: string; is_pinned?: boolean },
+  accessToken: string
+) {
+  return apiFetch<ForumTopicItem>(`/api/v1/lecturer/forum-topics/${topicId}`, accessToken, {
+    method: "PATCH",
+    body: JSON.stringify(payload)
+  });
+}
+
 type Paged<T> = {
   items: T[];
   meta: MetaPage;
@@ -388,6 +450,16 @@ export function adminSystemReport(accessToken: string) {
   return apiFetch<{ items: { key: string; value: string }[] }>("/api/v1/admin/reports/system", accessToken);
 }
 
+export function adminEnrollmentAction(
+  payload: { student_ids: string[]; target_section_id: string; action_type: "enroll" | "drop" | "move"; reason: string },
+  accessToken: string
+) {
+  return apiFetch<EnrollmentActionResult>("/api/v1/admin/enrollments/actions", accessToken, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
 export function academicCurriculum(accessToken: string, programId?: string) {
   const query = programId ? `?program_id=${programId}` : "";
   return apiFetch<{ items: CurriculumItem[] }>(`/api/v1/academic/curriculum${query}`, accessToken);
@@ -467,6 +539,20 @@ export function academicActionExamApproval(
 
 export function academicReport(accessToken: string) {
   return apiFetch<{ items: { key: string; value: string }[] }>("/api/v1/academic/reports/training", accessToken);
+}
+
+export function academicSurveys(accessToken: string) {
+  return apiFetch<{ items: QualitySurveyItem[] }>("/api/v1/academic/surveys", accessToken);
+}
+
+export function academicCreateSurvey(
+  payload: { title: string; category: string; status: string; responses_count: number },
+  accessToken: string
+) {
+  return apiFetch<{ item: QualitySurveyItem }>("/api/v1/academic/surveys", accessToken, {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
 }
 
 export function advisorStudents(accessToken: string) {
@@ -645,5 +731,29 @@ export function adminCreateUser(
   return apiFetch<AdminUserItem>("/api/v1/users", accessToken, {
     method: "POST",
     body: JSON.stringify(payload)
+  });
+}
+
+export function adminUpdateUser(
+  userId: string,
+  payload: {
+    full_name?: string;
+    role?: RoleSlug;
+    department_id?: string;
+    program_id?: string;
+    is_active?: boolean;
+    password?: string;
+  },
+  accessToken: string
+) {
+  return apiFetch<AdminUserItem>(`/api/v1/users/${userId}`, accessToken, {
+    method: "PUT",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function adminDeleteUser(userId: string, accessToken: string) {
+  return apiFetch<{ message: string }>(`/api/v1/users/${userId}`, accessToken, {
+    method: "DELETE"
   });
 }

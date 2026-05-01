@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-bright": "#faf9fd",
+                    "primary-container": "#1a4173",
+                    "success": "#2e7d32",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-container": "#606365",
+                    "on-primary-container": "#7493c5",
+                    "inverse-surface": "#2f3034",
+                    "on-tertiary-container": "#e39e62",
+                    "background": "#faf9fd",
+                    "surface-variant": "#e3e2e6",
+                    "surface-container-low": "#f4f3f7",
+                    "tertiary-fixed": "#ffdcc2",
+                    "surface-container-highest": "#e3e2e6",
+                    "on-surface-variant": "#43474f",
+                    "outline-variant": "#c3c6d0",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#c4c7c9",
+                    "on-secondary-fixed-variant": "#444749",
+                    "surface-container-lowest": "#ffffff",
+                    "on-background": "#1a1c1f",
+                    "on-primary": "#ffffff",
+                    "secondary-fixed": "#e1e3e5",
+                    "tertiary-container": "#643500",
+                    "surface-container": "#eeedf2",
+                    "tertiary": "#442200",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "primary-fixed-dim": "#a8c8fd",
+                    "on-error-container": "#93000a",
+                    "on-tertiary": "#ffffff",
+                    "on-surface": "#1a1c1f",
+                    "on-secondary-fixed": "#191c1e",
+                    "on-primary-fixed": "#001b3b",
+                    "surface-dim": "#dad9de",
+                    "surface-container-high": "#e8e8ec",
+                    "secondary-container": "#dee0e2",
+                    "inverse-on-surface": "#f1f0f5",
+                    "on-tertiary-fixed-variant": "#663d17",
+                    "on-primary-fixed-variant": "#264775",
+                    "outline": "#737780",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#2e1500",
+                    "info": "#0288d1",
+                    "primary": "#001733",
+                    "surface-tint": "#405f8e",
+                    "tertiary-fixed-dim": "#f6bb8a",
+                    "surface": "#faf9fe",
+                    "secondary": "#5c5f61",
+                    "inverse-primary": "#a8c8fd"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "base": "4px",
+                    "sidebar-width": "260px",
+                    "lg": "32px",
+                    "md": "24px",
+                    "xs": "8px",
+                    "gutter": "24px",
+                    "container_max": "1440px",
+                    "sm": "16px",
+                    "xl": "48px",
+                    "sidebar_width": "260px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "body-lg": ["Inter"],
+                    "stats-display": ["Inter"],
+                    "h1": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "h3": ["Inter"]
+            },
+            "fontSize": {
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen w-64 z-50 bg-slate-50 border-r border-slate-200 flex flex-col py-6">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" style="font-variation-settings: 'FILL' 1;">school</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-blue-950">UniAdmin</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Global Root</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-medium text-sm">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-medium text-sm">User Management</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">school</span>
+<span class="font-medium text-sm">Course Catalog</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">account_balance</span>
+<span class="font-medium text-sm">Institutions</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">payments</span>
+<span class="font-medium text-sm">Finance &amp; Billing</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 transition-all" href="#">
+<span class="material-symbols-outlined">receipt_long</span>
+<span class="font-medium text-sm">System Logs</span>
+</a>
+<a class="flex items-center gap-3 bg-white text-blue-900 border-l-4 border-blue-900 px-4 py-3 shadow-sm" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">admin_panel_settings</span>
+<span class="font-bold text-sm">Security</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1 border-t border-slate-200 pt-6">
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-100 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 text-slate-600 px-4 py-3 hover:bg-slate-100 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined text-error">logout</span>
+<span class="font-medium text-sm">Logout</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 z-40 bg-white border-b border-slate-200 h-16 flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<span class="text-lg font-black tracking-tighter text-blue-950">LMS Admin Console</span>
+<div class="h-4 w-[1px] bg-slate-300"></div>
+<nav class="flex items-center gap-6">
+<span class="text-sm font-bold text-blue-900">Security &amp; Settings</span>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative flex items-center bg-slate-100 rounded-full px-4 py-1.5 border border-slate-200">
+<span class="material-symbols-outlined text-slate-400 text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 text-on-surface" placeholder="Search configurations..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<button class="hover:text-blue-900 transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-blue-900 transition-colors"><span class="material-symbols-outlined">settings</span></button>
+<button class="hover:text-blue-900 transition-colors"><span class="material-symbols-outlined">help</span></button>
+</div>
+<div class="flex items-center gap-3 border-l border-slate-200 pl-6">
+<div class="text-right">
+<p class="text-xs font-bold text-blue-950">Dr. Sarah Chen</p>
+<p class="text-[10px] text-slate-500">System Administrator</p>
+</div>
+<img class="w-9 h-9 rounded-full object-cover border border-slate-200" data-alt="professional portrait of a confident female administrator in a clean modern office setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCF0rM8ixLkwoDuFNZIe9mSgIoGVSe6QekyXdkBGw6Fs-qUVhVqioEIN9ssyeEZ1yyKkBk-U2-8irz3OBpLHS0q3fII-FkVLJsPFj-4XpgsKPua9FP03ZM9CTBAAoV_NCANeDvFP7ne2sVcuKq0zykqAL2vx5Rp31awt5lWXzNVhX72XJpC8T0N88dTYkwEmHQOtw7gLzifx2FZs2XvpjHkzGTjelslSKmZZC40yMrQBPdsbrGph6JotXuUnZlP57bfza3Dx2ojcTU"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 pb-12 px-8 max-w-[1440px]">
+<header class="mb-10">
+<div class="flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 text-primary mb-1">
+<span class="material-symbols-outlined text-sm">verified_user</span>
+<span class="font-label-caps text-label-caps uppercase tracking-widest">Enterprise Core</span>
+</div>
+<h2 class="font-h1 text-h1 text-blue-950">Security &amp; System Settings</h2>
+<p class="text-body-lg text-secondary mt-2">Manage institutional authentication, visual identity, and regulatory compliance.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2.5 border border-outline text-on-surface font-semibold rounded-lg hover:bg-slate-50 transition-colors">Discard Changes</button>
+<button class="px-6 py-2.5 bg-primary text-white font-semibold rounded-lg shadow-sm hover:opacity-90 transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">save</span>
+                        Apply Global Settings
+                    </button>
+</div>
+</div>
+</header>
+<!-- Bento Grid Configuration Hub -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Authentication Section -->
+<section class="col-span-12 lg:col-span-8 bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="h-1 bg-primary"></div>
+<div class="p-8">
+<div class="flex items-center justify-between mb-8">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 bg-primary-fixed rounded-lg flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl">fingerprint</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-blue-950">Authentication &amp; Access</h3>
+<p class="text-body-md text-secondary">Configure identity providers and security gates.</p>
+</div>
+</div>
+<span class="px-3 py-1 bg-green-50 text-success text-[10px] font-bold rounded-full border border-green-100 uppercase tracking-tighter">Secure Connection</span>
+</div>
+<div class="grid grid-cols-2 gap-8">
+<div class="space-y-6">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-2">Primary SSO Provider</label>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md focus:ring-primary-container focus:border-primary-container">
+<option>Microsoft Azure Active Directory</option>
+<option>Okta Enterprise</option>
+<option>Google Workspace</option>
+<option>Shibboleth / SAML 2.0</option>
+</select>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-lg">
+<div>
+<p class="font-semibold text-blue-950 text-sm">Enforce Multi-Factor Authentication</p>
+<p class="text-xs text-secondary">Require MFA for all staff and faculty accounts.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-2">Password Expiry Policy</label>
+<div class="flex items-center gap-3">
+<input class="w-24 bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md" type="number" value="90"/>
+<span class="text-body-md text-secondary font-medium">Days until rotation</span>
+</div>
+</div>
+<div class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-lg">
+<div>
+<p class="font-semibold text-blue-950 text-sm">Session Timeout</p>
+<p class="text-xs text-secondary">Auto-logout after 30 minutes of inactivity.</p>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Global Branding Section -->
+<section class="col-span-12 lg:col-span-4 bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="h-1 bg-tertiary-container"></div>
+<div class="p-8">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 bg-tertiary-fixed rounded-lg flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-2xl">palette</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-blue-950">Global Branding</h3>
+<p class="text-body-md text-secondary">Institutional visual identity.</p>
+</div>
+</div>
+<div class="space-y-6">
+<div class="p-4 border-2 border-dashed border-outline-variant rounded-xl text-center bg-surface-container-low">
+<img class="h-12 mx-auto mb-3 grayscale opacity-60" data-alt="clean professional university logo with academic shield and serif typography in deep blue" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC3SSCfHk_p0RWjvtCQdG_yCIDFDXka0IcpapCnwYRvio5ZosMRwSmnsSK8gZIKs2yw7MMoWRWErC6XmVrta4D0w5_S879I6CHFkkZwyvDxOfUdHCT0_yklcKJQrtaqRA5B5tyDJSwKjQlZGZ_-87F31EoUKBsV9v91xbsNGsAcOKzfRZFkUqzC_bml5sJv663k6MkUrKteDLbdkAgrTrO79fM_ttFiYEiH9aCbKAdE0PGWLcWTcF6D0eml5HVE7-qFQGyyCUGTXXE"/>
+<button class="text-xs font-bold text-primary hover:underline">Change Institutional Logo</button>
+<p class="text-[10px] text-slate-400 mt-1">PNG or SVG, max 2MB</p>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-3">Primary Theme Color</label>
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-primary ring-4 ring-primary-fixed shadow-sm"></div>
+<input class="flex-1 bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-body-md font-mono" type="text" value="#001733"/>
+</div>
+</div>
+<div class="pt-4 border-t border-slate-100">
+<button class="w-full py-2.5 bg-surface-container-highest text-blue-950 font-bold rounded-lg text-sm hover:bg-slate-200 transition-colors">
+                                Preview Branding Changes
+                            </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Privacy & Compliance Section -->
+<section class="col-span-12 lg:col-span-7 bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="h-1 bg-success"></div>
+<div class="p-8">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 bg-green-50 rounded-lg flex items-center justify-center text-success">
+<span class="material-symbols-outlined text-2xl">gavel</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-blue-950">Privacy &amp; Compliance</h3>
+<p class="text-body-md text-secondary">Data governance and regulatory adherence settings.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="space-y-4">
+<div>
+<h4 class="text-sm font-bold text-blue-950 mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">policy</span>
+                                    GDPR Controls
+                                </h4>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" id="gdpr_rtb" type="checkbox"/>
+<label class="text-body-md text-on-surface" for="gdpr_rtb">Enable 'Right to be Forgotten' workflow</label>
+</div>
+<div class="flex items-center gap-3">
+<input checked="" class="rounded border-outline-variant text-primary focus:ring-primary" id="gdpr_export" type="checkbox"/>
+<label class="text-body-md text-on-surface" for="gdpr_export">Self-service data portability</label>
+</div>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="text-sm font-bold text-blue-950 mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-lg">history</span>
+                                Data Retention
+                            </h4>
+<div>
+<label class="block text-xs font-semibold text-secondary mb-1">Student Course Records</label>
+<select class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2 text-sm">
+<option>7 Years (Default)</option>
+<option>10 Years</option>
+<option>Indefinite</option>
+</select>
+</div>
+</div>
+</div>
+<div class="mt-8 p-4 bg-red-50 border border-red-100 rounded-lg flex items-start gap-4">
+<span class="material-symbols-outlined text-error">warning</span>
+<div>
+<p class="text-sm font-bold text-red-900">System Overlap Warning</p>
+<p class="text-xs text-red-700">Changing data retention policies will trigger a background cleanup process. This action is irreversible once finalized.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- System Notifications Section -->
+<section class="col-span-12 lg:col-span-5 bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="h-1 bg-info"></div>
+<div class="p-8">
+<div class="flex items-center gap-4 mb-8">
+<div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center text-info">
+<span class="material-symbols-outlined text-2xl">campaign</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 text-blue-950">System Notifications</h3>
+<p class="text-body-md text-secondary">Global alert and mailing configurations.</p>
+</div>
+</div>
+<div class="space-y-6">
+<div>
+<label class="block font-label-caps text-label-caps text-on-surface-variant uppercase mb-2">Global Banner Alert</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant rounded-lg px-4 py-2.5 text-body-md resize-none" placeholder="Enter emergency message for all users..." rows="2"></textarea>
+</div>
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface">New Course Enrollment Emails</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-info"></div>
+</label>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-sm font-medium text-on-surface">Weekly Faculty Analytics Digests</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input class="sr-only peer" type="checkbox"/>
+<div class="w-10 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-info"></div>
+</label>
+</div>
+</div>
+<button class="w-full py-2.5 flex items-center justify-center gap-2 text-primary font-bold border border-primary/20 rounded-lg text-sm hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-sm">mail</span>
+                            Edit Email Templates
+                        </button>
+</div>
+</div>
+</section>
+</div>
+<!-- Utility Footer Information -->
+<footer class="mt-12 pt-8 border-t border-outline-variant flex justify-between items-center text-secondary">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-success"></span>
+<span class="text-xs font-semibold">All Systems Operational</span>
+</div>
+<p class="text-xs">Last global configuration update: <span class="text-on-surface font-bold">2023-10-24 14:32:05</span></p>
+</div>
+<div class="flex gap-4">
+<a class="text-xs hover:text-primary transition-colors underline underline-offset-4" href="#">Security Audit Log</a>
+<a class="text-xs hover:text-primary transition-colors underline underline-offset-4" href="#">API Documentation</a>
+</div>
+</footer>
+</main>
+</body></html>

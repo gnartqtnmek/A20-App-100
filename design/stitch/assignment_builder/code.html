@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "surface-container-low": "#f4f3f8",
+                        "surface": "#faf9fe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-surface": "#1a1c1f",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "background": "#faf9fd",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-container": "#7493c5",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "primary": "#001733",
+                        "outline-variant": "#c3c6d0",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-container-highest": "#e2e2e7",
+                        "primary-fixed": "#d5e3ff",
+                        "success": "#2e7d32",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-container": "#e39e62",
+                        "on-error-container": "#93000a",
+                        "info": "#0288d1",
+                        "secondary": "#5c5f61",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-container": "#442200",
+                        "surface-tint": "#405f8e",
+                        "surface-bright": "#faf9fd",
+                        "on-secondary-container": "#606365",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "secondary-fixed": "#e1e3e5",
+                        "outline": "#737780",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed-variant": "#264775",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "tertiary": "#442200",
+                        "inverse-on-surface": "#f1f0f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "xl": "48px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "lg": "32px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "sidebar_width": "260px"
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-50 border-r border-slate-200 flex flex-col py-6 px-4 gap-2">
+<div class="px-2 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-[#002b57] flex items-center justify-center text-white">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#002b57] leading-tight">Academic Core</h1>
+<p class="text-[11px] uppercase tracking-widest text-slate-500 font-bold">Lecturer Portal</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-md transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Lesson Editor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-white text-[#002b57] border-l-4 border-[#002b57] shadow-sm transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_add">assignment_add</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Assignment Builder</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-md transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Submission Review</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-md transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Rubric Grading</span>
+</a>
+</nav>
+<div class="mt-auto pt-6 border-t border-slate-200 space-y-1">
+<button class="w-full mb-4 py-3 bg-[#002b57] text-white rounded-md font-bold text-[13px] shadow-sm hover:brightness-110 transition-all active:scale-95">
+                Create New Course
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-md transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:bg-slate-100 rounded-md transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Help Center</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-256px)] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 h-16 flex justify-between items-center px-8">
+<div class="flex items-center gap-8">
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Dashboard</a>
+<a class="text-[#002b57] font-bold border-b-2 border-[#002b57] pb-4 font-inter text-sm antialiased" href="#">Courses</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Calendar</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative group">
+<input class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-md text-sm w-64 focus:ring-1 focus:ring-[#002b57] transition-all" placeholder="Search resources..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2 text-slate-400 text-sm" data-icon="search">search</span>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-md transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-md transition-all">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Lecturer Profile" class="w-full h-full object-cover" data-alt="professional portrait of a university professor in a library setting with soft focus books in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpG2n2gQd6oa4rig1CJR4GE1oN8jNT9Et6mmoKz8fjv6VCKBMM7V0xbTFUycy32VnsNS-IBffoP19uVIQEaBKC9_fzjTp-JfoVDAbvWTia3YiH7FtscTTw1ftZtPUSCjNEBDhqA7APe2R1lAzL3E8yciGURTKkx-gUa-7wGBX3ivB88fDoxaF7fuidAAc_3Mvq3C0uSTZIjDUq0xGVcZvHyojB5n02YE8vrpgO2XmH2TMtoQfan80pH9AlKz155Q9QTB1ri1wv7PM"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 max-w-[1440px]">
+<!-- Header Section -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<p class="text-label-caps font-label-caps text-on-primary-container mb-2 uppercase">Current Module: Advanced Microeconomics</p>
+<h2 class="text-h1 font-h1 text-primary tracking-tight">Assignment Builder</h2>
+</div>
+<div class="flex gap-3">
+<button class="px-6 py-2 border border-outline text-secondary font-semibold text-body-md hover:bg-surface-container transition-all">
+                    Save Draft
+                </button>
+<button class="px-6 py-2 bg-primary text-white font-semibold text-body-md shadow-sm hover:brightness-110 transition-all">
+                    Publish Assignment
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Column: Primary Content -->
+<div class="col-span-8 space-y-gutter">
+<!-- Main Editor Card -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-none relative">
+<div class="absolute top-0 left-0 w-full h-[4px] bg-primary"></div>
+<div class="space-y-6">
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">ASSIGNMENT TITLE</label>
+<input class="w-full border-b border-outline-variant focus:border-primary focus:ring-0 text-h3 font-h3 py-2 bg-transparent" placeholder="e.g., Final Research Project: Market Volatility" type="text"/>
+</div>
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">INSTRUCTIONS</label>
+<div class="border border-outline-variant min-h-[300px] p-4 flex flex-col">
+<div class="flex gap-4 border-b border-outline-variant pb-2 mb-4">
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" data-icon="format_bold">format_bold</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" data-icon="format_italic">format_italic</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" data-icon="format_list_bulleted">format_list_bulleted</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" data-icon="link">link</span>
+<span class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary" data-icon="image">image</span>
+</div>
+<textarea class="flex-1 w-full border-none focus:ring-0 text-body-lg font-body-lg bg-transparent resize-none" placeholder="Describe the objectives, requirements, and formatting guidelines..."></textarea>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">DEADLINE</label>
+<div class="relative">
+<input class="w-full border border-outline-variant p-3 focus:ring-1 focus:ring-primary text-body-md font-body-md" type="datetime-local"/>
+</div>
+</div>
+<div>
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-2">LATE POLICY</label>
+<select class="w-full border border-outline-variant p-3 focus:ring-1 focus:ring-primary text-body-md font-body-md appearance-none bg-transparent">
+<option>10% deduction per day</option>
+<option>No late submissions accepted</option>
+<option>Grace period (24 hours)</option>
+<option>Custom policy...</option>
+</select>
+</div>
+</div>
+</div>
+</div>
+<!-- Rubric Selector Section -->
+<div class="bg-surface-container-lowest border border-outline-variant p-md rounded-none relative">
+<div class="absolute top-0 left-0 w-full h-[4px] bg-tertiary-fixed-dim"></div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="text-h3 font-h3 text-primary">Grading Rubric</h3>
+<button class="text-primary font-semibold text-body-md flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-sm" data-icon="add_circle">add_circle</span> Change Rubric
+                        </button>
+</div>
+<div class="border border-outline-variant">
+<div class="grid grid-cols-4 bg-slate-50 border-b border-outline-variant p-3">
+<span class="text-label-caps font-label-caps text-secondary">CRITERIA</span>
+<span class="text-label-caps font-label-caps text-secondary">EXEMPLARY</span>
+<span class="text-label-caps font-label-caps text-secondary">PROFICIENT</span>
+<span class="text-label-caps font-label-caps text-secondary">DEVELOPING</span>
+</div>
+<div class="grid grid-cols-4 p-3 border-b border-outline-variant items-start">
+<div class="pr-4">
+<p class="font-bold text-body-md text-primary">Analysis</p>
+<p class="text-[11px] text-slate-500">Depth of research and critical thinking</p>
+</div>
+<div class="bg-primary/5 p-2 rounded-sm border border-primary/10">
+<p class="text-body-md font-medium text-primary">40 pts</p>
+<p class="text-xs text-slate-600">Thorough and nuanced insight</p>
+</div>
+<div class="p-2">
+<p class="text-body-md font-medium text-slate-700">30 pts</p>
+<p class="text-xs text-slate-500">Clear analysis with minor gaps</p>
+</div>
+<div class="p-2">
+<p class="text-body-md font-medium text-slate-700">20 pts</p>
+<p class="text-xs text-slate-500">Superficial observation</p>
+</div>
+</div>
+<div class="grid grid-cols-4 p-3 items-start">
+<div class="pr-4">
+<p class="font-bold text-body-md text-primary">Formatting</p>
+<p class="text-[11px] text-slate-500">APA compliance and citations</p>
+</div>
+<div class="p-2">
+<p class="text-body-md font-medium text-slate-700">10 pts</p>
+<p class="text-xs text-slate-500">Zero formatting errors</p>
+</div>
+<div class="p-2">
+<p class="text-body-md font-medium text-slate-700">7 pts</p>
+<p class="text-xs text-slate-500">Occasional citation errors</p>
+</div>
+<div class="p-2">
+<p class="text-body-md font-medium text-slate-700">4 pts</p>
+<p class="text-xs text-slate-500">Inconsistent formatting</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Settings & Options -->
+<div class="col-span-4 space-y-gutter">
+<!-- Options Panel -->
+<div class="bg-surface-container-low border border-outline-variant p-md rounded-none">
+<h3 class="text-h3 font-h3 text-primary mb-6">Submission Options</h3>
+<div class="space-y-6">
+<div class="flex items-center justify-between p-3 bg-white border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="upload_file">upload_file</span>
+<span class="font-body-md font-medium text-primary">File Upload</span>
+</div>
+<input checked="" class="w-5 h-5 text-primary rounded-sm border-outline focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-3 bg-white border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="edit_square">edit_square</span>
+<span class="font-body-md font-medium text-primary">Text Answer</span>
+</div>
+<input class="w-5 h-5 text-primary rounded-sm border-outline focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-3 bg-white border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="group">group</span>
+<span class="font-body-md font-medium text-primary">Group Mode</span>
+</div>
+<input class="w-5 h-5 text-primary rounded-sm border-outline focus:ring-0" type="checkbox"/>
+</div>
+<div class="flex items-center justify-between p-3 bg-white border border-outline-variant">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" data-icon="policy">policy</span>
+<div class="flex flex-col">
+<span class="font-body-md font-medium text-primary">Similarity Check</span>
+<span class="text-[10px] text-slate-500">TurnItIn Integration</span>
+</div>
+</div>
+<div class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-outline-variant">
+<label class="block text-label-caps font-label-caps text-on-surface-variant mb-4">ACCEPTED FILE TYPES</label>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-[11px] font-bold">.PDF</span>
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-[11px] font-bold">.DOCX</span>
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed text-[11px] font-bold">.XLSX</span>
+<button class="px-3 py-1 border border-outline-variant text-[11px] font-bold hover:bg-slate-50">+ Add</button>
+</div>
+</div>
+</div>
+<!-- Assignment Stats/Summary Card -->
+<div class="bg-[#002b57] p-md text-white">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-on-primary-container" data-icon="summarize">summarize</span>
+<h3 class="text-h3 font-h3">Builder Summary</h3>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-body-md">
+<span class="opacity-70">Total Points</span>
+<span class="font-bold text-lg">100</span>
+</div>
+<div class="flex justify-between items-center text-body-md">
+<span class="opacity-70">Est. Grading Time</span>
+<span class="font-bold">45 mins / student</span>
+</div>
+<div class="flex justify-between items-center text-body-md">
+<span class="opacity-70">Enrolled Students</span>
+<span class="font-bold text-success">142</span>
+</div>
+</div>
+<div class="mt-8">
+<div class="flex justify-between mb-2">
+<span class="text-xs opacity-70">Setup Completeness</span>
+<span class="text-xs font-bold">85%</span>
+</div>
+<div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+<div class="bg-success h-full" style="width: 85%"></div>
+</div>
+</div>
+</div>
+<!-- Help Tip -->
+<div class="border-l-4 border-info bg-info/5 p-4">
+<div class="flex gap-3">
+<span class="material-symbols-outlined text-info" data-icon="lightbulb">lightbulb</span>
+<div>
+<p class="font-bold text-body-md text-primary">Pro Tip</p>
+<p class="text-xs text-on-surface-variant mt-1">Rubrics with clear descriptors lead to 30% fewer grade appeals. Ensure each level is distinct.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

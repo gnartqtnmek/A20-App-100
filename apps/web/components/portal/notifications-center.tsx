@@ -1,7 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useState } from "react";
 
+import { EmptyState } from "@/components/ui/empty-state";
 import { markNotificationRead, notifications } from "@/lib/api";
 import type { NotificationItem } from "@/lib/lms";
 
@@ -33,24 +34,25 @@ export function NotificationsCenter({ accessToken }: Props) {
   }
 
   return (
-    <section className="rounded-2xl border border-white/50 bg-white/70 p-4 dark:border-white/10 dark:bg-slate-900/45">
-      <h3 className="text-lg font-semibold text-brand.night dark:text-white">Notification Center</h3>
-      {isLoading ? <p className="mt-3 text-sm text-slate-500">Loading notifications...</p> : null}
-      {!isLoading && items.length === 0 ? <p className="mt-3 text-sm text-slate-500">No notifications yet.</p> : null}
+    <section className="rounded-[28px] border border-[#c8d2e8] bg-white p-5">
+      <h3 className="text-2xl font-bold text-[#151b2d]">Notifications</h3>
+      {isLoading ? <p className="mt-3 text-sm text-[#6f7f9f]">Loading notifications...</p> : null}
+      {!isLoading && items.length === 0 ? (
+        <div className="mt-3">
+          <EmptyState title="No notifications" description="System and role announcements will appear here." />
+        </div>
+      ) : null}
       <div className="mt-3 space-y-2">
         {items.map((item) => (
-          <div key={item.id} className="rounded-lg border border-slate-200 bg-white/85 px-3 py-2 dark:border-slate-700 dark:bg-slate-800/70">
-            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.title}</p>
-            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">{item.message}</p>
+          <div key={item.id} className="rounded-[18px] border border-[#d3dbee] bg-[#f7f9fe] px-3 py-2">
+            <p className="text-sm font-semibold text-[#18203a]">{item.title}</p>
+            <p className="mt-1 text-xs text-[#5f7097]">{item.message}</p>
             {!item.is_read ? (
-              <button
-                onClick={() => void handleRead(item.id)}
-                className="mt-2 rounded bg-brand.night px-2 py-1 text-xs font-semibold text-white"
-              >
+              <button onClick={() => void handleRead(item.id)} className="mt-2 rounded-full bg-[#3864e7] px-3 py-1 text-xs font-semibold text-white">
                 Mark as read
               </button>
             ) : (
-              <p className="mt-2 text-xs text-emerald-600 dark:text-emerald-400">Read</p>
+              <p className="mt-2 text-xs text-[#2f7f4c]">Read</p>
             )}
           </div>
         ))}

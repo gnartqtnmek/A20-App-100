@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LMS Admin - Roles &amp; RBAC</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary": "#ffffff",
+            "info": "#0288d1",
+            "surface-dim": "#dad9de",
+            "surface-container-low": "#f4f3f7",
+            "inverse-primary": "#a8c8fd",
+            "surface-variant": "#e3e2e6",
+            "tertiary-fixed": "#ffdcc2",
+            "on-surface-variant": "#43474f",
+            "tertiary": "#442200",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#444749",
+            "on-primary-fixed-variant": "#264775",
+            "primary-container": "#002b57",
+            "on-primary": "#ffffff",
+            "surface-bright": "#faf9fd",
+            "tertiary-container": "#442200",
+            "primary-fixed": "#d5e3ff",
+            "on-background": "#1a1c1f",
+            "on-primary-container": "#8caee7",
+            "surface-container-high": "#e8e8ec",
+            "secondary-fixed": "#e1e3e5",
+            "success": "#2e7d32",
+            "tertiary-fixed-dim": "#f6bb8a",
+            "inverse-surface": "#2f3034",
+            "surface-container-highest": "#e3e2e6",
+            "surface-container": "#eeedf2",
+            "on-tertiary-fixed": "#2e1500",
+            "on-secondary-fixed": "#191c1e",
+            "error-container": "#ffdad6",
+            "on-error-container": "#93000a",
+            "on-secondary-container": "#606365",
+            "background": "#faf9fd",
+            "on-surface": "#1a1c1f",
+            "outline-variant": "#c3c6d0",
+            "secondary-container": "#dee0e2",
+            "on-tertiary-container": "#bc875a",
+            "primary": "#001733",
+            "error": "#ba1a1a",
+            "primary-fixed-dim": "#a8c8fd",
+            "inverse-on-surface": "#f1f0f5",
+            "surface-tint": "#405f8e",
+            "surface": "#faf9fe",
+            "on-tertiary-fixed-variant": "#663d17",
+            "on-primary-fixed": "#001b3b",
+            "secondary-fixed-dim": "#c4c7c9",
+            "on-error": "#ffffff",
+            "secondary": "#5c5f61",
+            "outline": "#737780"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "xl": "48px",
+            "container-max": "1440px",
+            "xs": "8px",
+            "sidebar_width": "260px",
+            "gutter": "24px",
+            "container_max": "1440px",
+            "base": "4px",
+            "sidebar-width": "260px",
+            "md": "24px",
+            "lg": "32px",
+            "sm": "16px"
+          },
+          "fontFamily": {
+            "h1": ["Inter"],
+            "h3": ["Inter"],
+            "body-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "label-caps": ["Inter"],
+            "h2": ["Inter"],
+            "stats-display": ["Inter"]
+          },
+          "fontSize": {
+            "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+            "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+            "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+            "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+            "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+            "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+            "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}]
+          }
+        },
+      },
+    }
+  </script>
+</head>
+<body class="bg-background font-body-md text-on-surface">
+<!-- SideNavBar -->
+<aside class="fixed flex flex-col h-screen w-64 py-4 px-3 border-r border-slate-200 bg-slate-50 z-50">
+<div class="px-3 mb-8 flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="school">school</span>
+</div>
+<div>
+<p class="font-h3 text-primary text-sm leading-tight">Global Admin</p>
+<p class="text-[11px] text-secondary uppercase tracking-wider font-semibold">University Systems</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-medium text-[13px]">Dashboard</span>
+</div>
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-medium text-[13px]">User Management</span>
+</div>
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="library_books">library_books</span>
+<span class="font-medium text-[13px]">Course Catalog</span>
+</div>
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="assessment">assessment</span>
+<span class="font-medium text-[13px]">Reports</span>
+</div>
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="history_edu">history_edu</span>
+<span class="font-medium text-[13px]">Audit Logs</span>
+</div>
+<!-- Active State -->
+<div class="px-3 py-2 bg-white text-[#002b57] border-l-4 border-[#002b57] rounded-r transition-all duration-200 cursor-pointer flex items-center gap-3 font-semibold">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium text-[13px]">System Settings</span>
+</div>
+</nav>
+<div class="mt-auto border-t border-slate-200 pt-4 space-y-1">
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-medium text-[13px]">Support</span>
+</div>
+<div class="px-3 py-2 text-slate-600 hover:text-[#002b57] hover:bg-slate-100 rounded transition-all duration-200 cursor-pointer flex items-center gap-3">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-medium text-[13px]">Logout</span>
+</div>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-0 flex items-center justify-between px-6 h-16 bg-white z-40 ml-64 border-b border-slate-200">
+<div class="flex items-center gap-4">
+<h1 class="font-['Inter'] text-lg font-black text-[#002b57] tracking-tight uppercase">LMS Admin</h1>
+<div class="h-6 w-px bg-slate-200 mx-2"></div>
+<nav class="flex items-center gap-6">
+<a class="text-[#002b57] font-bold font-['Inter'] text-sm tracking-tight" href="#">Security &amp; RBAC</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-['Inter'] text-sm tracking-tight" href="#">Integration</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-colors font-['Inter'] text-sm tracking-tight" href="#">Email Templates</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary-container w-64 transition-all" placeholder="Search roles or permissions..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-white"></span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full transition-colors">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+</button>
+<img alt="Administrator Profile" class="w-8 h-8 rounded-full object-cover border border-slate-200" data-alt="professional portrait of a university administrator in business casual attire with a blurred office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-9n00CjiGEZTAphicU-UFvV7Lq0doO_Ln540z7HcdEcQn0s3X_FvycKaVsm0SxEjfx71UgZkEFmuJf1eTLrZdlEBokSP88Ool40iZDUwPdK6p9-GJFYoZ-Y_l5Kkr3epLLzrQzj_etxxYHcLQWwh_0RUD59Fsu2_m2peYCSckHq3n05CGuqjxNeUkncnIfVQ7Srm7nqMo-P2fGvdVzEOi53hJbmdZRo39umLGPNayhKzHQgNL6PolLx5sMM7ezOCou45_yPEH1tI"/>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-container-max mx-auto p-md space-y-md">
+<!-- Header Section -->
+<div class="flex items-end justify-between">
+<div>
+<nav class="flex items-center gap-2 text-secondary mb-2">
+<span class="text-xs font-medium uppercase tracking-widest">Settings</span>
+<span class="material-symbols-outlined text-xs" data-icon="chevron_right">chevron_right</span>
+<span class="text-xs font-medium uppercase tracking-widest text-primary">Roles &amp; Access Control</span>
+</nav>
+<h2 class="font-h1 text-primary">Role-Based Access Control</h2>
+<p class="text-body-lg text-secondary mt-1">Manage user permissions and security scopes across the institution.</p>
+</div>
+<!-- Quick Actions -->
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-primary font-semibold rounded-lg hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="description">description</span>
+<span class="font-body-md">RBAC report</span>
+</button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-primary font-semibold rounded-lg hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-[20px]" data-icon="grid_view">grid_view</span>
+<span class="font-body-md">Permission matrix</span>
+</button>
+<button class="flex items-center gap-2 px-5 py-2 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+<span class="font-body-md">Create role</span>
+</button>
+</div>
+</div>
+<!-- Statistics Overview (Bento Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-sm">
+<div class="bg-white border border-outline-variant p-sm rounded-lg shadow-sm">
+<p class="text-label-caps text-secondary uppercase">Active Roles</p>
+<p class="font-stats-display text-primary mt-1">12</p>
+<div class="mt-2 flex items-center text-success text-xs font-semibold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="trending_up">trending_up</span>
+<span>+2 this semester</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-sm rounded-lg shadow-sm">
+<p class="text-label-caps text-secondary uppercase">Assigned Users</p>
+<p class="font-stats-display text-primary mt-1">8,420</p>
+<div class="mt-2 flex items-center text-slate-500 text-xs font-semibold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="sync">sync</span>
+<span>Last sync: 2h ago</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-sm rounded-lg shadow-sm">
+<p class="text-label-caps text-secondary uppercase">Custom Scopes</p>
+<p class="font-stats-display text-primary mt-1">05</p>
+<div class="mt-2 flex items-center text-info text-xs font-semibold">
+<span class="material-symbols-outlined text-sm mr-1" data-icon="info">info</span>
+<span>Departmental filters active</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant p-sm rounded-lg shadow-sm">
+<p class="text-label-caps text-secondary uppercase">Security Status</p>
+<div class="flex items-center gap-3 mt-1">
+<p class="font-stats-display text-primary">Opt</p>
+<span class="px-2 py-1 bg-success/10 text-success text-[10px] font-bold rounded uppercase">Compliance Pass</span>
+</div>
+<p class="text-xs text-slate-500 mt-2">All roles verified Aug 2023</p>
+</div>
+</div>
+<!-- Main Content Area: Roles Table -->
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="p-4 border-b border-outline-variant flex items-center justify-between bg-slate-50/50">
+<h3 class="font-h3 text-primary text-base">Institutional Role Hierarchy</h3>
+<div class="flex items-center gap-2">
+<button class="p-1.5 text-slate-500 hover:bg-slate-100 rounded">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+</button>
+<button class="p-1.5 text-slate-500 hover:bg-slate-100 rounded">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</div>
+</div>
+<table class="w-full text-left">
+<thead>
+<tr class="bg-slate-50 border-b border-outline-variant">
+<th class="px-6 py-3 font-label-caps text-secondary uppercase">Role Name</th>
+<th class="px-6 py-3 font-label-caps text-secondary uppercase">User Count</th>
+<th class="px-6 py-3 font-label-caps text-secondary uppercase">Access Scope</th>
+<th class="px-6 py-3 font-label-caps text-secondary uppercase">Status</th>
+<th class="px-6 py-3 font-label-caps text-secondary uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Student -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-10 bg-info rounded-full"></div>
+<div>
+<p class="font-semibold text-primary">Student</p>
+<p class="text-xs text-secondary">Default access for learners</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-medium text-slate-700">7,850</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Own data</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Assigned classes</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-success text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 bg-success rounded-full"></span>
+                  System
+                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-wider">Configure</button>
+</td>
+</tr>
+<!-- Lecturer -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-10 bg-primary-container rounded-full"></div>
+<div>
+<p class="font-semibold text-primary">Lecturer</p>
+<p class="text-xs text-secondary">Faculty teaching permissions</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-medium text-slate-700">420</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Course editing</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Grade entry</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-success text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 bg-success rounded-full"></span>
+                  System
+                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-wider">Configure</button>
+</td>
+</tr>
+<!-- Advisor -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-10 bg-tertiary-fixed-dim rounded-full"></div>
+<div>
+<p class="font-semibold text-primary">Advisor</p>
+<p class="text-xs text-secondary">Student tracking &amp; counseling</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-medium text-slate-700">85</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Assigned advisees</span>
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Read records</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-info text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 bg-info rounded-full"></span>
+                  Custom
+                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-wider">Configure</button>
+</td>
+</tr>
+<!-- Dept. Admin -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-2 h-10 bg-error-container rounded-full"></div>
+<div>
+<p class="font-semibold text-primary">Dept. Admin</p>
+<p class="text-xs text-secondary">Unit level administration</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-medium text-slate-700">42</td>
+<td class="px-6 py-4">
+<div class="flex flex-wrap gap-1">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface-variant text-[11px] font-medium rounded">Departmental scope</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-info text-xs font-bold uppercase">
+<span class="w-1.5 h-1.5 bg-info rounded-full"></span>
+                  Custom
+                </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary hover:underline text-xs font-bold uppercase tracking-wider">Configure</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="p-4 bg-slate-50 border-t border-outline-variant flex items-center justify-between text-xs font-medium text-secondary">
+<p>Showing 4 of 12 roles</p>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+              Previous
+            </button>
+<button class="flex items-center gap-1 hover:text-primary transition-colors">
+              Next
+              <span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Bottom Layout Section: Audit & Matrix -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-md">
+<!-- Audit Section -->
+<div class="lg:col-span-1 bg-white border border-outline-variant rounded-lg p-md shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-h3 text-base text-primary">Recent Access Logs</h3>
+<span class="material-symbols-outlined text-slate-400" data-icon="history">history</span>
+</div>
+<div class="space-y-4">
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-sm text-slate-600" data-icon="person_add">person_add</span>
+</div>
+<div>
+<p class="text-[13px] font-semibold text-primary">Role "External Auditor" created</p>
+<p class="text-[11px] text-secondary">by Admin_Mark • 14:20 PM</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-sm text-slate-600" data-icon="security_update_good">security_update_good</span>
+</div>
+<div>
+<p class="text-[13px] font-semibold text-primary">Permission Matrix Updated</p>
+<p class="text-[11px] text-secondary">Lecturer role • 10:45 AM</p>
+</div>
+</div>
+<div class="flex gap-3">
+<div class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-sm text-slate-600" data-icon="key">key</span>
+</div>
+<div>
+<p class="text-[13px] font-semibold text-primary">Bulk User Re-assignment</p>
+<p class="text-[11px] text-secondary">24 users affected • Yesterday</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-6 py-2 text-xs font-bold uppercase tracking-widest text-primary border border-outline rounded hover:bg-slate-50 transition-all">
+            Full Audit Trail
+          </button>
+</div>
+<!-- Role Comparison / Matrix Preview -->
+<div class="lg:col-span-2 bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="p-4 border-b border-outline-variant bg-[#002b57] text-white flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="verified_user">verified_user</span>
+<h3 class="font-h3 text-base">Quick Permission Matrix Preview</h3>
+</div>
+<span class="text-[10px] bg-white/20 px-2 py-1 rounded uppercase font-bold tracking-widest">Read-Only Preview</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs">
+<thead>
+<tr class="bg-slate-50 border-b border-outline-variant">
+<th class="px-4 py-3 font-semibold text-secondary w-1/4">Feature Module</th>
+<th class="px-2 py-3 text-center font-semibold text-secondary">Student</th>
+<th class="px-2 py-3 text-center font-semibold text-secondary">Lecturer</th>
+<th class="px-2 py-3 text-center font-semibold text-secondary">Advisor</th>
+<th class="px-2 py-3 text-center font-semibold text-secondary">Admin</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr>
+<td class="px-4 py-3 font-medium text-primary">View Course Content</td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 font-medium text-primary">Submit Assignments</td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 font-medium text-primary">Edit Course Materials</td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+</tr>
+<tr>
+<td class="px-4 py-3 font-medium text-primary">Access Financial Records</td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-slate-300 text-sm" data-icon="radio_button_unchecked">radio_button_unchecked</span></td>
+<td class="px-2 py-3 text-center"><span class="material-symbols-outlined text-success text-sm" data-icon="check_circle">check_circle</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-3 bg-slate-50 flex justify-center">
+<button class="text-primary hover:underline text-xs font-bold flex items-center gap-1 uppercase tracking-widest">
+              View Extended Permission Matrix
+              <span class="material-symbols-outlined text-sm" data-icon="open_in_new">open_in_new</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB (Hidden as per rule: Suppress on Detail/Settings screens) -->
+<!-- No FAB rendered here for authoritative administrative environment consistency -->
+</body></html>

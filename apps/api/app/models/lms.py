@@ -355,6 +355,44 @@ class SupportRequest(Base, TimestampMixin):
     escalation_note: Mapped[str] = mapped_column(Text, default="")
 
 
+class ForumTopic(Base, TimestampMixin):
+    __tablename__ = "forum_topics"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_str)
+    section_id: Mapped[str] = mapped_column(ForeignKey("course_sections.id", ondelete="CASCADE"), index=True)
+    created_by: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    title: Mapped[str] = mapped_column(String(180))
+    content: Mapped[str] = mapped_column(Text, default="")
+    status: Mapped[str] = mapped_column(String(32), default="open")
+    is_pinned: Mapped[bool] = mapped_column(Boolean, default=False)
+    replies_count: Mapped[int] = mapped_column(Integer, default=0)
+
+
+class LiveClassSession(Base, TimestampMixin):
+    __tablename__ = "live_class_sessions"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_str)
+    section_id: Mapped[str] = mapped_column(ForeignKey("course_sections.id", ondelete="CASCADE"), index=True)
+    lecturer_id: Mapped[str] = mapped_column(ForeignKey("users.id", ondelete="SET NULL"), nullable=True, index=True)
+    title: Mapped[str] = mapped_column(String(180))
+    scheduled_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    platform: Mapped[str] = mapped_column(String(64), default="zoom")
+    meeting_url: Mapped[str] = mapped_column(String(255), default="")
+    recording_url: Mapped[str] = mapped_column(String(255), default="")
+    status: Mapped[str] = mapped_column(String(32), default="scheduled")
+
+
+class QualitySurvey(Base, TimestampMixin):
+    __tablename__ = "quality_surveys"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=uuid_str)
+    title: Mapped[str] = mapped_column(String(180))
+    category: Mapped[str] = mapped_column(String(64), default="course")
+    department_id: Mapped[str] = mapped_column(ForeignKey("departments.id", ondelete="SET NULL"), nullable=True, index=True)
+    status: Mapped[str] = mapped_column(String(32), default="open")
+    responses_count: Mapped[int] = mapped_column(Integer, default=0)
+
+
 class AuditLog(Base):
     __tablename__ = "audit_logs"
 

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#a8c8fd",
+                    "background": "#faf9fd",
+                    "on-surface-variant": "#43474f",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-high": "#e8e8ec",
+                    "info": "#0288d1",
+                    "surface-tint": "#405f8e",
+                    "primary-fixed": "#d5e3ff",
+                    "on-secondary-fixed": "#191c1e",
+                    "on-error": "#ffffff",
+                    "surface": "#faf9fe",
+                    "on-primary-fixed-variant": "#264775",
+                    "inverse-surface": "#2f3034",
+                    "surface-container": "#eeedf2",
+                    "surface-dim": "#dad9de",
+                    "primary-fixed-dim": "#a8c8fd",
+                    "surface-bright": "#faf9fd",
+                    "primary": "#001733",
+                    "outline-variant": "#c3c6d0",
+                    "on-primary-fixed": "#001b3b",
+                    "surface-container-low": "#f4f3f7",
+                    "on-secondary-fixed-variant": "#444749",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "tertiary-container": "#442200",
+                    "on-secondary-container": "#606365",
+                    "success": "#2e7d32",
+                    "on-tertiary-container": "#e39e62",
+                    "inverse-on-surface": "#f1f0f5",
+                    "surface-variant": "#e3e2e6",
+                    "secondary-fixed-dim": "#c4c7c9",
+                    "tertiary": "#442200",
+                    "on-surface": "#1a1c1f",
+                    "tertiary-fixed-dim": "#f6bb8a",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e3e2e6",
+                    "primary-container": "#1a4173",
+                    "on-background": "#1a1c1f",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "secondary-container": "#dee0e2",
+                    "outline": "#737780",
+                    "on-primary": "#ffffff",
+                    "on-primary-container": "#8caee7",
+                    "secondary-fixed": "#e1e3e5",
+                    "on-tertiary-fixed-variant": "#663d17",
+                    "tertiary-fixed": "#ffdcc2",
+                    "secondary": "#5c5f61",
+                    "on-tertiary-fixed": "#2e1500"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sidebar-width": "260px",
+                    "base": "4px",
+                    "sm": "16px",
+                    "xs": "8px",
+                    "xl": "48px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "sidebar_width": "260px",
+                    "lg": "32px",
+                    "md": "24px",
+                    "container_max": "1440px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "stats-display": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "h1": ["Inter"],
+                    "h3": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-8 py-3 sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 font-['Inter'] text-sm tracking-tight">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black text-[#002b57] dark:text-white uppercase tracking-wider">Academic Portal</span>
+<nav class="hidden md:flex gap-6">
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#002b57] dark:hover:text-blue-300 transition-all duration-150" href="#">Institutional News</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#002b57] dark:hover:text-blue-300 transition-all duration-150" href="#">Academic Calendar</a>
+<a class="text-slate-500 dark:text-slate-400 font-medium hover:text-[#002b57] dark:hover:text-blue-300 transition-all duration-150" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="px-4 py-1.5 border border-outline-variant text-on-surface font-semibold rounded-lg hover:bg-surface-container transition-colors">Quick Actions</button>
+<button class="px-4 py-1.5 bg-primary text-white font-semibold rounded-lg hover:opacity-90 transition-opacity">Create New</button>
+<div class="flex items-center gap-2 ml-4">
+<span class="material-symbols-outlined text-on-surface-variant p-2 cursor-pointer hover:bg-surface-container rounded-full">notifications</span>
+<span class="material-symbols-outlined text-on-surface-variant p-2 cursor-pointer hover:bg-surface-container rounded-full">apps</span>
+<div class="w-8 h-8 rounded-full overflow-hidden ml-2 bg-surface-container">
+<img alt="Administrator Profile" data-alt="professional portrait of a university administrator in business attire, clean neutral studio background, high quality photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-vzYh0t-AEItBv_PgY68Cc7DMNsCurs--Qtohv2c5R6gr1pHApuTgHIzeM43pjWkl2vWtA4MX7GfHAuQCbpNIvfXHB678kdB3m5vwvoKw5uI4r4ighwJw8DJGj6r3f8tV6V8YbDXRLxcNPKCTD_JcR7KGDvEH-d0U8DGFSEDKRWGBMDoBccoI4U5mf2BsVI3mWpsYgndyo4jVAOjy0blvNJLYds4CzdHp0TO5yAWtRBT80yoWbSww_VrPEX5I6ePEZZZOYLCC-K4"/>
+</div>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-screen flex flex-col pt-16 z-40 bg-slate-50 dark:bg-slate-950 border-r border-slate-200 dark:border-slate-800 w-72">
+<div class="px-6 py-8 flex flex-col gap-1">
+<span class="text-lg font-bold text-[#002b57] dark:text-white">Staff Portal</span>
+<span class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Institutional Management</span>
+</div>
+<nav class="flex-1 flex flex-col">
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+                Financials
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">history_edu</span>
+                Degree Audits
+            </a>
+<a class="flex items-center gap-3 bg-white dark:bg-slate-900 text-[#002b57] dark:text-blue-300 border-l-4 border-[#002b57] px-4 py-3 shadow-sm font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">library_books</span>
+                Curriculum
+            </a>
+<a class="flex items-center gap-3 text-slate-500 dark:text-slate-400 px-4 py-3 border-l-4 border-transparent hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors duration-200 font-['Inter'] text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">campaign</span>
+                Communications
+            </a>
+</nav>
+<div class="p-6 border-t border-slate-200 dark:border-slate-800 mt-auto flex flex-col gap-4">
+<button class="w-full flex items-center justify-center gap-2 py-2 bg-[#002b57] text-white rounded font-bold text-xs uppercase tracking-widest transition-transform active:scale-95">
+<span class="material-symbols-outlined text-sm">support_agent</span>
+                System Support
+            </button>
+<div class="flex flex-col gap-1">
+<a class="flex items-center gap-3 text-slate-500 py-2 hover:text-[#002b57] transition-colors font-['Inter'] text-[10px] font-bold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined text-sm">settings</span>
+                    Settings
+                </a>
+<a class="flex items-center gap-3 text-slate-500 py-2 hover:text-[#002b57] transition-colors font-['Inter'] text-[10px] font-bold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined text-sm">logout</span>
+                    Sign Out
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-72 pt-4 px-8 pb-12">
+<!-- Header & Breadcrumbs -->
+<div class="mb-8">
+<nav class="flex gap-2 text-label-caps font-label-caps text-secondary mb-2">
+<span>UNIVERSITY CATALOG</span>
+<span class="text-outline">/</span>
+<span class="text-primary">CURRICULUM MANAGEMENT</span>
+</nav>
+<h1 class="font-h1 text-h1 text-on-surface">Curriculum &amp; Catalog Management</h1>
+<p class="text-body-md font-body-md text-on-surface-variant max-w-2xl mt-2">Centralized workspace for departmental catalog oversight, course validation, and credit structure management.</p>
+</div>
+<!-- Bento Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Hierarchical Faculty View (Side Pane) -->
+<section class="col-span-12 lg:col-span-3">
+<div class="bg-white border border-outline-variant rounded-lg p-sm h-full">
+<h3 class="font-h3 text-h3 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_tree</span>
+                        Hierarchy
+                    </h3>
+<div class="space-y-1">
+<!-- Faculty Item -->
+<div class="group">
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container rounded cursor-pointer text-primary bg-surface-container-low font-bold">
+<span class="material-symbols-outlined text-sm">expand_more</span>
+<span class="text-body-md font-body-md">Faculty of Engineering</span>
+</div>
+<div class="ml-6 mt-1 space-y-1 border-l border-outline-variant">
+<div class="p-2 pl-4 text-body-md font-body-md text-on-surface-variant hover:bg-surface-container cursor-pointer border-l-2 border-primary">Mechanical Eng.</div>
+<div class="p-2 pl-4 text-body-md font-body-md text-on-surface-variant hover:bg-surface-container cursor-pointer border-l-2 border-transparent">Computer Science</div>
+<div class="p-2 pl-4 text-body-md font-body-md text-on-surface-variant hover:bg-surface-container cursor-pointer border-l-2 border-transparent">Electrical Eng.</div>
+</div>
+</div>
+<!-- Faculty Item -->
+<div class="group mt-4">
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container rounded cursor-pointer text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-body-md font-body-md">Faculty of Arts</span>
+</div>
+</div>
+<div class="group">
+<div class="flex items-center gap-2 p-2 hover:bg-surface-container rounded cursor-pointer text-on-surface-variant font-medium">
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-body-md font-body-md">School of Business</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Interactive Course List -->
+<section class="col-span-12 lg:col-span-9 flex flex-col gap-gutter">
+<!-- Table Filters -->
+<div class="bg-white border border-outline-variant rounded-lg p-4 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative flex-1 max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container-lowest border border-outline-variant rounded-lg text-body-md focus:ring-1 focus:ring-primary outline-none" placeholder="Search courses by code or title..." type="text"/>
+</div>
+<select class="bg-surface-container-lowest border border-outline-variant rounded-lg px-4 py-2 text-body-md outline-none">
+<option>All Statuses</option>
+<option>Active</option>
+<option>Under Review</option>
+<option>Archived</option>
+</select>
+</div>
+<div class="flex gap-2">
+<button class="p-2 hover:bg-surface-container rounded-lg border border-outline-variant transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 hover:bg-surface-container rounded-lg border border-outline-variant transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Ghost Table Course List -->
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 text-left font-label-caps text-label-caps text-secondary uppercase tracking-widest">Code</th>
+<th class="px-6 py-4 text-left font-label-caps text-label-caps text-secondary uppercase tracking-widest">Course Title</th>
+<th class="px-6 py-4 text-left font-label-caps text-label-caps text-secondary uppercase tracking-widest">Credits</th>
+<th class="px-6 py-4 text-left font-label-caps text-label-caps text-secondary uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 text-left font-label-caps text-label-caps text-secondary uppercase tracking-widest">Department</th>
+<th class="px-6 py-4 text-right font-label-caps text-label-caps text-secondary uppercase tracking-widest">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Course Row 1 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 font-body-md font-bold text-primary">CS101</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-body-md font-h3 text-on-surface">Intro to Computer Science</span>
+<span class="text-[12px] text-on-surface-variant">Fundamental programming concepts in Python</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-body-md">4.0</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-success/10 text-success text-[11px] font-bold rounded uppercase tracking-wider">Active</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Computer Science</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded transition-colors text-primary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<!-- Course Row 2 -->
+<tr class="hover:bg-surface-bright transition-colors group">
+<td class="px-6 py-4 font-body-md font-bold text-primary">ME305</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-body-md font-h3 text-on-surface">Thermodynamics II</span>
+<span class="text-[12px] text-on-surface-variant">Advanced cycle analysis and phase changes</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-body-md">3.0</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-info/10 text-info text-[11px] font-bold rounded uppercase tracking-wider">Under Review</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Mechanical Eng.</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded transition-colors text-primary">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</td>
+</tr>
+<!-- Course Row 3 -->
+<tr class="hover:bg-surface-bright transition-colors group border-l-4 border-error/50">
+<td class="px-6 py-4 font-body-md font-bold text-primary">CS202</td>
+<td class="px-6 py-4">
+<div class="flex flex-col">
+<span class="text-body-md font-h3 text-on-surface">Data Structures (Legacy)</span>
+<span class="text-[12px] text-on-surface-variant">Outdated curriculum module</span>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md font-body-md">3.0</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-outline-variant/30 text-on-surface-variant text-[11px] font-bold rounded uppercase tracking-wider">Archived</span>
+</td>
+<td class="px-6 py-4 text-body-md text-on-surface-variant">Computer Science</td>
+<td class="px-6 py-4 text-right">
+<button class="p-2 hover:bg-surface-container rounded transition-colors text-primary">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-surface-container-low flex items-center justify-between">
+<span class="text-[12px] text-on-surface-variant font-medium">Showing 1-15 of 248 courses</span>
+<div class="flex gap-2">
+<button class="p-1 hover:bg-surface-container rounded border border-outline-variant">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 hover:bg-surface-container rounded border border-outline-variant bg-white shadow-sm">1</button>
+<button class="p-1 hover:bg-surface-container rounded border border-outline-variant">2</button>
+<button class="p-1 hover:bg-surface-container rounded border border-outline-variant">3</button>
+<button class="p-1 hover:bg-surface-container rounded border border-outline-variant">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Update Tools & Audit Log Split -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter">
+<!-- Update Tools -->
+<div class="bg-white border border-outline-variant rounded-lg p-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<h3 class="font-h3 text-h3 mb-6">Quick Course Update</h3>
+<form class="space-y-4">
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-label-caps font-label-caps text-secondary">Course Code</label>
+<input class="border border-outline-variant rounded px-3 py-2 text-body-md focus:border-primary outline-none" type="text" value="CS101"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-caps font-label-caps text-secondary">Credit Hours</label>
+<input class="border border-outline-variant rounded px-3 py-2 text-body-md focus:border-primary outline-none" type="number" value="4"/>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-caps font-label-caps text-secondary">Prerequisites</label>
+<div class="flex flex-wrap gap-2 p-2 border border-outline-variant rounded min-h-[40px]">
+<span class="px-2 py-0.5 bg-surface-container text-[11px] font-bold rounded flex items-center gap-1">MATH101 <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span></span>
+<span class="px-2 py-0.5 bg-surface-container text-[11px] font-bold rounded flex items-center gap-1">ENG102 <span class="material-symbols-outlined text-[12px] cursor-pointer">close</span></span>
+<button class="text-primary text-[11px] font-bold">+ ADD COURSE</button>
+</div>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-caps font-label-caps text-secondary">Catalog Description</label>
+<textarea class="border border-outline-variant rounded px-3 py-2 text-body-md focus:border-primary outline-none resize-none" rows="3">Foundational programming logic using modular design patterns and algorithmic thinking...</textarea>
+</div>
+<div class="flex justify-end gap-3 pt-2">
+<button class="px-4 py-2 text-body-md font-bold text-secondary" type="button">Cancel</button>
+<button class="px-6 py-2 bg-primary text-white text-body-md font-bold rounded-lg shadow-sm hover:shadow-md transition-shadow" type="button">Save Changes</button>
+</div>
+</form>
+</div>
+<!-- Recent Changes Audit Log -->
+<div class="bg-white border border-outline-variant rounded-lg p-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-tertiary"></div>
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3">Recent Changes Audit</h3>
+<span class="text-label-caps font-label-caps text-primary cursor-pointer hover:underline">Full Log</span>
+</div>
+<div class="space-y-4">
+<!-- Audit Item 1 -->
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-success/10 rounded-full">
+<span class="material-symbols-outlined text-success text-sm" data-weight="fill">verified</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex justify-between items-center">
+<span class="text-body-md font-bold text-on-surface">Dr. Sarah Miller</span>
+<span class="text-[10px] text-outline">10:42 AM Today</span>
+</div>
+<p class="text-body-md text-on-surface-variant mt-0.5">Approved syllabus update for <span class="font-mono text-[12px] bg-surface-container px-1 rounded">PHYS202</span></p>
+</div>
+</div>
+<!-- Audit Item 2 -->
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-info/10 rounded-full">
+<span class="material-symbols-outlined text-info text-sm">edit_square</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex justify-between items-center">
+<span class="text-body-md font-bold text-on-surface">Marcus Chen</span>
+<span class="text-[10px] text-outline">Yesterday</span>
+</div>
+<p class="text-body-md text-on-surface-variant mt-0.5">Modified credit hours (3.0 → 4.0) for <span class="font-mono text-[12px] bg-surface-container px-1 rounded">HIST110</span></p>
+</div>
+</div>
+<!-- Audit Item 3 -->
+<div class="flex gap-4 items-start">
+<div class="p-2 bg-tertiary-container/20 rounded-full">
+<span class="material-symbols-outlined text-tertiary-container text-sm">history_edu</span>
+</div>
+<div class="flex flex-col flex-1">
+<div class="flex justify-between items-center">
+<span class="text-body-md font-bold text-on-surface">System Automator</span>
+<span class="text-[10px] text-outline">Oct 24, 2023</span>
+</div>
+<p class="text-body-md text-on-surface-variant mt-0.5">Archived <span class="font-mono text-[12px] bg-surface-container px-1 rounded">LIT305</span> due to three-year inactivity cycle.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Contextual FAB - Restricted to Dashboard/Main views -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-xl flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

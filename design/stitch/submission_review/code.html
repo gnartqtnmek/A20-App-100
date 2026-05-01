@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "surface-container-low": "#f4f3f8",
+                        "surface": "#faf9fe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-surface": "#1a1c1f",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "background": "#faf9fd",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-container": "#7493c5",
+                        "error": "#ba1a1a",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-container-highest": "#e2e2e7",
+                        "primary-fixed": "#d5e3ff",
+                        "success": "#2e7d32",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-container": "#e39e62",
+                        "on-error-container": "#93000a",
+                        "info": "#0288d1",
+                        "secondary": "#5c5f61",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-container": "#442200",
+                        "surface-tint": "#405f8e",
+                        "surface-bright": "#faf9fd",
+                        "on-secondary-container": "#606365",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "secondary-fixed": "#e1e3e5",
+                        "outline": "#737780",
+                        "outline-variant": "#c3c6d0",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed-variant": "#264775",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "tertiary": "#442200",
+                        "inverse-on-surface": "#f1f0f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "xl": "48px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "lg": "32px",
+                        "container-max": "1440px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "sidebar_width": "260px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"],
+                        "stats-display": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full w-64 z-50 bg-slate-50 border-r border-slate-200 flex flex-col h-full py-6 px-4 gap-2">
+<div class="px-2 mb-8">
+<div class="flex items-center gap-3 mb-1">
+<div class="w-10 h-10 bg-[#002b57] rounded flex items-center justify-center text-white">
+<span class="material-symbols-outlined">school</span>
+</div>
+<div>
+<h1 class="text-xl font-bold text-[#002b57]">Academic Core</h1>
+<p class="text-[11px] font-medium tracking-widest text-slate-500 uppercase">Lecturer Portal</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-slate-600 hover:bg-slate-100 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="edit_note">edit_note</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Lesson Editor</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-slate-600 hover:bg-slate-100 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_add">assignment_add</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Assignment Builder</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md bg-white text-[#002b57] border-l-4 border-[#002b57] shadow-sm transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="rate_review">rate_review</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Submission Review</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-md text-slate-600 hover:bg-slate-100 transition-all active:scale-95" href="#">
+<span class="material-symbols-outlined" data-icon="rule">rule</span>
+<span class="font-inter text-[13px] font-medium tracking-wide">Rubric Grading</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-200 pt-6 space-y-1">
+<button class="w-full mb-4 bg-[#002b57] text-white py-3 rounded-md text-[13px] font-bold hover:bg-[#003d7a] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">add_circle</span>
+                Create New Course
+            </button>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-inter text-[13px] font-medium">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-inter text-[13px] font-medium">Help Center</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 min-h-screen">
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 w-[calc(100%-256px)] z-40 bg-white/90 backdrop-blur-md border-b border-slate-200 flex justify-between items-center h-16 px-8">
+<div class="flex items-center gap-8">
+<span class="text-lg font-black tracking-tight text-[#002b57]">Academic Core</span>
+<nav class="flex gap-6 h-full">
+<a class="flex items-center text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Dashboard</a>
+<a class="flex items-center text-[#002b57] font-bold border-b-2 border-[#002b57] h-16 font-inter text-sm antialiased" href="#">Courses</a>
+<a class="flex items-center text-slate-500 hover:text-[#002b57] transition-colors font-inter text-sm antialiased" href="#">Calendar</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative flex items-center bg-slate-100 rounded-md px-3 py-1.5 border border-transparent focus-within:border-[#002b57] transition-all">
+<span class="material-symbols-outlined text-slate-400 text-lg mr-2">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-sm w-48 font-inter" placeholder="Search submissions..." type="text"/>
+</div>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-md transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden">
+<img alt="Lecturer Profile" class="w-full h-full object-cover" data-alt="Professional headshot of a middle-aged academic professor with glasses and a kind expression in a studio setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5DXmgb8lOBCAcC5h8vbUyj8a15fy2y4MIf1vjUB9sYNGViS4i9w_OuSK0oiHezK0CXj8vvOs6ZeVfx8_c7wOmJFMiK6yl9wrIYrBaHflDEY-2Zik3OHLjzuic1UFQcE-nmyNhSDi65YCEY3NKtxn0K2ffLBEcPh5FqUWHU5156DRswucQLWHdc30gX6O9Ks6PZj47bucuLRz4aWl3UTt_dx5iIrQOnQvTIdQm8XBX-c6KKNyFNR4wu4FZJ9iUBSXHQm87UNnfjmQ"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="pt-24 px-8 pb-12 max-w-container_max mx-auto">
+<!-- Breadcrumbs & Title -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-xs font-medium text-slate-400 uppercase tracking-widest mb-2">
+<span>CS101</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span>Assignments</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-[#002b57]">Final Research Thesis</span>
+</nav>
+<h2 class="font-h1 text-h1 text-primary">Submission Review</h2>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant text-secondary rounded-lg text-body-md font-medium hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="filter_list">filter_list</span>
+                        Filter by status
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant text-secondary rounded-lg text-body-md font-medium hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined" data-icon="download">download</span>
+                        Export ZIP
+                    </button>
+<button class="flex items-center gap-2 px-6 py-2 bg-[#002b57] text-white rounded-lg text-body-md font-bold shadow-sm hover:bg-[#003d7a] transition-all">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+                        Bulk Grade
+                    </button>
+</div>
+</div>
+<!-- Dashboard Stats Bento Grid -->
+<div class="grid grid-cols-4 gap-gutter mb-8">
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<span class="text-label-caps font-label-caps text-secondary mb-4 uppercase">Total Submissions</span>
+<div class="flex items-end justify-between">
+<span class="text-stats-display font-stats-display text-primary">128</span>
+<span class="text-success text-sm font-bold flex items-center mb-2"><span class="material-symbols-outlined text-sm">trending_up</span> 92%</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<span class="text-label-caps font-label-caps text-secondary mb-4 uppercase">Ungraded</span>
+<div class="flex items-end justify-between">
+<span class="text-stats-display font-stats-display text-primary">42</span>
+<span class="text-error text-sm font-bold flex items-center mb-2">Needs attention</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<span class="text-label-caps font-label-caps text-secondary mb-4 uppercase">Avg. Similarity</span>
+<div class="flex items-end justify-between">
+<span class="text-stats-display font-stats-display text-primary">14%</span>
+<span class="text-info text-sm font-bold mb-2">Within range</span>
+</div>
+</div>
+<div class="bg-white p-6 rounded-xl border border-outline-variant shadow-sm flex flex-col justify-between">
+<span class="text-label-caps font-label-caps text-secondary mb-4 uppercase">Late Submissions</span>
+<div class="flex items-end justify-between">
+<span class="text-stats-display font-stats-display text-primary">05</span>
+<span class="text-secondary text-sm font-bold mb-2">Final week</span>
+</div>
+</div>
+</div>
+<!-- Submissions Table Card -->
+<div class="bg-white rounded-xl border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+<h3 class="text-h3 font-h3 text-primary">Student Submissions</h3>
+<div class="flex gap-2">
+<span class="px-3 py-1 bg-primary-container/10 text-primary text-[11px] font-bold rounded-full uppercase tracking-tighter">Fall Semester 2024</span>
+</div>
+</div>
+<table class="w-full text-left border-collapse">
+<thead class="bg-slate-50">
+<tr>
+<th class="px-6 py-4 text-label-caps font-label-caps text-secondary uppercase border-b border-slate-100">Student Name</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-secondary uppercase border-b border-slate-100">Submission Date</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-secondary uppercase border-b border-slate-100">Status</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-secondary uppercase border-b border-slate-100">Similarity</th>
+<th class="px-6 py-4 text-label-caps font-label-caps text-secondary uppercase border-b border-slate-100 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-[11px] font-bold text-on-primary-fixed">AM</div>
+<div>
+<p class="text-body-md font-semibold text-primary">Alexander Mitchell</p>
+<p class="text-[11px] text-slate-400">ID: 2024-9182</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-secondary">Oct 12, 2023 · 02:45 PM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                    Submitted
+                                </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-success rounded-full" style="width: 4%"></div>
+</div>
+<span class="text-xs font-bold text-success">4%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#002b57] font-bold text-xs hover:underline uppercase tracking-wider">Open grading</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-[11px] font-bold text-on-tertiary-fixed">SB</div>
+<div>
+<p class="text-body-md font-semibold text-primary">Sarah Brooks</p>
+<p class="text-[11px] text-slate-400">ID: 2024-1042</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-secondary">Oct 13, 2023 · 11:10 AM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-error/10 text-error">
+                                    Late
+                                </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim rounded-full" style="width: 22%"></div>
+</div>
+<span class="text-xs font-bold text-on-tertiary-fixed-variant">22%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#002b57] font-bold text-xs hover:underline uppercase tracking-wider">Open grading</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-fixed flex items-center justify-center text-[11px] font-bold text-on-secondary-fixed">JK</div>
+<div>
+<p class="text-body-md font-semibold text-primary">Julian Kang</p>
+<p class="text-[11px] text-slate-400">ID: 2024-8821</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-secondary">In progress</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-slate-100 text-slate-500">
+                                    Draft
+                                </span>
+</td>
+<td class="px-6 py-4">
+<span class="text-xs font-medium text-slate-300">--</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-slate-400 font-bold text-xs cursor-not-allowed uppercase tracking-wider">View Draft</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center text-[11px] font-bold text-on-primary-fixed">ER</div>
+<div>
+<p class="text-body-md font-semibold text-primary">Elena Rodriguez</p>
+<p class="text-[11px] text-slate-400">ID: 2024-7732</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-secondary">Oct 11, 2023 · 09:00 AM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                    Submitted
+                                </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-error rounded-full" style="width: 82%"></div>
+</div>
+<span class="text-xs font-bold text-error">82%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-error font-bold text-xs hover:underline uppercase tracking-wider">Review Flag</button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center text-[11px] font-bold text-on-tertiary-fixed">TC</div>
+<div>
+<p class="text-body-md font-semibold text-primary">Thomas Chen</p>
+<p class="text-[11px] text-slate-400">ID: 2024-1156</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-4 text-body-md text-secondary">Oct 12, 2023 · 04:22 PM</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-success/10 text-success">
+                                    Submitted
+                                </span>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-success rounded-full" style="width: 12%"></div>
+</div>
+<span class="text-xs font-bold text-success">12%</span>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-[#002b57] font-bold text-xs hover:underline uppercase tracking-wider">Open grading</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 border-t border-slate-100 flex items-center justify-between text-body-md text-secondary">
+<p>Showing 5 of 128 submissions</p>
+<div class="flex gap-2">
+<button class="p-1.5 border border-outline-variant rounded hover:bg-slate-50 disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-3 py-1 bg-[#002b57] text-white rounded text-xs font-bold">1</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-xs font-medium hover:bg-slate-50">2</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-xs font-medium hover:bg-slate-50">3</button>
+<button class="p-1.5 border border-outline-variant rounded hover:bg-slate-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Contextual Help / Tips -->
+<div class="mt-8 bg-primary-container/5 rounded-xl border border-primary-container/10 p-6 flex items-start gap-4">
+<div class="p-3 bg-[#002b57] rounded-lg text-white">
+<span class="material-symbols-outlined">lightbulb</span>
+</div>
+<div>
+<h4 class="text-body-lg font-bold text-[#002b57] mb-1">Quick Tip: Similarity Scores</h4>
+<p class="text-body-md text-slate-600 max-w-3xl">Submissions with similarity scores above 30% are automatically flagged for review. You can adjust this threshold in the <a class="text-[#002b57] underline font-medium" href="#">Assignment Settings</a>.</p>
+</div>
+</div>
+</div>
+</main>
+</body></html>

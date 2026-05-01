@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-tertiary-container": "#e39e62",
+                    "primary-fixed-dim": "#a8c8fd",
+                    "background": "#faf9fd",
+                    "surface-container-highest": "#e3e2e6",
+                    "surface-container-lowest": "#ffffff",
+                    "outline-variant": "#c3c6d0",
+                    "on-error": "#ffffff",
+                    "on-background": "#1a1c1f",
+                    "surface-container": "#eeedf2",
+                    "surface-dim": "#dad9de",
+                    "surface-bright": "#faf9fe",
+                    "surface-container-high": "#e8e8ec",
+                    "on-primary-fixed": "#001b3b",
+                    "on-secondary-container": "#606365",
+                    "tertiary-fixed-dim": "#f6bb8a",
+                    "on-primary-container": "#8caee7",
+                    "tertiary-fixed": "#ffdcc2",
+                    "secondary": "#5c5f61",
+                    "surface-variant": "#e3e2e6",
+                    "on-surface-variant": "#43474f",
+                    "inverse-on-surface": "#f1f0f5",
+                    "success": "#2e7d32",
+                    "secondary-fixed": "#e1e3e5",
+                    "on-surface": "#1a1c1f",
+                    "primary": "#001733",
+                    "error-container": "#ffdad6",
+                    "tertiary": "#442200",
+                    "inverse-surface": "#2f3034",
+                    "tertiary-container": "#643500",
+                    "secondary-container": "#dee0e2",
+                    "on-tertiary-fixed-variant": "#663d17",
+                    "primary-fixed": "#d5e3ff",
+                    "inverse-primary": "#a8c8fd",
+                    "on-secondary-fixed-variant": "#444749",
+                    "on-primary-fixed-variant": "#264775",
+                    "info": "#0288d1",
+                    "outline": "#737780",
+                    "on-primary": "#ffffff",
+                    "surface-container-low": "#f4f3f8",
+                    "primary-container": "#1a4173",
+                    "secondary-fixed-dim": "#c4c7c9",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed": "#2e1500",
+                    "on-tertiary": "#ffffff",
+                    "surface-tint": "#405f8e",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-secondary-fixed": "#191c1e",
+                    "surface": "#faf9fe"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "16px",
+                    "lg": "32px",
+                    "container_max": "1440px",
+                    "xs": "8px",
+                    "sidebar-width": "260px",
+                    "xl": "48px",
+                    "gutter": "24px",
+                    "container-max": "1440px",
+                    "sidebar_width": "260px",
+                    "md": "24px",
+                    "base": "4px"
+            },
+            "fontFamily": {
+                    "body-md": ["Inter"],
+                    "stats-display": ["Inter"],
+                    "h3": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "h2": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "h1": ["Inter"]
+            },
+            "fontSize": {
+                    "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                    "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                    "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-white/10 bg-[#002b57] dark:bg-slate-950 flex flex-col py-6 font-inter antialiased tracking-tight">
+<div class="px-6 mb-10 flex items-center gap-3">
+<div class="w-10 h-10 rounded bg-white/20 flex items-center justify-center">
+<img alt="University Crest" data-alt="minimalist university crest logo in white on a dark blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6LgVMQou9llx5-l37tS6C30GQ6LRLmxWyZVn5heWg8D3z8-yDbgAB1MYPlfuhdQJ49RUTXnMz_jSvVugSJCbbzXv5DMrqZJ74kEYk08lcMNNqgTeU81ZueeQvfO_AF9wSDwv7sEr_uAMJpfgoqdJvmN1HNmq0cAX3VsGk293LjxnrP8KzYXUsPB-4uQ-_MzBEWZn1wJyn6q5H1cpjPJZcHSObFNlvDKYU9rsJgyzWpalV0CkSS5XVcAnBpqGHqdlMsprcbiQUxyM"/>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tight text-white">Academic Core</h1>
+<p class="text-[10px] text-white/50 uppercase tracking-widest">Student Portal</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="grid_view">grid_view</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md text-body-md">Calendar</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="emoji_events">emoji_events</span>
+<span class="font-body-md text-body-md">Achievements</span>
+</a>
+<!-- Active State: Community -->
+<a class="relative flex items-center gap-3 px-4 py-3 bg-white/10 text-white before:absolute before:left-0 before:w-1 before:h-8 before:bg-white before:rounded-r-full" href="#">
+<span class="material-symbols-outlined" data-icon="groups">groups</span>
+<span class="font-body-md text-body-md">Community</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="forum">forum</span>
+<span class="font-body-md text-body-md">Messaging</span>
+</a>
+</nav>
+<div class="mt-auto px-4 space-y-1">
+<button class="w-full mb-6 bg-white/10 hover:bg-white/20 text-white py-2.5 rounded-lg font-label-caps text-label-caps transition-all active:scale-[0.98]">
+                View Grades
+            </button>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md text-sm">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-white/70 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="font-body-md text-body-md text-sm">Support</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="fixed top-0 right-0 left-64 h-16 border-b border-slate-200 bg-white/80 backdrop-blur-md z-40 flex items-center justify-between px-8">
+<div class="flex items-center gap-4">
+<h2 class="font-h2 text-h2 text-primary">Community Forum</h2>
+<div class="flex gap-6 ml-8">
+<a class="font-body-md text-body-md text-primary font-semibold" href="#">General</a>
+<a class="font-body-md text-body-md text-slate-500" href="#">Course Q&amp;A</a>
+<a class="font-body-md text-body-md text-slate-500" href="#">Announcements</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative group">
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border-none rounded-full w-64 text-sm focus:ring-2 focus:ring-primary-container" placeholder="Search discussions..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-2.5 text-slate-400 text-lg" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-4 text-slate-500">
+<button aria-label="Notifications" class="hover:bg-slate-50 p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button aria-label="Apps" class="hover:bg-slate-50 p-2 rounded-lg transition-all">
+<span class="material-symbols-outlined" data-icon="apps">apps</span>
+</button>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Student Avatar" data-alt="professional close-up portrait of a student, neutral background, soft studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUKbr7c6zQzc8CdZtGAtybn69S1Uv1YtiNlfkCnG4tcW8rgyr1cH6UIz9Vqfax1fb2fmU1eOiJL3ESMEqfiFwfsYneymPd94eT3LE6jWg0Bvk031tQJZBxmPbbAMeGcDx-azhuCangGjIjMgWVQxN96HW-rHOvh8ve2v1fStgUJ2Hj5aIZbBgDaI_3_O_KV3ertFjLFGijtO8Bu7Wt4JFOgeA7xMlWTosJqG9gRdpxFx5oAMg4lKCFr7sz6B7WKd1qf9IL2SQK_Gk"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 mt-16 p-8 min-h-screen">
+<div class="max-w-container-max mx-auto">
+<!-- Quick Actions & Stats -->
+<div class="grid grid-cols-12 gap-gutter mb-lg">
+<!-- Bento Card: Primary Action -->
+<div class="col-span-12 lg:col-span-8 bg-primary rounded-xl p-8 text-white relative overflow-hidden flex flex-col justify-between min-h-[220px]">
+<div class="relative z-10">
+<h3 class="font-h1 text-h1 mb-2">Connect with your cohort.</h3>
+<p class="font-body-lg text-body-lg text-white/70 max-w-md">Engage in peer-to-peer learning, share resources, and resolve academic queries together.</p>
+</div>
+<div class="flex gap-4 relative z-10">
+<button class="bg-white text-primary px-6 py-3 rounded-lg font-label-caps text-label-caps flex items-center gap-2 hover:bg-surface-container-low transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                            Create topic
+                        </button>
+<button class="bg-white/10 text-white px-6 py-3 rounded-lg border border-white/20 font-label-caps text-label-caps hover:bg-white/20 transition-all">
+                            Browse Categories
+                        </button>
+</div>
+<!-- Decorative Element -->
+<div class="absolute right-0 bottom-0 opacity-10 pointer-events-none">
+<span class="material-symbols-outlined text-[200px]" data-icon="forum">forum</span>
+</div>
+</div>
+<!-- Bento Card: Quick Stats -->
+<div class="col-span-12 lg:col-span-4 grid grid-rows-2 gap-4">
+<div class="bg-white border border-outline-variant rounded-xl p-6 flex items-center justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-secondary mb-1">UNRESOLVED Q&amp;A</p>
+<p class="font-stats-display text-stats-display text-primary">12</p>
+</div>
+<div class="h-12 w-12 bg-error-container text-on-error-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="pending">pending</span>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded-xl p-6 flex items-center justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-secondary mb-1">TOTAL REPLIES</p>
+<p class="font-stats-display text-stats-display text-primary">1.2k</p>
+</div>
+<div class="h-12 w-12 bg-primary-container text-on-primary-container rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Toolbar -->
+<div class="flex flex-col md:flex-row items-center justify-between mb-md gap-4">
+<div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0">
+<button class="px-4 py-2 bg-primary text-white rounded-lg font-label-caps text-label-caps">All Topics</button>
+<button class="px-4 py-2 hover:bg-surface-container rounded-lg font-label-caps text-label-caps text-secondary">My Discussions</button>
+<button class="px-4 py-2 hover:bg-surface-container rounded-lg font-label-caps text-label-caps text-secondary">Pinned</button>
+<button class="px-4 py-2 hover:bg-surface-container rounded-lg font-label-caps text-label-caps text-secondary">Resolved</button>
+</div>
+<div class="flex items-center gap-3 w-full md:w-auto">
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-caps text-label-caps text-secondary hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter
+                    </button>
+<button class="flex-1 md:flex-none flex items-center justify-center gap-2 px-4 py-2 border border-outline-variant rounded-lg font-label-caps text-label-caps text-secondary hover:bg-white hover:shadow-sm transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export
+                    </button>
+</div>
+</div>
+<!-- Discussion Topics Table -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Topic</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Category</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Replies</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-widest">Status</th>
+<th class="px-6 py-4 font-label-caps text-label-caps text-secondary uppercase tracking-widest text-right">Last Activity</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/50">
+<!-- Pinned Topic -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-1" data-icon="push_pin" style="font-variation-settings: 'FILL' 1;">push_pin</span>
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-primary group-hover:text-primary-container transition-colors">Course Syllabus and Reading List Clarifications</p>
+<p class="text-xs text-secondary mt-1">Started by Prof. Sarah Jenkins</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-primary-container/10 text-primary-container rounded-full font-label-caps text-[10px]">General</span>
+</td>
+<td class="px-6 py-5 text-body-md text-secondary">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                                        42
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-primary font-medium">
+<div class="h-2 w-2 rounded-full bg-primary animate-pulse"></div>
+<span class="text-xs">Pinned</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs text-secondary">2 hours ago</td>
+</tr>
+<!-- Active Topic -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-start gap-3 pl-8">
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-primary group-hover:text-primary-container transition-colors">How to apply the Taylor Expansion in Problem Set 4?</p>
+<p class="text-xs text-secondary mt-1">Started by David Miller</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-on-tertiary-container/10 text-on-tertiary-container rounded-full font-label-caps text-[10px]">Course Q&amp;A</span>
+</td>
+<td class="px-6 py-5 text-body-md text-secondary">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                                        15
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-info font-medium">
+<div class="h-2 w-2 rounded-full bg-info"></div>
+<span class="text-xs">Active</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs text-secondary">15 mins ago</td>
+</tr>
+<!-- Open Topic -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-start gap-3 pl-8">
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-primary group-hover:text-primary-container transition-colors">Study group for Final Exam - Room 302</p>
+<p class="text-xs text-secondary mt-1">Started by Maria Rodriguez</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-secondary-container/50 text-secondary rounded-full font-label-caps text-[10px]">Community</span>
+</td>
+<td class="px-6 py-5 text-body-md text-secondary">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                                        8
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-secondary font-medium">
+<div class="h-2 w-2 rounded-full bg-secondary"></div>
+<span class="text-xs">Open</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs text-secondary">Yesterday</td>
+</tr>
+<!-- Resolved Topic -->
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-start gap-3 pl-8">
+<div>
+<p class="font-body-lg text-body-lg font-semibold text-slate-400 group-hover:text-primary-container transition-colors line-through">Deadline for Lab Submission</p>
+<p class="text-xs text-secondary mt-1">Started by Tech Support</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 bg-slate-100 text-slate-400 rounded-full font-label-caps text-[10px]">Announcements</span>
+</td>
+<td class="px-6 py-5 text-body-md text-secondary">
+<div class="flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+                                        3
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-success font-medium">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+<span class="text-xs">Resolved</span>
+</div>
+</td>
+<td class="px-6 py-5 text-right text-xs text-secondary">Oct 24</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-6 bg-surface-container-lowest border-t border-outline-variant flex items-center justify-between">
+<p class="text-xs text-secondary">Showing 1-10 of 48 discussions</p>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container transition-all" disabled="">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar (Shared Component - Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 border-t border-slate-200 bg-white dark:bg-slate-900 z-50 flex justify-around items-center px-4">
+<a class="flex flex-col items-center justify-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] uppercase tracking-widest mt-1">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span class="font-label-caps text-[10px] uppercase tracking-widest mt-1">Calendar</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="workspace_premium">workspace_premium</span>
+<span class="font-label-caps text-[10px] uppercase tracking-widest mt-1">Awards</span>
+</a>
+<!-- Active -->
+<a class="flex flex-col items-center justify-center text-[#002b57] bg-blue-50 rounded-xl px-4 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="forum" style="font-variation-settings: 'FILL' 1;">forum</span>
+<span class="font-label-caps text-[10px] uppercase tracking-widest mt-1">Forum</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400" href="#">
+<span class="material-symbols-outlined" data-icon="chat_bubble">chat_bubble</span>
+<span class="font-label-caps text-[10px] uppercase tracking-widest mt-1">Chat</span>
+</a>
+</nav>
+</body></html>

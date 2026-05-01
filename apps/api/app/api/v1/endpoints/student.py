@@ -19,6 +19,7 @@ from app.schemas.lms import (
     SubmissionCreate,
     SubmissionOut,
 )
+from app.schemas.sprint67 import ForumTopicCreate, ForumTopicOut
 from app.services.lms_service import (
     get_course_detail_for_user,
     list_assignments,
@@ -31,6 +32,7 @@ from app.services.lms_service import (
     submit_assignment,
     submit_quiz_attempt,
 )
+from app.services.sprint67_service import create_forum_topic, list_student_forum_topics
 
 router = APIRouter(prefix="/student", tags=["Student LMS"])
 
@@ -124,3 +126,21 @@ async def get_my_attendance(
     db: AsyncSession = Depends(get_db),
 ) -> list[AttendanceRecordOut]:
     return await list_attendance_for_student(current_user.id, section_id, db)
+
+
+@router.get("/community/topics", response_model=list[ForumTopicOut])
+async def get_community_topics(
+    section_id: str = Query(...),
+    current_user: User = Depends(require_roles(UserRole.STUDENT)),
+    db: AsyncSession = Depends(get_db),
+) -> list[ForumTopicOut]:
+    return await list_student_forum_topics(section_id, current_user.id, db)
+
+
+@router.post("/community/topics", response_model=ForumTopicOut)
+async def post_community_topic(
+    payload: ForumTopicCreate,
+    current_user: User = Depends(require_roles(UserRole.STUDENT)),
+    db: AsyncSession = Depends(get_db),
+) -> ForumTopicOut:
+    return await create_forum_topic(payload, current_user, db)

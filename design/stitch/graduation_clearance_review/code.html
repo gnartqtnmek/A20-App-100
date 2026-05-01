@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Advisor Central - Graduation Clearance</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-low": "#f4f3f7",
+                        "surface-dim": "#dad9de",
+                        "inverse-primary": "#a8c8fd",
+                        "error-container": "#ffdad6",
+                        "surface-bright": "#faf9fe",
+                        "secondary": "#5c5f61",
+                        "surface-tint": "#405f8e",
+                        "surface-container-highest": "#e2e2e7",
+                        "tertiary-container": "#643500",
+                        "secondary-container": "#dee0e2",
+                        "primary": "#001733",
+                        "inverse-on-surface": "#f1f0f5",
+                        "on-primary-container": "#8caee7",
+                        "on-secondary-fixed-variant": "#444749",
+                        "primary-container": "#002b57",
+                        "on-surface": "#1a1c1f",
+                        "on-primary-fixed": "#001b3b",
+                        "secondary-fixed": "#e1e3e5",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-secondary": "#ffffff",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "info": "#0288d1",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container-lowest": "#ffffff",
+                        "outline-variant": "#c3c6d0",
+                        "outline": "#737780",
+                        "on-secondary-fixed": "#191c1e",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-secondary-container": "#606365",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "error": "#ba1a1a",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "tertiary": "#442200",
+                        "surface-container": "#eeedf2",
+                        "on-background": "#1a1c1f",
+                        "on-tertiary-container": "#bc875a",
+                        "surface-variant": "#e3e2e6",
+                        "on-error-container": "#93000a",
+                        "on-tertiary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "primary-fixed": "#d5e3ff",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#2e1500",
+                        "inverse-surface": "#2f3034",
+                        "success": "#2e7d32",
+                        "on-error": "#ffffff",
+                        "surface": "#faf9fe",
+                        "on-primary-fixed-variant": "#264775",
+                        "background": "#faf9fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "lg": "32px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "xl": "48px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "container_max": "1440px",
+                        "container-max": "1440px",
+                        "xs": "8px",
+                        "md": "24px",
+                        "sm": "16px"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full h-16 px-6 z-40 flex justify-between items-center bg-white border-b border-slate-200 shadow-none">
+<div class="flex items-center gap-8">
+<span class="text-xl font-black tracking-tighter text-blue-900">Advisor Central</span>
+<div class="relative hidden md:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 border-none rounded text-sm w-64 focus:ring-1 focus:ring-blue-900" placeholder="Search students..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-slate-500 hover:bg-slate-50 transition-colors rounded">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 transition-colors rounded">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 transition-colors rounded">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="Advisor Profile" data-alt="professional headshot of an academic advisor in a modern office setting, soft natural lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBef_i5eELYzGq0M9G__QMPssED2wbC4zSrx7uZO_Bhe2aT1NlOY58AeyUkmRR9AhshNlqOZcw4TNsfdTEmEkS3ctXnJx6U7H_8MUc3fCVIC95b4YkAnvU5h9qIj21Le8qLbW5-v7akgrEYYiKJEWK1QAF_5JDX4_DZx24uQA5VvYDD90AgUT6KsiXY_by0smTiljWeCtvDIviFLFXAldywj1xBcWCn1cjk49PdQs2ui1Tfbv9gazHccA-i5JZYVrAKdngRN_4P5ao"/>
+</div>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-6 z-30 bg-slate-50 border-r border-slate-200 w-64">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-blue-900 rounded-sm flex items-center justify-center text-white font-bold">AC</div>
+<div>
+<div class="text-lg font-bold text-blue-900 leading-none">Academic Core</div>
+<div class="text-[10px] uppercase tracking-widest text-slate-500 font-semibold">Faculty Portal</div>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 hover:bg-slate-100 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 bg-white text-blue-900 border-l-4 border-blue-900 px-4 py-3 ml-[-1px] transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">group</span>
+                Caseload
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 hover:bg-slate-100 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+                Schedule
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 hover:bg-slate-100 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">query_stats</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 hover:bg-slate-100 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">auto_stories</span>
+                Resources
+            </a>
+</nav>
+<div class="px-2 space-y-1 pt-4 border-t border-slate-200">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:text-blue-900 transition-all font-sans text-xs font-semibold uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Log Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 pt-24 px-8 pb-12">
+<div class="max-w-[1440px] mx-auto">
+<!-- Breadcrumbs & Header -->
+<div class="mb-8 flex justify-between items-end">
+<div>
+<div class="flex items-center gap-2 text-slate-500 mb-2">
+<span class="text-label-caps uppercase">Caseload</span>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-label-caps uppercase text-blue-900">Graduation Clearance</span>
+</div>
+<h1 class="font-h1 text-h1 text-primary">Marcus Thompson</h1>
+<p class="text-body-md text-slate-500">B.S. Computer Science • Expected Graduation May 2024</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-outline-variant text-primary font-semibold flex items-center gap-2 hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">description</span>
+                        Official Audit
+                    </button>
+<button class="px-4 py-2 bg-white border border-outline-variant text-primary font-semibold flex items-center gap-2 hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-sm">print</span>
+                        Unofficial Transcript
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Student Summary Card -->
+<div class="col-span-12 lg:col-span-4 bg-white border border-outline-variant p-6 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-blue-900"></div>
+<div class="flex justify-between items-start mb-6">
+<h3 class="font-h3 text-h3">Completion Status</h3>
+<span class="bg-green-100 text-green-800 text-[10px] font-bold px-2 py-0.5 rounded uppercase">Pending Review</span>
+</div>
+<div class="flex flex-col items-center py-4">
+<div class="relative w-40 h-40 flex items-center justify-center mb-4">
+<svg class="w-full h-full -rotate-90">
+<circle class="text-slate-100" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-blue-900" cx="80" cy="80" fill="transparent" r="70" stroke="currentColor" stroke-dasharray="440" stroke-dashoffset="17.6" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-stats-display text-stats-display text-primary">96%</span>
+<span class="text-label-caps text-slate-500 uppercase">Credits</span>
+</div>
+</div>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Major GPA</span>
+<span class="font-bold text-primary">3.82 / 4.0</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Overall GPA</span>
+<span class="font-bold text-primary">3.65 / 4.0</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="text-slate-500">Residency Requirement</span>
+<span class="text-success font-bold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> Satisfied
+                            </span>
+</div>
+</div>
+</div>
+<!-- Requirement Checklist -->
+<div class="col-span-12 lg:col-span-8 bg-white border border-outline-variant">
+<div class="absolute top-0 left-0 w-full h-1 bg-secondary-container"></div>
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-h3 text-h3">Academic Requirements</h3>
+<div class="flex gap-2">
+<span class="flex items-center gap-1 text-[11px] font-semibold text-slate-400 uppercase">
+<span class="w-2 h-2 rounded-full bg-success"></span> Satisfied
+                            </span>
+<span class="flex items-center gap-1 text-[11px] font-semibold text-slate-400 uppercase ml-2">
+<span class="w-2 h-2 rounded-full bg-error"></span> Missing
+                            </span>
+</div>
+</div>
+<div class="p-0">
+<!-- Table Style Checklist -->
+<table class="w-full text-left">
+<thead class="bg-slate-50 border-b border-outline-variant">
+<tr>
+<th class="px-6 py-3 font-label-caps text-label-caps text-slate-500 uppercase">Requirement Group</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-slate-500 uppercase">Component</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-slate-500 uppercase">Status</th>
+<th class="px-6 py-3 font-label-caps text-label-caps text-slate-500 uppercase">Details</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr>
+<td class="px-6 py-4 font-bold text-primary text-sm">Core Curriculum</td>
+<td class="px-6 py-4 text-slate-600 text-sm">General Education (36 Cr)</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-success text-[10px] font-bold rounded flex items-center gap-1 w-fit uppercase">
+<span class="material-symbols-outlined text-xs">check</span> Satisfied
+                                        </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">All categories complete.</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-bold text-primary text-sm" rowspan="3">Computer Science Major</td>
+<td class="px-6 py-4 text-slate-600 text-sm">Lower Division Core</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-success text-[10px] font-bold rounded flex items-center gap-1 w-fit uppercase">
+<span class="material-symbols-outlined text-xs">check</span> Satisfied
+                                        </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">CS101 - CS240 fulfilled.</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-slate-600 text-sm">Upper Division Core</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-red-50 text-error text-[10px] font-bold rounded flex items-center gap-1 w-fit uppercase">
+<span class="material-symbols-outlined text-xs">close</span> Missing
+                                        </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">CS490 Capstone Project (In Progress)</td>
+</tr>
+<tr>
+<td class="px-6 py-4 text-slate-600 text-sm">Technical Electives</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-success text-[10px] font-bold rounded flex items-center gap-1 w-fit uppercase">
+<span class="material-symbols-outlined text-xs">check</span> Satisfied
+                                        </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">9 credits from approved list.</td>
+</tr>
+<tr>
+<td class="px-6 py-4 font-bold text-primary text-sm">General Electives</td>
+<td class="px-6 py-4 text-slate-600 text-sm">Open Electives (12 Cr)</td>
+<td class="px-6 py-4">
+<span class="px-2 py-1 bg-green-50 text-success text-[10px] font-bold rounded flex items-center gap-1 w-fit uppercase">
+<span class="material-symbols-outlined text-xs">check</span> Satisfied
+                                        </span>
+</td>
+<td class="px-6 py-4 text-xs text-slate-500">Excess credits from minor applied.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Clearance Actions Section -->
+<div class="col-span-12 bg-white border border-outline-variant overflow-hidden">
+<div class="grid grid-cols-1 md:grid-cols-3">
+<div class="p-8 border-r border-outline-variant bg-slate-50">
+<h3 class="font-h3 text-h3 mb-2">Final Clearance</h3>
+<p class="text-body-md text-slate-500 mb-6">Review the academic record above and select the appropriate clearance action for the upcoming graduation cycle.</p>
+<div class="space-y-3">
+<div class="flex items-start gap-4 p-4 bg-white border border-outline-variant hover:border-blue-900 transition-colors cursor-pointer group">
+<div class="mt-1 w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-blue-900 flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-blue-900 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div>
+<div class="font-bold text-sm text-primary">Approve for Graduation</div>
+<div class="text-xs text-slate-500">Pending final semester grades.</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 bg-white border border-outline-variant hover:border-blue-900 transition-colors cursor-pointer group">
+<div class="mt-1 w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-blue-900 flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-blue-900 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div>
+<div class="font-bold text-sm text-primary">Request Substitution</div>
+<div class="text-xs text-slate-500">Waive or substitute core requirements.</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 bg-white border border-outline-variant hover:border-error transition-colors cursor-pointer group">
+<div class="mt-1 w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-error flex items-center justify-center">
+<div class="w-2 h-2 rounded-full bg-error opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div>
+<div class="font-bold text-sm text-primary">Deny Clearance</div>
+<div class="text-xs text-slate-500">Student is ineligible for graduation.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="md:col-span-2 p-8">
+<h4 class="font-label-caps text-label-caps text-slate-500 uppercase mb-4">Official Advisor Notes</h4>
+<textarea class="w-full border border-outline-variant p-4 text-sm focus:ring-1 focus:ring-blue-900 mb-6" placeholder="Document substitution rationales, missing paperwork, or specific conditions for approval..." rows="6"></textarea>
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-2 text-xs text-slate-400">
+<span class="material-symbols-outlined text-sm">lock</span>
+                                    Entries are permanent and added to official audit.
+                                </div>
+<div class="flex gap-4">
+<button class="px-6 py-2 bg-slate-100 text-slate-600 font-bold hover:bg-slate-200 transition-colors">Discard Draft</button>
+<button class="px-8 py-2 bg-primary text-white font-bold shadow-sm hover:opacity-90 transition-opacity">Submit Final Review</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Related Documents / Quick Access -->
+<div class="col-span-12 lg:col-span-6 bg-white border border-outline-variant p-6">
+<h3 class="font-h3 text-h3 mb-4">Supporting Documents</h3>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-3 border border-outline-variant hover:bg-slate-50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-900">picture_as_pdf</span>
+<div>
+<div class="text-sm font-bold text-primary">Graduation_Application.pdf</div>
+<div class="text-xs text-slate-500">Submitted: Jan 12, 2024</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-blue-900">download</span>
+</div>
+<div class="flex items-center justify-between p-3 border border-outline-variant hover:bg-slate-50 transition-colors cursor-pointer group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-900">picture_as_pdf</span>
+<div>
+<div class="text-sm font-bold text-primary">Transfer_Credit_Evaluation.pdf</div>
+<div class="text-xs text-slate-500">Processed: Aug 20, 2021</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-blue-900">download</span>
+</div>
+</div>
+</div>
+<div class="col-span-12 lg:col-span-6 bg-white border border-outline-variant p-6">
+<h3 class="font-h3 text-h3 mb-4">Advising History</h3>
+<div class="space-y-4">
+<div class="flex gap-4">
+<div class="w-1 h-auto bg-slate-200 rounded-full"></div>
+<div>
+<div class="text-[10px] font-bold text-slate-400 uppercase">Oct 14, 2023</div>
+<div class="text-sm font-bold text-primary">Degree Audit Session</div>
+<div class="text-xs text-slate-500 italic">"Student advised to enroll in CS490 for Spring. Confirming minor completion."</div>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-1 h-auto bg-slate-200 rounded-full"></div>
+<div>
+<div class="text-[10px] font-bold text-slate-400 uppercase">Mar 02, 2023</div>
+<div class="text-sm font-bold text-primary">Substitution Approved</div>
+<div class="text-xs text-slate-500 italic">"MATH310 substituted for STAT200 per Department Head approval."</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB - Only for main screens -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-transform z-50">
+<span class="material-symbols-outlined" data-weight="fill">add</span>
+</button>
+</body></html>

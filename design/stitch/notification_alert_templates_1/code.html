@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LMS Admin - Notification &amp; Alert Templates</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-error": "#ffffff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "inverse-primary": "#a8c8fd",
+                        "on-secondary-fixed": "#191c1e",
+                        "surface-container": "#eeedf2",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "surface-container-low": "#f4f3f8",
+                        "surface": "#faf9fe",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-surface": "#1a1c1f",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "background": "#faf9fd",
+                        "secondary-container": "#dee0e2",
+                        "on-primary-container": "#7493c5",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "primary": "#001733",
+                        "outline-variant": "#c3c6d0",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-container-highest": "#e2e2e7",
+                        "primary-fixed": "#d5e3ff",
+                        "success": "#2e7d32",
+                        "on-secondary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "inverse-surface": "#2f3034",
+                        "on-tertiary-container": "#e39e62",
+                        "on-error-container": "#93000a",
+                        "info": "#0288d1",
+                        "secondary": "#5c5f61",
+                        "on-tertiary-fixed": "#2e1500",
+                        "tertiary-container": "#442200",
+                        "surface-tint": "#405f8e",
+                        "surface-bright": "#faf9fd",
+                        "on-secondary-container": "#606365",
+                        "on-primary": "#ffffff",
+                        "on-surface-variant": "#43474f",
+                        "secondary-fixed": "#e1e3e5",
+                        "outline": "#737780",
+                        "surface-container-high": "#e8e8ec",
+                        "on-primary-fixed-variant": "#264775",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "tertiary": "#442200",
+                        "inverse-on-surface": "#f1f0f5"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "48px",
+                        "sidebar-width": "260px",
+                        "md": "24px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "xs": "8px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "lg": "32px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "stats-display": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "h2": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-lg": ["Inter"]
+                    },
+                    "fontSize": {
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex">
+<!-- SideNavBar -->
+<aside class="flex flex-col fixed left-0 top-0 h-full z-50 h-screen w-64 border-r border-slate-200 bg-slate-50 dark:bg-slate-950 dark:border-slate-800">
+<div class="p-sm flex flex-col gap-xs mb-lg">
+<div class="flex items-center gap-sm px-xs py-base">
+<div class="w-10 h-10 bg-primary-container rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="school">school</span>
+</div>
+<div>
+<h2 class="font-black tracking-tight text-[#1A4173] dark:text-white font-label-caps text-body-md uppercase">Academic Portal</h2>
+<p class="text-xs text-slate-500 font-body-md">Admin Console</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-xs space-y-base">
+<a class="flex items-center gap-sm px-sm py-xs rounded transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-[#1A4173] hover:bg-slate-200/50 group" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span class="font-sans text-sm tracking-tight">Users</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-xs rounded transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-[#1A4173] hover:bg-slate-200/50 group" href="#">
+<span class="material-symbols-outlined" data-icon="school">school</span>
+<span class="font-sans text-sm tracking-tight">Courses</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-xs rounded transition-all duration-200 text-slate-600 dark:text-slate-400 hover:text-[#1A4173] hover:bg-slate-200/50 group" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-sans text-sm tracking-tight">Reports</span>
+</a>
+<!-- Active State Navigation -->
+<a class="flex items-center gap-sm px-sm py-xs rounded transition-all duration-200 text-[#1A4173] dark:text-blue-300 bg-white dark:bg-slate-900 border-l-4 border-[#1A4173] font-bold" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-sans text-sm tracking-tight">Settings</span>
+</a>
+</nav>
+<div class="p-xs mt-auto border-t border-slate-200 dark:border-slate-800">
+<a class="flex items-center gap-sm px-sm py-xs rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="contact_support">contact_support</span>
+<span class="font-sans text-sm tracking-tight">Support</span>
+</a>
+<a class="flex items-center gap-sm px-sm py-xs rounded text-slate-600 dark:text-slate-400 hover:bg-slate-200/50 transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span class="font-sans text-sm tracking-tight">Logout</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-64 flex-1 flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex items-center justify-between px-6 sticky top-0 z-40 w-full h-16 border-b border-slate-200 bg-white dark:bg-slate-900 dark:border-slate-800">
+<div class="flex items-center gap-lg">
+<h1 class="text-xl font-bold text-[#1A4173] dark:text-blue-300 font-sans">LMS Admin</h1>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center text-slate-400">
+<span class="material-symbols-outlined text-sm" data-icon="search">search</span>
+</span>
+<input class="pl-10 pr-4 py-1.5 bg-slate-50 border-none rounded text-sm focus:ring-2 focus:ring-[#1A4173]/20 w-64" placeholder="Search templates..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-primary-container text-white px-4 py-2 rounded text-sm font-medium hover:opacity-90 transition-opacity">
+                    Add New
+                </button>
+<div class="flex items-center gap-sm border-l border-slate-200 pl-md">
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 text-slate-500 hover:bg-slate-50 rounded-full">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-slate-200 overflow-hidden ml-2">
+<img alt="Administrator Profile" class="w-full h-full object-cover" data-alt="Professional portrait of a male university administrator with a clear background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAC8Zy5RHfboOSCRnUBe8_BFuso-ZXRfY1Po6-FfruSneQMRyYACjhF5L-fVJfYP1f_fyTH21F7hRy7dUYNDgRYMj84_h3k4J_8-OYM69Y7HrTv-fy2zyluJxlF58ESWThcdpnK5FrAKZ_5fsmspAcRAs-hE4gtZHqnRPuEQTz9HztYHYXek722c2-c5860gn9fIYZxjrb7HUV2KjSJDUuaIPoCo65hf4Q-kRZ88okKBocXTTlgWotS3v1HqZBCZqACc7Zky0gZZU8"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<div class="p-lg space-y-lg max-w-[1440px] mx-auto w-full">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<span class="text-label-caps font-label-caps text-on-secondary-container tracking-widest uppercase mb-xs block">System Management</span>
+<h2 class="text-h1 font-h1 text-primary">Notification &amp; Alert Templates</h2>
+</div>
+<div class="flex gap-sm">
+<button class="flex items-center gap-xs px-md py-sm border border-outline text-on-surface font-body-md rounded hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="rule">rule</span>
+                        Edit Rule
+                    </button>
+<button class="flex items-center gap-xs px-md py-sm bg-primary-container text-white font-body-md rounded hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                        Create New Template
+                    </button>
+</div>
+</div>
+<!-- Dashboard Layout: Bento Style -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Column: Template List -->
+<div class="col-span-12 lg:col-span-7 space-y-gutter">
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-0 overflow-hidden shadow-sm">
+<div class="p-md border-b border-outline-variant flex justify-between items-center bg-white">
+<h3 class="text-h3 font-h3 text-primary">Active Templates</h3>
+<div class="flex gap-xs">
+<span class="bg-primary-fixed text-on-primary-fixed px-sm py-1 rounded-full text-xs font-semibold">12 Total</span>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-md py-sm text-label-caps font-label-caps text-on-surface-variant uppercase">Template Name</th>
+<th class="px-md py-sm text-label-caps font-label-caps text-on-surface-variant uppercase">Category</th>
+<th class="px-md py-sm text-label-caps font-label-caps text-on-surface-variant uppercase">Channels</th>
+<th class="px-md py-sm text-label-caps font-label-caps text-on-surface-variant uppercase text-right">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface transition-colors cursor-pointer group">
+<td class="px-md py-md">
+<div class="font-body-md font-semibold text-primary">Payment Reminder</div>
+<div class="text-xs text-on-surface-variant">Sent 4 days before tuition deadline</div>
+</td>
+<td class="px-md py-md">
+<span class="bg-secondary-fixed text-on-secondary-fixed-variant px-xs py-1 rounded text-xs">Finance</span>
+</td>
+<td class="px-md py-md">
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-sm text-success" data-icon="mail">mail</span>
+<span class="material-symbols-outlined text-sm text-info" data-icon="notifications_active">notifications_active</span>
+</div>
+</td>
+<td class="px-md py-md text-right">
+<button class="text-on-primary-container hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors cursor-pointer bg-primary/5">
+<td class="px-md py-md border-l-4 border-primary-container">
+<div class="font-body-md font-semibold text-primary">System Maintenance</div>
+<div class="text-xs text-on-surface-variant">Alert for scheduled downtime</div>
+</td>
+<td class="px-md py-md">
+<span class="bg-error-container text-on-error-container px-xs py-1 rounded text-xs">Technical</span>
+</td>
+<td class="px-md py-md">
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-sm text-info" data-icon="notifications_active">notifications_active</span>
+<span class="material-symbols-outlined text-sm text-outline" data-icon="sms">sms</span>
+</div>
+</td>
+<td class="px-md py-md text-right">
+<button class="text-primary font-semibold text-xs uppercase tracking-wider">Active View</button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors cursor-pointer">
+<td class="px-md py-md">
+<div class="font-body-md font-semibold text-primary">Exam Schedule Published</div>
+<div class="text-xs text-on-surface-variant">Blast to all enrolled students</div>
+</td>
+<td class="px-md py-md">
+<span class="bg-tertiary-fixed text-on-tertiary-fixed-variant px-xs py-1 rounded text-xs">Academic</span>
+</td>
+<td class="px-md py-md">
+<div class="flex gap-xs">
+<span class="material-symbols-outlined text-sm text-success" data-icon="mail">mail</span>
+<span class="material-symbols-outlined text-sm text-info" data-icon="notifications_active">notifications_active</span>
+<span class="material-symbols-outlined text-sm text-info" data-icon="smartphone">smartphone</span>
+</div>
+</td>
+<td class="px-md py-md text-right">
+<button class="text-on-primary-container hover:text-primary">
+<span class="material-symbols-outlined" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-sm bg-surface-container-low text-center">
+<button class="text-label-caps font-label-caps text-on-primary-container hover:underline">View All Archived Templates</button>
+</div>
+</section>
+</div>
+<!-- Right Column: Detail View / Template Editor -->
+<div class="col-span-12 lg:col-span-5">
+<section class="bg-surface-container-lowest border border-outline-variant rounded p-md shadow-sm sticky top-24">
+<div class="flex items-center justify-between mb-md">
+<h3 class="text-h3 font-h3 text-primary">Template Editor</h3>
+<div class="flex gap-xs">
+<button class="p-1 hover:bg-surface-container-high rounded"><span class="material-symbols-outlined text-on-surface-variant" data-icon="history">history</span></button>
+<button class="p-1 hover:bg-surface-container-high rounded"><span class="material-symbols-outlined text-on-surface-variant" data-icon="delete">delete</span></button>
+</div>
+</div>
+<div class="space-y-md">
+<!-- Template Info -->
+<div class="grid grid-cols-2 gap-sm">
+<div class="space-y-base">
+<label class="text-label-caps font-label-caps text-on-surface-variant">TEMPLATE NAME</label>
+<input class="w-full border-outline-variant rounded p-xs text-body-md focus:ring-primary focus:border-primary" type="text" value="System Maintenance"/>
+</div>
+<div class="space-y-base">
+<label class="text-label-caps font-label-caps text-on-surface-variant">CATEGORY</label>
+<select class="w-full border-outline-variant rounded p-xs text-body-md focus:ring-primary">
+<option>Technical</option>
+<option>Academic</option>
+<option>Finance</option>
+</select>
+</div>
+</div>
+<!-- Channels -->
+<div class="space-y-base">
+<label class="text-label-caps font-label-caps text-on-surface-variant">DELIVERY CHANNELS</label>
+<div class="grid grid-cols-3 gap-xs">
+<label class="flex flex-col items-center gap-xs p-sm border border-primary-container bg-primary/5 rounded cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="desktop_windows">desktop_windows</span>
+<span class="text-xs font-semibold">Web Portal</span>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+<label class="flex flex-col items-center gap-xs p-sm border border-outline-variant rounded cursor-pointer hover:bg-surface">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="mail">mail</span>
+<span class="text-xs font-semibold">Email</span>
+<input class="hidden" type="checkbox"/>
+</label>
+<label class="flex flex-col items-center gap-xs p-sm border border-primary-container bg-primary/5 rounded cursor-pointer">
+<span class="material-symbols-outlined text-primary" data-icon="notifications_active">notifications_active</span>
+<span class="text-xs font-semibold">Mobile Push</span>
+<input checked="" class="hidden" type="checkbox"/>
+</label>
+</div>
+</div>
+<!-- Body & Placeholders -->
+<div class="space-y-base">
+<div class="flex justify-between items-end">
+<label class="text-label-caps font-label-caps text-on-surface-variant">MESSAGE BODY</label>
+<span class="text-[10px] text-on-surface-variant">Markdown Supported</span>
+</div>
+<div class="relative">
+<textarea class="w-full border-outline-variant rounded p-sm text-body-md focus:ring-primary font-mono text-sm leading-relaxed" rows="6">Dear {{Student_Name}},
+
+Please be advised that the {{System_Module}} will be offline for scheduled maintenance on {{Date}} from {{Start_Time}} to {{End_Time}}.
+
+We apologize for any inconvenience.
+Academic IT Support</textarea>
+</div>
+</div>
+<!-- Placeholder Tags -->
+<div class="space-y-base">
+<label class="text-label-caps font-label-caps text-on-surface-variant">AVAILABLE TAGS</label>
+<div class="flex flex-wrap gap-xs">
+<button class="bg-surface-container-high px-xs py-1 rounded text-[11px] font-mono hover:bg-outline-variant transition-colors text-primary">{{Student_Name}}</button>
+<button class="bg-surface-container-high px-xs py-1 rounded text-[11px] font-mono hover:bg-outline-variant transition-colors text-primary">{{Date}}</button>
+<button class="bg-surface-container-high px-xs py-1 rounded text-[11px] font-mono hover:bg-outline-variant transition-colors text-primary">{{System_Module}}</button>
+<button class="bg-surface-container-high px-xs py-1 rounded text-[11px] font-mono hover:bg-outline-variant transition-colors text-primary">{{Course_Name}}</button>
+<button class="bg-surface-container-low px-xs py-1 rounded border border-dashed border-outline text-[11px] text-on-surface-variant">+ Add Custom</button>
+</div>
+</div>
+<div class="pt-sm border-t border-outline-variant flex justify-end gap-sm">
+<button class="text-on-surface-variant font-label-caps hover:text-primary">CANCEL</button>
+<button class="bg-primary text-white px-lg py-sm rounded font-body-md font-semibold hover:opacity-90">SAVE TEMPLATE</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Bottom Stats Row -->
+<div class="col-span-12 grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="bg-white border border-outline-variant rounded p-md flex items-center gap-md">
+<div class="w-12 h-12 bg-info/10 text-info rounded flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant">SENT LAST 24H</p>
+<h4 class="text-h3 font-h3">1,248</h4>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded p-md flex items-center gap-md">
+<div class="w-12 h-12 bg-success/10 text-success rounded flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="task_alt">task_alt</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant">OPEN RATE</p>
+<h4 class="text-h3 font-h3">94.2%</h4>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded p-md flex items-center gap-md">
+<div class="w-12 h-12 bg-error/10 text-error rounded flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="error_outline">error_outline</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant">FAILED</p>
+<h4 class="text-h3 font-h3">12</h4>
+</div>
+</div>
+<div class="bg-white border border-outline-variant rounded p-md flex items-center gap-md">
+<div class="w-12 h-12 bg-tertiary-fixed/30 text-tertiary rounded flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+</div>
+<div>
+<p class="text-label-caps font-label-caps text-on-surface-variant">QUEUED</p>
+<h4 class="text-h3 font-h3">52</h4>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

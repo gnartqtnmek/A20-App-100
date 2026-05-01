@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Nunito, Space_Grotesk } from "next/font/google";
+import { Inter } from "next/font/google";
 
 import "./globals.css";
 
-const headingFont = Space_Grotesk({
+const headingFont = Inter({
   subsets: ["latin"],
   variable: "--font-heading",
-  weight: ["500", "600", "700"]
+  weight: ["500", "600", "700", "800"]
 });
 
-const bodyFont = Nunito({
+const bodyFont = Inter({
   subsets: ["latin"],
   variable: "--font-body",
-  weight: ["400", "500", "600", "700"]
+  weight: ["400", "500", "600"]
 });
 
 export const metadata: Metadata = {

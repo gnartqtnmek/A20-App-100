@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "surface-container-highest": "#e2e2e7",
+                "on-tertiary-container": "#e39e62",
+                "primary-fixed": "#d5e3ff",
+                "outline-variant": "#c3c6d0",
+                "surface": "#faf9fe",
+                "on-secondary-fixed-variant": "#444749",
+                "on-secondary-container": "#606365",
+                "on-surface-variant": "#43474f",
+                "surface-container": "#eeedf2",
+                "background": "#faf9fd",
+                "surface-bright": "#faf9fe",
+                "secondary-fixed": "#e1e3e5",
+                "on-tertiary-fixed": "#2e1500",
+                "on-surface": "#1a1c1f",
+                "tertiary-fixed-dim": "#f6bb8a",
+                "inverse-primary": "#a8c8fd",
+                "success": "#2e7d32",
+                "surface-dim": "#dad9de",
+                "outline": "#737780",
+                "on-primary-container": "#7493c5",
+                "error-container": "#ffdad6",
+                "primary-container": "#002b57",
+                "surface-tint": "#405f8e",
+                "surface-variant": "#e3e2e6",
+                "on-tertiary": "#ffffff",
+                "surface-container-high": "#e8e8ec",
+                "tertiary-container": "#442200",
+                "surface-container-low": "#f4f3f8",
+                "on-tertiary-fixed-variant": "#663d17",
+                "on-error": "#ffffff",
+                "error": "#ba1a1a",
+                "tertiary-fixed": "#ffdcc2",
+                "on-primary-fixed": "#001b3b",
+                "inverse-on-surface": "#f1f0f5",
+                "tertiary": "#442200",
+                "on-primary": "#ffffff",
+                "on-background": "#1a1c1f",
+                "secondary": "#5c5f61",
+                "surface-container-lowest": "#ffffff",
+                "info": "#0288d1",
+                "on-primary-fixed-variant": "#264775",
+                "on-error-container": "#93000a",
+                "secondary-container": "#dee0e2",
+                "secondary-fixed-dim": "#c4c7c9",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed": "#191c1e",
+                "primary": "#001733",
+                "inverse-surface": "#2f3034",
+                "primary-fixed-dim": "#a8c8fd"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "xs": "8px",
+                "container_max": "1440px",
+                "xl": "48px",
+                "sm": "16px",
+                "sidebar_width": "260px",
+                "gutter": "24px",
+                "sidebar-width": "260px",
+                "base": "4px",
+                "lg": "32px",
+                "md": "24px",
+                "container-max": "1440px"
+            },
+            "fontFamily": {
+                "label-caps": ["Inter"],
+                "body-lg": ["Inter"],
+                "body-md": ["Inter"],
+                "stats-display": ["Inter"],
+                "h1": ["Inter"],
+                "h3": ["Inter"],
+                "h2": ["Inter"]
+            },
+            "fontSize": {
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #faf9fd;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background antialiased">
+<!-- SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-200 bg-[#002b57] flex flex-col z-20">
+<div class="p-6">
+<h1 class="text-lg font-bold tracking-tight text-white font-h1">Advisor Portal</h1>
+<p class="text-xs text-slate-300 font-body-md">Academic Core System</p>
+</div>
+<nav class="flex-1 mt-4">
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="person_search">person_search</span>
+<span class="font-inter text-sm antialiased">Student Data</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
+<span class="font-inter text-sm antialiased">Analytical Dashboards</span>
+</a>
+<a class="relative flex items-center px-4 py-3 text-white bg-white/10 before:absolute before:left-0 before:w-1 before:h-8 before:bg-blue-400 before:rounded-r-full" href="#">
+<span class="material-symbols-outlined mr-3 text-blue-400" data-icon="inventory_2">inventory_2</span>
+<span class="font-inter text-sm antialiased">Resource Management</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="policy">policy</span>
+<span class="font-inter text-sm antialiased">Audit Tools</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-inter text-sm antialiased">Settings</span>
+</a>
+</nav>
+<div class="p-4 border-t border-white/10">
+<button class="w-full bg-blue-500 hover:bg-blue-600 text-white py-2 rounded-lg font-label-caps transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="add">add</span>
+                New Report
+            </button>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="h-16 fixed top-0 right-0 left-64 z-10 border-b border-slate-200 bg-white flex items-center justify-between px-8">
+<div class="flex items-center gap-8">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm w-80 focus:ring-2 focus:ring-primary-container/20" placeholder="Search resources..." type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-slate-500 hover:text-[#002b57] font-inter text-sm font-medium" href="#">Overview</a>
+<a class="text-slate-500 hover:text-[#002b57] font-inter text-sm font-medium" href="#">Calendar</a>
+<a class="text-[#002b57] border-b-2 border-[#002b57] pb-5 font-inter text-sm font-medium" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 text-[#002b57] font-inter text-sm font-medium border border-slate-200 rounded-lg hover:bg-slate-50 transition-all">
+<span class="material-symbols-outlined text-lg" data-icon="search">search</span>
+                Quick Search
+            </button>
+<div class="flex items-center gap-2 border-l pl-4 border-slate-200">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer p-2 hover:bg-slate-100 rounded-full" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer p-2 hover:bg-slate-100 rounded-full" data-icon="help_outline">help_outline</span>
+<img alt="Advisor Avatar" class="w-8 h-8 rounded-full ml-2 object-cover" data-alt="professional portrait of a middle-aged academic advisor in a library setting with soft bookshelf background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8igNkZHR_LuxERSFz-uxSbYE6SGwj-XCdACccWqid2inJhs06IsoB4vPRSYFevtMIhKUuchobM8w9RTSxktgpSMOacl4sa8kZ9c76vvvu_uGuehmbD2YLSm9HIN9lrwiAFKmAxiPwDqxjgQFEjRqlxhWGGXp8WAlsykAFzum3rDdJED6XkPN9lqrdiAONW2Wnt3DLmR4Un4eS13J_ZrS6jezbK70PiN3uw03isIq7oympcIbvwKV9wWE_5z1_ywQlLe8jSjxpMv0"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 p-8 min-h-screen">
+<div class="max-w-[1440px] mx-auto">
+<header class="mb-10">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h2 class="font-h1 text-primary-container">Resource &amp; Documentation Hub</h2>
+<p class="font-body-lg text-secondary mt-2">Centralized access to institutional policies, templates, and training materials.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-outline-variant rounded-lg font-label-caps text-on-surface flex items-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                            Filter
+                        </button>
+<button class="px-4 py-2 bg-primary-container text-white rounded-lg font-label-caps flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-sm" data-icon="upload">upload</span>
+                            Submit Resource
+                        </button>
+</div>
+</div>
+<div class="flex gap-2 pb-2 overflow-x-auto">
+<span class="px-4 py-1.5 bg-primary-container text-white rounded-full text-xs font-label-caps cursor-pointer">All Resources</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-label-caps cursor-pointer hover:bg-outline-variant">Policy Handbooks</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-label-caps cursor-pointer hover:bg-outline-variant">Student Forms (PDF)</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-label-caps cursor-pointer hover:bg-outline-variant">Training Videos</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-label-caps cursor-pointer hover:bg-outline-variant">Academic Calendar</span>
+<span class="px-4 py-1.5 bg-surface-container-highest text-on-surface-variant rounded-full text-xs font-label-caps cursor-pointer hover:bg-outline-variant">FERPA Guidelines</span>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="bento-grid">
+<!-- Featured Training Video -->
+<div class="col-span-8 bg-white border border-outline-variant rounded-xl overflow-hidden relative group">
+<div class="absolute top-4 left-4 z-10">
+<span class="px-3 py-1 bg-tertiary text-white rounded-full text-[10px] font-label-caps">LATEST TRAINING</span>
+</div>
+<div class="aspect-video relative overflow-hidden bg-slate-900">
+<img class="w-full h-full object-cover opacity-60 group-hover:scale-105 transition-transform duration-500" data-alt="lecture hall interior with a digital screen displaying academic data and blurred audience members in foreground" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAx1zRSdE1lLU6i44dutLnZ0N2_P4uDvS1kZOQQjKkQZhyZy0Y9_5gwTc2-X33uyhSfKp0tahfT45gSXRjmXR5FzJ5g4hzbGy6ICySXwOT4gYUmBR7Gq35aBd77kQH2mPpCmkUaa0JgOL9rDN68dQbbxgB5zvNUXAyTo3v2V_s9avOyyDfPKVBxu0TW0mr9u47NRU1AIN6hTNcfRRO9ngAA9DfNaiT-v61OITlxXba7mxA-aM_dXrSpwcNphfY4lqtu3pkxPZGUrwI"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center cursor-pointer hover:bg-white/40 transition-all">
+<span class="material-symbols-outlined text-white text-4xl" data-icon="play_arrow">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-slate-900/90 to-transparent">
+<h3 class="font-h2 text-white">Advising Essentials: Modernizing the Student Experience</h3>
+<p class="text-slate-300 font-body-md mt-1">Updated procedures for the 2024 academic cycle • 45 minutes</p>
+</div>
+</div>
+</div>
+<!-- Quick Stats / Status -->
+<div class="col-span-4 bg-[#001733] text-white p-6 rounded-xl border border-primary-container flex flex-col justify-between">
+<div>
+<h4 class="font-label-caps text-blue-400 mb-4">RESOURCE HEALTH</h4>
+<div class="space-y-4">
+<div class="flex items-center justify-between border-b border-white/10 pb-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-blue-400" data-icon="verified_user">verified_user</span>
+<span class="font-body-md">Policies Verified</span>
+</div>
+<span class="font-stats-display text-lg">100%</span>
+</div>
+<div class="flex items-center justify-between border-b border-white/10 pb-3">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-tertiary-container" data-icon="update">update</span>
+<span class="font-body-md">Forms Pending Review</span>
+</div>
+<span class="font-stats-display text-lg">3</span>
+</div>
+</div>
+</div>
+<div class="pt-6">
+<div class="flex gap-2 items-center text-xs text-slate-400 font-body-md italic">
+<span class="material-symbols-outlined text-sm" data-icon="info">info</span>
+                            Next sync scheduled for tonight at 02:00 AM
+                        </div>
+</div>
+</div>
+<!-- Form Templates Section -->
+<div class="col-span-12">
+<div class="flex items-center justify-between mb-4 border-l-4 border-primary-container pl-4">
+<h3 class="font-h3 text-primary">Student Form Templates</h3>
+<a class="text-primary-container font-label-caps text-xs hover:underline" href="#">View All Forms</a>
+</div>
+<div class="grid grid-cols-4 gap-6">
+<!-- Form Card -->
+<div class="bg-white p-5 rounded-lg border border-outline-variant hover:shadow-lg transition-shadow">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 bg-error-container/20 rounded flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-h3 text-sm mb-1">Major Change Request</h4>
+<p class="text-xs text-secondary font-body-md mb-4">Updated July 2023 • v2.4</p>
+<button class="w-full py-2 bg-surface-container text-primary font-label-caps text-[10px] rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                Download PDF
+                            </button>
+</div>
+<!-- Form Card -->
+<div class="bg-white p-5 rounded-lg border border-outline-variant hover:shadow-lg transition-shadow">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 bg-error-container/20 rounded flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-h3 text-sm mb-1">Grade Appeal Form</h4>
+<p class="text-xs text-secondary font-body-md mb-4">Updated Nov 2023 • v1.1</p>
+<button class="w-full py-2 bg-surface-container text-primary font-label-caps text-[10px] rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                Download PDF
+                            </button>
+</div>
+<!-- Form Card -->
+<div class="bg-white p-5 rounded-lg border border-outline-variant hover:shadow-lg transition-shadow">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 bg-error-container/20 rounded flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-h3 text-sm mb-1">Independent Study Agreement</h4>
+<p class="text-xs text-secondary font-body-md mb-4">Updated Jan 2024 • v3.0</p>
+<button class="w-full py-2 bg-surface-container text-primary font-label-caps text-[10px] rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                Download PDF
+                            </button>
+</div>
+<!-- Form Card -->
+<div class="bg-white p-5 rounded-lg border border-outline-variant hover:shadow-lg transition-shadow">
+<div class="flex items-start justify-between mb-4">
+<div class="w-10 h-10 bg-error-container/20 rounded flex items-center justify-center text-error">
+<span class="material-symbols-outlined" data-icon="picture_as_pdf">picture_as_pdf</span>
+</div>
+<span class="material-symbols-outlined text-slate-300 cursor-pointer" data-icon="more_vert">more_vert</span>
+</div>
+<h4 class="font-h3 text-sm mb-1">Graduation Clearance</h4>
+<p class="text-xs text-secondary font-body-md mb-4">Updated Feb 2024 • v4.2</p>
+<button class="w-full py-2 bg-surface-container text-primary font-label-caps text-[10px] rounded hover:bg-surface-container-highest transition-colors flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                                Download PDF
+                            </button>
+</div>
+</div>
+</div>
+<!-- Handbooks & Policies Table -->
+<div class="col-span-12 bg-white border border-outline-variant rounded-xl overflow-hidden mt-4">
+<div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-surface-container-lowest">
+<h3 class="font-h3 text-primary">Institutional Policies &amp; Handbooks</h3>
+<div class="flex gap-2">
+<span class="material-symbols-outlined text-slate-400 p-1 hover:bg-slate-100 rounded cursor-pointer" data-icon="sort">sort</span>
+<span class="material-symbols-outlined text-slate-400 p-1 hover:bg-slate-100 rounded cursor-pointer" data-icon="view_list">view_list</span>
+</div>
+</div>
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-left">
+<th class="px-6 py-3 font-label-caps text-xs text-on-surface-variant uppercase">Resource Name</th>
+<th class="px-6 py-3 font-label-caps text-xs text-on-surface-variant uppercase">Category</th>
+<th class="px-6 py-3 font-label-caps text-xs text-on-surface-variant uppercase">Last Revised</th>
+<th class="px-6 py-3 font-label-caps text-xs text-on-surface-variant uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" data-icon="book">book</span>
+<div>
+<span class="block font-h3 text-sm">Faculty Advising Handbook 2024</span>
+<span class="text-xs text-secondary font-body-md">Primary operational guide for academic staff</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed-variant rounded-full text-[10px] font-label-caps">INTERNAL GUIDE</span>
+</td>
+<td class="px-6 py-4 text-xs font-body-md text-secondary">March 12, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary-container font-label-caps text-xs hover:underline px-3 py-1">Open</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" data-icon="gavel">gavel</span>
+<div>
+<span class="block font-h3 text-sm">Student Code of Conduct</span>
+<span class="text-xs text-secondary font-body-md">Regulatory framework for disciplinary actions</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed-variant rounded-full text-[10px] font-label-caps">LEGAL</span>
+</td>
+<td class="px-6 py-4 text-xs font-body-md text-secondary">Jan 05, 2024</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary-container font-label-caps text-xs hover:underline px-3 py-1">Open</button>
+</td>
+</tr>
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary-container" data-icon="shield">shield</span>
+<div>
+<span class="block font-h3 text-sm">FERPA Compliance Reference</span>
+<span class="text-xs text-secondary font-body-md">Essential privacy regulations and procedures</span>
+</div>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-[10px] font-label-caps">COMPLIANCE</span>
+</td>
+<td class="px-6 py-4 text-xs font-body-md text-secondary">Oct 22, 2023</td>
+<td class="px-6 py-4 text-right">
+<button class="text-primary-container font-label-caps text-xs hover:underline px-3 py-1">Open</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Helpful Links Side Panel -->
+<div class="col-span-4 space-y-6">
+<!-- Documentation Categories -->
+<div class="bg-white border border-outline-variant p-6 rounded-xl">
+<h4 class="font-h3 text-primary mb-4">Quick Shortcuts</h4>
+<div class="space-y-2">
+<a class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary-container" data-icon="link">link</span>
+<span class="font-body-md text-sm">University Registrar</span>
+</a>
+<a class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary-container" data-icon="link">link</span>
+<span class="font-body-md text-sm">Transfer Equivalency Table</span>
+</a>
+<a class="flex items-center gap-3 p-2 hover:bg-slate-50 rounded transition-colors group" href="#">
+<span class="material-symbols-outlined text-slate-400 group-hover:text-primary-container" data-icon="link">link</span>
+<span class="font-body-md text-sm">Degree Works Manual</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Training Progress -->
+<div class="col-span-8 bg-white border border-outline-variant p-6 rounded-xl">
+<div class="flex items-center justify-between mb-6">
+<h4 class="font-h3 text-primary">Required Advisor Training</h4>
+<span class="text-xs font-label-caps text-success">85% COMPLETE</span>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-body-md">
+<span>Advanced Degree Audit Certification</span>
+<span class="text-secondary">Progress: 6/8 modules</span>
+</div>
+<div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-3/4 rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-xs font-body-md">
+<span>Student Wellness Referral Training</span>
+<span class="text-secondary">Progress: 2/5 modules</span>
+</div>
+<div class="h-2 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-on-tertiary-container w-2/5 rounded-full"></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB - suppressed on documentation details, but active on hub -->
+<div class="fixed bottom-8 right-8 flex flex-col gap-4">
+<button class="w-14 h-14 bg-primary-container text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-2xl" data-icon="help">help</span>
+</button>
+</div>
+</body></html>

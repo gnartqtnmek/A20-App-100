@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Advisor Portal - Academic Excellence</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "primary": "#001733",
+                      "on-primary-container": "#8caee7",
+                      "error-container": "#ffdad6",
+                      "tertiary-fixed-dim": "#f6bb8a",
+                      "success": "#2e7d32",
+                      "surface-variant": "#e3e2e6",
+                      "on-surface": "#1a1c1f",
+                      "secondary-container": "#dee0e2",
+                      "on-tertiary-fixed-variant": "#663d17",
+                      "on-primary": "#ffffff",
+                      "surface-dim": "#dad9de",
+                      "on-secondary-fixed-variant": "#444749",
+                      "on-secondary-container": "#606365",
+                      "tertiary-container": "#643500",
+                      "info": "#0288d1",
+                      "outline": "#737780",
+                      "on-error": "#ffffff",
+                      "surface-container-low": "#f4f3f7",
+                      "surface-container-highest": "#e3e2e6",
+                      "on-tertiary-fixed": "#2e1500",
+                      "secondary-fixed": "#e1e3e5",
+                      "on-surface-variant": "#43474f",
+                      "surface-container": "#eeedf2",
+                      "background": "#faf9fd",
+                      "surface-bright": "#faf9fe",
+                      "on-tertiary-container": "#e39e62",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#c3c6d0",
+                      "surface-container-high": "#e8e8ec",
+                      "on-secondary-fixed": "#191c1e",
+                      "primary-container": "#1a4173",
+                      "inverse-primary": "#a8c8fd",
+                      "on-primary-fixed-variant": "#264775",
+                      "inverse-on-surface": "#f1f0f5",
+                      "surface-tint": "#405f8e",
+                      "secondary-fixed-dim": "#c4c7c9",
+                      "tertiary": "#442200",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#2f3034",
+                      "on-background": "#1a1c1f",
+                      "primary-fixed": "#d5e3ff",
+                      "primary-fixed-dim": "#a8c8fd",
+                      "on-primary-fixed": "#001b3b",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary": "#ffffff",
+                      "surface": "#faf9fe",
+                      "secondary": "#5c5f61",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#ffdcc2"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "16px",
+                      "container-max": "1440px",
+                      "sidebar-width": "260px",
+                      "base": "4px",
+                      "md": "24px",
+                      "xs": "8px",
+                      "sidebar_width": "260px",
+                      "container_max": "1440px",
+                      "xl": "48px",
+                      "lg": "32px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "stats-display": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "h1": ["Inter"],
+                      "h3": ["Inter"],
+                      "h2": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"]
+              },
+              "fontSize": {
+                      "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                      "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; background-color: #faf9fd; }
+    </style>
+</head>
+<body class="bg-background text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="h-screen w-64 border-r fixed left-0 top-0 border-slate-200 bg-slate-50 flex flex-col py-6 font-['Inter'] text-sm antialiased z-50">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<img alt="University Crest" class="w-10 h-10 rounded" data-alt="Official university crest logo with deep navy colors and traditional academic seal aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB142M1QCRmj3FqEBNfgvURaC-tbMPI3rHQbRRGSb4b69XDMD-hBONC4ePDgcRVIuZWC8JdMnxrpW_8Kgr4KnRuMs8v-w9sUII3-AGgkKCVFFCODjpn0JS-eIjNrq6mT3_jKTXjGBQyn6b4ikS9pLBVRVKX3nYkwEcWK4uT28-xvImIlqjCskCquqZns8k2cC-mXZKGlT8EYSyXAkWLHnSykZLan7JTjwGKjC5DoTn0FIKvpspFrYsHmxmTJLmkaPCQqk-QCuDhhck"/>
+<div>
+<h1 class="text-lg font-black tracking-tight text-[#002b57]">Advisor Portal</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Academic Excellence</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Active: Dashboard -->
+<a class="flex items-center gap-3 border-l-4 border-[#002b57] bg-white text-[#002b57] font-bold px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Caseload
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="event_available">event_available</span>
+                Appointments
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+                Degree Planning
+            </a>
+</nav>
+<div class="mt-auto space-y-1 border-t border-slate-200 pt-4">
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Settings
+            </a>
+<a class="flex items-center gap-3 text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Help Center
+            </a>
+</div>
+</aside>
+<!-- TopAppBar Shell -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] border-b border-slate-200 bg-white z-40 flex items-center justify-between px-8 h-16 ml-64">
+<div class="flex-1 max-w-md">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-slate-50 border-none rounded-lg text-sm focus:ring-2 focus:ring-[#002b57]/20 transition-all" placeholder="Search student records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="relative text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="text-slate-500 hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</button>
+<div class="flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity">
+<div class="text-right">
+<p class="text-xs font-bold text-primary">Dr. Julian Vance</p>
+<p class="text-[10px] text-slate-500">Senior Academic Advisor</p>
+</div>
+<span class="material-symbols-outlined text-3xl" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 min-h-screen">
+<div class="max-w-container-max mx-auto space-y-8">
+<!-- Welcome Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-h2 text-h2 text-primary">Advisor Dashboard</h2>
+<p class="font-body-md text-body-md text-secondary">Academic Term: Fall 2024 • Tuesday, October 24</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary rounded-lg font-semibold text-sm transition-transform active:scale-95 shadow-sm">
+<span class="material-symbols-outlined text-lg" data-icon="add">add</span>
+                        New Appointment
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant bg-white text-on-surface rounded-lg font-semibold text-sm hover:bg-slate-50 transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="mail">mail</span>
+                        Bulk Message
+                    </button>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-gutter">
+<!-- 1. Caseload Overview (Left 8 Columns) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<div class="bg-white border border-outline-variant rounded-xl p-md shadow-sm border-t-4 border-t-primary">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="analytics">analytics</span>
+                                Caseload Overview
+                            </h3>
+<button class="text-sm font-semibold text-info hover:underline">View Full Roster</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="font-label-caps text-label-caps text-secondary mb-1">TOTAL STUDENTS</p>
+<p class="font-stats-display text-stats-display text-primary">248</p>
+<div class="mt-4 flex items-center gap-2 text-xs font-semibold text-success">
+<span class="material-symbols-outlined text-sm" data-icon="trending_up">trending_up</span>
+<span>+12 from last term</span>
+</div>
+</div>
+<div class="p-4 bg-error-container rounded-lg border border-[#ffdad6]">
+<p class="font-label-caps text-label-caps text-on-error-container mb-1">STUDENTS AT RISK</p>
+<p class="font-stats-display text-stats-display text-error">14</p>
+<div class="mt-4 flex items-center gap-2 text-xs font-semibold text-error">
+<span class="material-symbols-outlined text-sm" data-icon="priority_high">priority_high</span>
+<span>Action required soon</span>
+</div>
+</div>
+<div class="p-4 bg-surface-container-low rounded-lg border border-outline-variant">
+<p class="font-label-caps text-label-caps text-secondary mb-1">GRADUATION CLEARANCE</p>
+<p class="font-stats-display text-stats-display text-primary">82%</p>
+<div class="mt-4 w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+<div class="bg-success h-full w-[82%]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 2. Recent Alerts (Bento Component) -->
+<div class="bg-white border border-outline-variant rounded-xl p-md shadow-sm border-t-4 border-t-tertiary">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary" data-icon="notifications_active">notifications_active</span>
+                                Recent Alerts
+                            </h3>
+<button class="text-sm font-semibold text-secondary hover:text-primary">Dismiss All</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-start gap-4 p-4 border border-outline-variant rounded-lg hover:bg-slate-50 transition-colors group">
+<div class="w-10 h-10 rounded-full bg-error-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error" data-icon="warning">warning</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<p class="font-semibold text-primary">Marcus Holloway</p>
+<span class="text-xs text-secondary">2h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant">GPA dropped below 2.0 academic probation threshold.</p>
+<div class="mt-2 flex gap-4">
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span> Review Profile
+                                        </button>
+<button class="text-xs font-bold text-info flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-xs" data-icon="schedule">schedule</span> Schedule Meeting
+                                        </button>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 border border-outline-variant rounded-lg hover:bg-slate-50 transition-colors group">
+<div class="w-10 h-10 rounded-full bg-tertiary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary" data-icon="hourglass_empty">hourglass_empty</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<p class="font-semibold text-primary">Elena Rodriguez</p>
+<span class="text-xs text-secondary">5h ago</span>
+</div>
+<p class="text-sm text-on-surface-variant">Missing required 300-level core credits for Degree Progress.</p>
+<div class="mt-2 flex gap-4">
+<button class="text-xs font-bold text-primary flex items-center gap-1 hover:underline">
+<span class="material-symbols-outlined text-xs" data-icon="visibility">visibility</span> Review Profile
+                                        </button>
+</div>
+</div>
+</div>
+<div class="flex items-start gap-4 p-4 border border-outline-variant rounded-lg hover:bg-slate-50 transition-colors group opacity-75">
+<div class="w-10 h-10 rounded-full bg-secondary-fixed flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary" data-icon="chat">chat</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between">
+<p class="font-semibold text-primary">Sarah Jenkins</p>
+<span class="text-xs text-secondary">Yesterday</span>
+</div>
+<p class="text-sm text-on-surface-variant">Responded to advising survey: "Uncertain about major change."</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- 3. Upcoming Appointments (Right 4 Columns) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-white border border-outline-variant rounded-xl p-md shadow-sm border-t-4 border-t-info">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-h3 text-h3 text-primary flex items-center gap-2">
+<span class="material-symbols-outlined text-info" data-icon="calendar_month">calendar_month</span>
+                                Today's Schedule
+                            </h3>
+<button class="material-symbols-outlined text-slate-400" data-icon="more_vert">more_vert</button>
+</div>
+<div class="space-y-4">
+<!-- Appointment 1 -->
+<div class="relative pl-4 border-l-2 border-info">
+<p class="text-xs font-bold text-info">10:30 AM - 11:00 AM</p>
+<div class="flex items-center gap-3 mt-2">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close up portrait of a male student wearing glasses in a university library setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAmPw_pjNVhvcVKiphJIMYaXG88YiZNdoJssdLwU3jU7Y-axCYuKx30QIoQ54mDFQVa9cKyv7BPDDLoDCDFinP9lIC7WmKW8YP_fCzt7PukBRASbM1xYs-2rMjlwoSjQVuiNXcykAHoOjw2M1hzpGGIgIXM3TxbCH8fM8pd2s9vwomoEzYpuS9fuuDzXhV3ySlHYwntBK7IyrzrHY2YnKxZy9ViblZIuLPZG3UQVLu3LI2ZSUnsOHTp5rprsZR5I8syZWGBVrgyjEo"/>
+<div>
+<p class="text-sm font-bold text-primary">David Chen</p>
+<p class="text-[10px] text-secondary">Major: Comp Sci</p>
+</div>
+<button class="ml-auto material-symbols-outlined text-slate-400 hover:text-primary" data-icon="open_in_new">open_in_new</button>
+</div>
+</div>
+<!-- Appointment 2 -->
+<div class="relative pl-4 border-l-2 border-slate-200">
+<p class="text-xs font-bold text-secondary">1:00 PM - 1:30 PM</p>
+<div class="flex items-center gap-3 mt-2">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close up portrait of a smiling female student with curly hair in a sunny campus courtyard" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDJOy8WpOE7tvRyD5HezJMb0wag9_YvnYP2m4yRt-cGpZN1KLLTc86_FEmBI5iy8d7dhVfwXIt2nFuYZ62I3sSG-FJbuf-kQ3ewmbAqpLlJsIAtA83PGh9PJEGjQxodPIQwM1e1RQNXDbFTVvQiWScgcunHXjXimvyRPtdv-wkOgBBpNjw6O1hFuV8pTI8j8mppGT7aJMBAOTAf4I8G514tCMdfVGy5oSRLfe6UB5Td1F7BDY78sTaTGu60JOW99ZZTRhcHx3RVgog"/>
+<div>
+<p class="text-sm font-bold text-primary">Maya Patel</p>
+<p class="text-[10px] text-secondary">Major: Bio-Chemistry</p>
+</div>
+<button class="ml-auto material-symbols-outlined text-slate-400 hover:text-primary" data-icon="open_in_new">open_in_new</button>
+</div>
+</div>
+<!-- Appointment 3 -->
+<div class="relative pl-4 border-l-2 border-slate-200">
+<p class="text-xs font-bold text-secondary">2:45 PM - 3:15 PM</p>
+<div class="flex items-center gap-3 mt-2">
+<img alt="Student Avatar" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="Close up portrait of a young male student in a casual sweatshirt in a modern student lounge" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDj_NXPQhkasGFvzIdjeEGI6ig1JgMPYLRR1XoG6A7wU4hfkB7E4MekZ36dPCKhE2hxDFRGQui8BDnoScbuBDabxDUTnWjb9o9MvfZkRrfLs8ux5faUKM6TeW8gFNLzumX15dj1vjVtk8d9vZTdcC7nMCOqLbKGTw11MIk9_8iUpdPn-uV6Xbg8vMGXu2_yyjw74afVF4PltJDG4bTnxEiqPacR4guyC_W8yQ5WoXFbq2jnXT1Wfc8R-VY9vgqBUXXv1RLFp7KD4GA"/>
+<div>
+<p class="text-sm font-bold text-primary">Liam O'Connor</p>
+<p class="text-[10px] text-secondary">Major: Economics</p>
+</div>
+<button class="ml-auto material-symbols-outlined text-slate-400 hover:text-primary" data-icon="open_in_new">open_in_new</button>
+</div>
+</div>
+</div>
+<div class="mt-8 pt-6 border-t border-slate-100 text-center">
+<button class="font-label-caps text-label-caps text-primary hover:text-info transition-colors">VIEW FULL CALENDAR</button>
+</div>
+</div>
+<!-- 4. Quick Actions (Bottom Right) -->
+<div class="bg-primary text-on-primary rounded-xl p-md shadow-lg overflow-hidden relative">
+<div class="absolute -right-4 -bottom-4 opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="rocket_launch">rocket_launch</span>
+</div>
+<h3 class="font-h3 text-h3 mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="bolt">bolt</span>
+                            Quick Actions
+                        </h3>
+<div class="space-y-2 relative z-10">
+<button class="w-full text-left p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center justify-between group">
+<span class="text-sm font-semibold">New Appointment</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center justify-between group">
+<span class="text-sm font-semibold">Send Bulk Message</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="chevron_right">chevron_right</span>
+</button>
+<button class="w-full text-left p-3 rounded-lg bg-white/10 hover:bg-white/20 transition-all flex items-center justify-between group">
+<span class="text-sm font-semibold">Export Caseload Report</span>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="download">download</span>
+</button>
+</div>
+</div>
+<!-- Info Card -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden p-0 shadow-sm">
+<div class="h-32 bg-slate-100" data-alt="Wide angle shot of a modern glass and steel university building at sunset with students walking in the foreground" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCXGk6YuuS1qiek6MtzETwwVtQe8QbK6Q1mLZ3TrYkLxhL82-zlHzoOCoGy3fZqk3aMDlArIouNxMRN4_Wd8W62LOjhFVblCb6z8VIASmz6uJnH3ZZA8o7AyMbbfAV2jmA1ydcEpVQzSHAIojuHhFFQvrLF8UAkEZOBS9JyDH2PT3Hc1fvTztM4zrN7GU3iVDgJxIwebKPpIaqi6p61u_tK0TYPvjS6ug35QoXZpJeiIlfRuKeuWq3gmwn7_Cg6uGdrfEWUSYqx9Ng'); background-size: cover; background-position: center;">
+</div>
+<div class="p-4">
+<h4 class="font-bold text-primary mb-1">Advisor Resources</h4>
+<p class="text-xs text-on-surface-variant mb-4">New compliance training modules are now available for the 2024 academic cycle.</p>
+<a class="text-xs font-bold text-info hover:underline" href="#">Access Portal →</a>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Floating Action Button -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-on-primary rounded-full shadow-2xl flex items-center justify-center hover:scale-110 active:scale-95 transition-all z-50">
+<span class="material-symbols-outlined text-2xl" data-icon="add">add</span>
+</button>
+</body></html>

@@ -40,6 +40,12 @@ DASHBOARD_METRICS: dict[UserRole, list[MetricCard]] = {
 }
 
 
+def _dashboard_path(role: UserRole) -> str:
+    if role == UserRole.ACADEMIC_STAFF:
+        return "/dashboard/academic-staff"
+    return f"/dashboard/{role.value}"
+
+
 def get_dashboard_summary(role: UserRole) -> DashboardSummaryResponse:
     header_title, header_subtitle = DASHBOARD_HEADLINES[role]
     return DashboardSummaryResponse(
@@ -51,7 +57,7 @@ def get_dashboard_summary(role: UserRole) -> DashboardSummaryResponse:
             title=f"{role.value.replace('_', ' ').title()} Action Plan",
             subtitle="Use this week focus list to close critical academic tasks and communication loops.",
             cta_label="Open Priority Board",
-            cta_route=f"/dashboard/{role.value}",
+            cta_route=_dashboard_path(role),
         ),
         modules=ROLE_NAVIGATION[role],
     )

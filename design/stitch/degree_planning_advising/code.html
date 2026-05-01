@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Advisor Portal - Degree Planning</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "primary": "#001733",
+                "on-primary-container": "#8caee7",
+                "error-container": "#ffdad6",
+                "tertiary-fixed-dim": "#f6bb8a",
+                "success": "#2e7d32",
+                "surface-variant": "#e3e2e6",
+                "on-surface": "#1a1c1f",
+                "secondary-container": "#dee0e2",
+                "on-tertiary-fixed-variant": "#663d17",
+                "on-primary": "#ffffff",
+                "surface-dim": "#dad9de",
+                "on-secondary-fixed-variant": "#444749",
+                "on-secondary-container": "#606365",
+                "tertiary-container": "#643500",
+                "info": "#0288d1",
+                "outline": "#737780",
+                "on-error": "#ffffff",
+                "surface-container-low": "#f4f3f7",
+                "surface-container-highest": "#e3e2e6",
+                "on-tertiary-fixed": "#2e1500",
+                "secondary-fixed": "#e1e3e5",
+                "on-surface-variant": "#43474f",
+                "surface-container": "#eeedf2",
+                "background": "#faf9fd",
+                "surface-bright": "#faf9fe",
+                "on-tertiary-container": "#e39e62",
+                "on-error-container": "#93000a",
+                "outline-variant": "#c3c6d0",
+                "surface-container-high": "#e8e8ec",
+                "on-secondary-fixed": "#191c1e",
+                "primary-container": "#1a4173",
+                "inverse-primary": "#a8c8fd",
+                "on-primary-fixed-variant": "#264775",
+                "inverse-on-surface": "#f1f0f5",
+                "surface-tint": "#405f8e",
+                "secondary-fixed-dim": "#c4c7c9",
+                "tertiary": "#442200",
+                "on-tertiary": "#ffffff",
+                "inverse-surface": "#2f3034",
+                "on-background": "#1a1c1f",
+                "primary-fixed": "#d5e3ff",
+                "primary-fixed-dim": "#a8c8fd",
+                "on-primary-fixed": "#001b3b",
+                "surface-container-lowest": "#ffffff",
+                "on-secondary": "#ffffff",
+                "surface": "#faf9fe",
+                "secondary": "#5c5f61",
+                "error": "#ba1a1a",
+                "tertiary-fixed": "#ffdcc2"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.125rem",
+                "lg": "0.25rem",
+                "xl": "0.5rem",
+                "full": "0.75rem"
+            },
+            "spacing": {
+                "sm": "16px",
+                "container-max": "1440px",
+                "sidebar-width": "260px",
+                "base": "4px",
+                "md": "24px",
+                "xs": "8px",
+                "sidebar_width": "260px",
+                "container_max": "1440px",
+                "xl": "48px",
+                "lg": "32px",
+                "gutter": "24px"
+            },
+            "fontFamily": {
+                "stats-display": ["Inter"],
+                "label-caps": ["Inter"],
+                "h1": ["Inter"],
+                "h3": ["Inter"],
+                "h2": ["Inter"],
+                "body-md": ["Inter"],
+                "body-lg": ["Inter"]
+            },
+            "fontSize": {
+                "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      .gauge-ring { transition: stroke-dashoffset 0.35s; transform: rotate(-90deg); transform-origin: 50% 50%; }
+    </style>
+</head>
+<body class="bg-background font-body-md text-on-background antialiased">
+<!-- SideNavBar (Authority: JSON) -->
+<aside class="h-screen w-64 border-r fixed left-0 top-0 bg-slate-50 border-slate-200 flex flex-col py-6 z-50">
+<div class="px-6 mb-8 flex items-center gap-3">
+<div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-lg">school</span>
+</div>
+<div>
+<h1 class="text-lg font-black tracking-tight text-[#002b57]">Advisor Portal</h1>
+<p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Academic Excellence</p>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mr-3">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mr-3">group</span>
+<span>Caseload</span>
+</a>
+<a class="flex items-center text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mr-3">event_available</span>
+<span>Appointments</span>
+</a>
+<!-- Active Tab: Degree Planning -->
+<a class="flex items-center border-l-4 border-[#002b57] bg-white text-[#002b57] font-bold px-4 py-3 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">account_tree</span>
+<span>Degree Planning</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-200 pt-4">
+<a class="flex items-center text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span>Settings</span>
+</a>
+<a class="flex items-center text-slate-500 px-4 py-3 hover:bg-slate-100 transition-all duration-150" href="#">
+<span class="material-symbols-outlined mr-3">help</span>
+<span>Help Center</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar (Authority: JSON) -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] border-b border-slate-200 bg-white z-40 flex items-center justify-between px-8 h-16 ml-64">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</span>
+<input class="w-full bg-slate-50 border-none rounded-lg py-2 pl-10 pr-4 text-sm focus:ring-1 focus:ring-primary/20" placeholder="Search student by name or ID..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-opacity">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:bg-slate-50 p-2 rounded-lg transition-opacity">history</span>
+<div class="flex items-center gap-3 pl-4 border-l border-slate-200">
+<span class="text-right">
+<p class="text-xs font-bold text-primary">Dr. Sarah Jenkins</p>
+<p class="text-[10px] text-slate-400">Senior Advisor</p>
+</span>
+<span class="material-symbols-outlined text-primary text-3xl cursor-pointer">account_circle</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="max-w-[1440px] mx-auto p-gutter grid grid-cols-12 gap-gutter">
+<!-- Student Header Section -->
+<section class="col-span-12">
+<div class="bg-white border border-outline-variant p-md flex items-center justify-between relative overflow-hidden">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex items-center gap-md">
+<img alt="Student Portrait" class="w-20 h-20 rounded-xl object-cover border border-outline-variant" data-alt="Portrait of a male university student in a library setting, soft natural lighting, professional academic atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdANRc-pdO9_N0JZwon4nMDgiUbuFJiPZpjiL3O1mSPCQsmh40eiBeRQGwJkuI6xQmcCHT8fMKJFGI7QlCFnbYM5EPTYPJHyFosr9ImfnFsHaM98gsn2S_f04Htec0MjjPOFRARJhcuLFaXGnywcrZFQ_EcTTqdN9__hAhDnoZIX115aw6Ouip6fFSsA2ntdcUFnsyEszdoMdIqCWUFGhoWl02CoAhcj_2B3_E0LRx6edgvT7pavakXum2rh1x2Ykjbb0lZVBNFsg"/>
+<div>
+<h2 class="font-h2 text-h2 text-primary">Marcus Holloway</h2>
+<p class="font-body-md text-on-surface-variant flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">badge</span>
+                                Student ID: #U829104
+                            </p>
+<div class="flex gap-4 mt-2">
+<span class="bg-surface-container-high px-3 py-1 text-xs font-semibold text-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">book</span>
+                                    Computer Science BS
+                                </span>
+<span class="bg-surface-container-high px-3 py-1 text-xs font-semibold text-primary-container flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">calendar_today</span>
+                                    Catalog: Fall 2022
+                                </span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-white border border-primary text-primary font-semibold text-sm hover:bg-primary/5 transition-colors">
+                            Generate Audit PDF
+                        </button>
+<button class="px-6 py-2 bg-primary text-white font-semibold text-sm hover:opacity-90 transition-opacity">
+                            Approve Schedule
+                        </button>
+</div>
+</div>
+</section>
+<!-- Degree Progress Gauges (Semantic Circular Visuals) -->
+<section class="col-span-12 lg:col-span-8">
+<div class="grid grid-cols-3 gap-gutter">
+<!-- Core Requirements -->
+<div class="bg-white border border-outline-variant p-md text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4">CORE CURRICULUM</p>
+<div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+<svg class="w-full h-full">
+<circle class="text-surface-container" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-success gauge-ring" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="30.15" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-stats-display text-lg">90%</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-4">36 / 40 Credits</p>
+</div>
+<!-- Major Requirements -->
+<div class="bg-white border border-outline-variant p-md text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4">MAJOR CORE</p>
+<div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+<svg class="w-full h-full">
+<circle class="text-surface-container" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-container gauge-ring" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="120.63" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-stats-display text-lg">60%</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-4">48 / 80 Credits</p>
+</div>
+<!-- Electives -->
+<div class="bg-white border border-outline-variant p-md text-center">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-4">GENERAL ELECTIVES</p>
+<div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+<svg class="w-full h-full">
+<circle class="text-surface-container" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-tertiary-container gauge-ring" cx="56" cy="56" fill="transparent" r="48" stroke="currentColor" stroke-dasharray="301.59" stroke-dashoffset="211.11" stroke-width="8"></circle>
+</svg>
+<span class="absolute font-stats-display text-lg">30%</span>
+</div>
+<p class="text-xs text-on-surface-variant mt-4">6 / 20 Credits</p>
+</div>
+</div>
+<!-- Interactive Roadmap -->
+<div class="mt-gutter bg-white border border-outline-variant p-md">
+<div class="flex items-center justify-between mb-lg">
+<h3 class="font-h3 text-h3 text-primary">Academic Roadmap</h3>
+<div class="flex items-center gap-4 text-xs font-semibold">
+<div class="flex items-center gap-1"><span class="w-3 h-3 bg-success rounded-full"></span> Completed</div>
+<div class="flex items-center gap-1"><span class="w-3 h-3 border border-primary-container rounded-full"></span> Planned</div>
+</div>
+</div>
+<div class="space-y-lg">
+<!-- Year 1 -->
+<div>
+<div class="flex items-center gap-2 mb-sm">
+<span class="font-label-caps text-primary bg-primary-fixed px-2 py-0.5 rounded">YEAR 1</span>
+<div class="h-[1px] flex-1 bg-surface-variant"></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">CS101</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Intro to Programming</p>
+</div>
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">MATH150</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Calculus I</p>
+</div>
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">ENGL101</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Comp &amp; Rhetoric</p>
+</div>
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">HIST120</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Modern History</p>
+</div>
+</div>
+</div>
+<!-- Year 2 -->
+<div>
+<div class="flex items-center gap-2 mb-sm">
+<span class="font-label-caps text-primary bg-primary-fixed px-2 py-0.5 rounded">YEAR 2</span>
+<div class="h-[1px] flex-1 bg-surface-variant"></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">CS210</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Data Structures</p>
+</div>
+<div class="bg-success/5 border border-success p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-success">CS225</p>
+<span class="material-symbols-outlined text-success text-sm" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Discrete Math</p>
+</div>
+<div class="bg-white border-2 border-dashed border-primary-container p-sm ring-2 ring-primary-container/10">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-primary-container">CS350</p>
+<span class="material-symbols-outlined text-primary-container text-sm">schedule</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Operating Systems</p>
+</div>
+<div class="bg-white border-2 border-dashed border-primary-container p-sm">
+<div class="flex justify-between items-start mb-1">
+<p class="font-bold text-xs text-primary-container">PHYS201</p>
+<span class="material-symbols-outlined text-primary-container text-sm">schedule</span>
+</div>
+<p class="text-[10px] text-on-surface leading-tight">Univ Physics I</p>
+</div>
+</div>
+</div>
+<!-- Year 3 (Partial) -->
+<div>
+<div class="flex items-center gap-2 mb-sm">
+<span class="font-label-caps text-primary bg-primary-fixed px-2 py-0.5 rounded">YEAR 3</span>
+<div class="h-[1px] flex-1 bg-surface-variant"></div>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-sm">
+<div class="bg-surface-container-low border border-outline-variant p-sm opacity-60">
+<p class="font-bold text-xs text-outline">TBD</p>
+<p class="text-[10px] text-outline leading-tight">Major Elective 1</p>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm opacity-60">
+<p class="font-bold text-xs text-outline">TBD</p>
+<p class="text-[10px] text-outline leading-tight">Major Elective 2</p>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm opacity-60">
+<p class="font-bold text-xs text-outline">TBD</p>
+<p class="text-[10px] text-outline leading-tight">Gen Ed Elective</p>
+</div>
+<div class="bg-surface-container-low border border-outline-variant p-sm opacity-60">
+<p class="font-bold text-xs text-outline">TBD</p>
+<p class="text-[10px] text-outline leading-tight">Gen Ed Elective</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Audit Notes Side Panel -->
+<section class="col-span-12 lg:col-span-4">
+<div class="bg-white border border-outline-variant flex flex-col h-full sticky top-[80px]">
+<div class="p-md border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center gap-2 mb-1">
+<span class="material-symbols-outlined text-primary">rate_review</span>
+<h3 class="font-h3 text-h3 text-primary">Audit Notes</h3>
+</div>
+<p class="text-xs text-on-surface-variant">Advisor-Student workspace for exceptions</p>
+</div>
+<div class="flex-1 p-md space-y-md overflow-y-auto max-h-[600px]">
+<!-- Note Entry -->
+<div class="bg-surface-container-low p-sm border-l-4 border-info">
+<div class="flex justify-between mb-2">
+<span class="font-bold text-xs text-primary">Substitution Approved</span>
+<span class="text-[10px] text-on-surface-variant">Oct 12, 2023</span>
+</div>
+<p class="text-xs text-on-surface leading-relaxed">
+                                Approved ART200 to satisfy Humanities elective requirement. Student demonstrated equivalent transfer credit.
+                            </p>
+<div class="mt-2 flex items-center gap-2">
+<div class="w-5 h-5 bg-primary-container text-white text-[8px] flex items-center justify-center rounded-full font-bold">SJ</div>
+<span class="text-[10px] font-semibold text-primary">Dr. Sarah Jenkins</span>
+</div>
+</div>
+<!-- Note Entry -->
+<div class="bg-surface-container-low p-sm border-l-4 border-error">
+<div class="flex justify-between mb-2">
+<span class="font-bold text-xs text-error">Prerequisite Warning</span>
+<span class="text-[10px] text-on-surface-variant">Sep 28, 2023</span>
+</div>
+<p class="text-xs text-on-surface leading-relaxed">
+                                Marcus needs to complete MATH150 with a C or better before enrolling in CS350. Currently in progress.
+                            </p>
+</div>
+<!-- Placeholder for new note -->
+<div class="mt-lg">
+<label class="font-label-caps text-on-surface-variant block mb-2">ADD NEW AUDIT NOTE</label>
+<textarea class="w-full border-outline-variant text-sm p-3 focus:ring-primary focus:border-primary min-h-[100px]" placeholder="Type your comment here..."></textarea>
+<div class="flex items-center justify-between mt-2">
+<div class="flex items-center gap-2">
+<input class="rounded text-primary focus:ring-primary" id="student-visible" type="checkbox"/>
+<label class="text-xs font-semibold" for="student-visible">Visible to Student</label>
+</div>
+<button class="bg-primary text-white text-xs font-bold px-4 py-2 hover:opacity-90">Post Note</button>
+</div>
+</div>
+</div>
+<div class="p-md border-t border-outline-variant mt-auto">
+<p class="font-label-caps text-on-surface-variant mb-4">CRITICAL ACTIONS</p>
+<div class="space-y-2">
+<button class="w-full text-left p-3 flex items-center gap-3 bg-error-container text-on-error-container hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">flag</span>
+<span class="text-xs font-bold uppercase">Place Academic Hold</span>
+</button>
+<button class="w-full text-left p-3 flex items-center gap-3 bg-surface-container-high text-primary hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg">swap_horiz</span>
+<span class="text-xs font-bold uppercase">Request Change of Major</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Floating Action Button (Only for specific contexts) -->
+<button class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white shadow-xl hover:scale-105 transition-transform flex items-center justify-center z-50">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+</body></html>

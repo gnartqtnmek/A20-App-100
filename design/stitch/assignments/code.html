@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#e1e3e5",
+                        "primary-fixed": "#d5e3ff",
+                        "tertiary-container": "#442200",
+                        "on-surface-variant": "#43474f",
+                        "tertiary": "#442200",
+                        "on-surface": "#1a1c1f",
+                        "surface-container-high": "#e8e8ec",
+                        "surface-container": "#eeedf2",
+                        "secondary": "#5c5f61",
+                        "tertiary-fixed": "#ffdcc2",
+                        "background": "#faf9fd",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "primary-container": "#1a4173",
+                        "surface-container-highest": "#e3e2e6",
+                        "on-secondary-fixed-variant": "#444749",
+                        "surface-dim": "#dad9de",
+                        "error-container": "#ffdad6",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "secondary-container": "#dee0e2",
+                        "info": "#0288d1",
+                        "on-primary-container": "#7493c5",
+                        "surface": "#faf9fe",
+                        "surface-bright": "#faf9fe",
+                        "inverse-surface": "#2f3034",
+                        "on-background": "#1a1c1f",
+                        "on-tertiary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "primary": "#001733",
+                        "inverse-on-surface": "#f1f0f5",
+                        "outline-variant": "#c3c6d0",
+                        "on-tertiary-container": "#e39e62",
+                        "inverse-primary": "#a8c8fd",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-variant": "#e3e2e6",
+                        "on-secondary": "#ffffff",
+                        "success": "#2e7d32",
+                        "on-secondary-container": "#606365",
+                        "error": "#ba1a1a",
+                        "on-primary-fixed-variant": "#264775",
+                        "on-error-container": "#93000a",
+                        "outline": "#737780",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-secondary-fixed": "#191c1e",
+                        "on-primary": "#ffffff",
+                        "surface-container-low": "#f4f3f8",
+                        "on-primary-fixed": "#001b3b",
+                        "surface-tint": "#405f8e"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "container-max": "1440px",
+                        "xl": "48px",
+                        "lg": "32px",
+                        "base": "4px",
+                        "container_max": "1440px",
+                        "sidebar-width": "260px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "xs": "8px",
+                        "md": "24px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "body-md": ["Inter"],
+                        "h3": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-surface">
+<!-- Global Side Navigation -->
+<aside class="h-screen w-64 border-r border-slate-200 fixed left-0 top-0 bg-white flex flex-col py-8">
+<div class="px-6 mb-10">
+<h1 class="text-lg font-black tracking-tighter text-blue-900">AcademicCore</h1>
+<p class="text-xs text-slate-500 font-medium tracking-wide">Student Portal</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-medium text-sm">Home</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-medium text-sm">Courses</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="play_lesson">play_lesson</span>
+<span class="font-medium text-sm">Lessons</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-blue-900 bg-blue-50 border-l-4 border-blue-900 font-semibold" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+<span class="font-medium text-sm">Assignments</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-medium text-sm">Grades</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-slate-100 pt-6 space-y-1">
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-medium text-sm">Support</span>
+</a>
+<a class="flex items-center gap-3 px-6 py-3 text-slate-500 hover:text-blue-800 hover:bg-slate-50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-medium text-sm">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Top App Bar -->
+<header class="h-16 border-b border-slate-200 sticky top-0 z-40 bg-white/80 backdrop-blur-md flex items-center justify-between px-8 w-[calc(100%-16rem)] ml-64">
+<div class="flex items-center gap-4">
+<h2 class="font-h2 text-h2 text-primary">Assignments</h2>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant focus-within:ring-2 focus-within:ring-blue-900/20">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="search">search</span>
+<input class="bg-transparent border-none text-sm focus:ring-0 w-48 text-on-surface" placeholder="Search tasks..." type="text"/>
+</div>
+<div class="flex items-center gap-4 text-slate-600">
+<span class="material-symbols-outlined cursor-pointer hover:text-blue-900" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-blue-900" data-icon="calendar_today">calendar_today</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-blue-900" data-icon="chat_bubble">chat_bubble</span>
+</div>
+<div class="h-8 w-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Student Profile" class="h-full w-full object-cover" data-alt="Professional headshot of a young university student in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpQftylYo0i6FbwTfQWXJjweyMnql4dzfMhU8W-fUBiTV1W5IDQtkBekXOZ71nn4Om6bdzfEn_5uOGxsU7pqbmM6BuGQufVh5rwAfIYyKRue2Tw1Jc5y_RtTPv4lWRL0snICfCQaNYG88qfCdYB9v5pj9seNOyOlh7vAVE4dSY922ISuCKQ1q6bnUlOrmnURXMCtioBdq8S6_AyP5GeFq7LWpdXLlbTB_fDaOm6rFdex1w_oFEg3L0aUGQPfLQQLFncst5p2Whud4"/>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 p-8 min-h-[calc(100vh-64px)] bg-background">
+<!-- Summary Stats Section -->
+<section class="grid grid-cols-12 gap-6 mb-8">
+<div class="col-span-3 bg-white p-6 rounded-lg border border-outline-variant shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<p class="font-label-caps text-label-caps text-secondary mb-2 uppercase">Pending Tasks</p>
+<h3 class="font-stats-display text-stats-display text-primary">08</h3>
+</div>
+<div class="col-span-3 bg-white p-6 rounded-lg border border-outline-variant shadow-sm relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-on-tertiary-container"></div>
+<p class="font-label-caps text-label-caps text-secondary mb-2 uppercase">Due Tonight</p>
+<h3 class="font-stats-display text-stats-display text-primary">02</h3>
+</div>
+<div class="col-span-6 bg-white p-6 rounded-lg border border-outline-variant shadow-sm flex items-center justify-between">
+<div>
+<p class="font-label-caps text-label-caps text-secondary mb-2 uppercase">Overall Completion</p>
+<div class="flex items-center gap-4">
+<div class="w-64 h-2 bg-slate-100 rounded-full overflow-hidden">
+<div class="h-full bg-success w-[74%]"></div>
+</div>
+<span class="font-h3 text-h3 text-success">74%</span>
+</div>
+</div>
+<button class="bg-primary text-white px-6 py-2.5 rounded-lg flex items-center gap-2 font-medium text-sm hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-sm" data-icon="upload_file">upload_file</span>
+                    Submit Assignment
+                </button>
+</div>
+</section>
+<!-- Assignments Table Container -->
+<div class="bg-white rounded-lg border border-outline-variant shadow-sm overflow-hidden">
+<div class="px-8 py-6 border-b border-slate-100 flex items-center justify-between">
+<div>
+<h3 class="font-h3 text-h3 text-primary">Active Assignments</h3>
+<p class="text-sm text-slate-500 mt-1">Academic Year 2023-24 • Semester 2</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+<span class="material-symbols-outlined text-sm" data-icon="filter_list">filter_list</span>
+                        Filter
+                    </button>
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50">
+<span class="material-symbols-outlined text-sm" data-icon="download">download</span>
+                        Export
+                    </button>
+</div>
+</div>
+<table class="w-full text-left">
+<thead class="bg-slate-50">
+<tr>
+<th class="px-8 py-4 font-label-caps text-label-caps text-slate-500 uppercase">Assignment Name</th>
+<th class="px-8 py-4 font-label-caps text-label-caps text-slate-500 uppercase">Deadline</th>
+<th class="px-8 py-4 font-label-caps text-label-caps text-slate-500 uppercase">Course</th>
+<th class="px-8 py-4 font-label-caps text-label-caps text-slate-500 uppercase">Status</th>
+<th class="px-8 py-4 font-label-caps text-label-caps text-slate-500 uppercase text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-error-container/30 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-error" data-icon="history_edu">history_edu</span>
+</div>
+<span class="font-medium text-slate-900">Advanced Macroeconomics Final Paper</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">
+<div class="flex flex-col">
+<span class="font-semibold text-error">Tonight</span>
+<span class="text-xs text-slate-400">11:59 PM</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">ECON-402</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-error-container text-on-error-container">
+                                Not submitted
+                            </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="text-blue-900 hover:underline font-semibold text-sm">View Details</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-tertiary-fixed/30 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-on-tertiary-fixed-variant" data-icon="biotech">biotech</span>
+</div>
+<span class="font-medium text-slate-900">Organic Chemistry Lab Report</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">
+<div class="flex flex-col">
+<span class="font-semibold text-on-tertiary-container">Tomorrow</span>
+<span class="text-xs text-slate-400">5:00 PM</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">CHEM-310</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed-variant">
+                                Draft
+                            </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="text-blue-900 hover:underline font-semibold text-sm">Resume</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-primary-fixed/30 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container" data-icon="psychology">psychology</span>
+</div>
+<span class="font-medium text-slate-900">Cognitive Neuroscience Review</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Fri</span>
+<span class="text-xs text-slate-400">9:00 AM</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">PSYC-205</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-fixed text-on-primary-fixed-variant">
+                                Open
+                            </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="text-blue-900 hover:underline font-semibold text-sm">Start Task</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="data_object">data_object</span>
+</div>
+<span class="font-medium text-slate-900">Algorithm Efficiency Analysis</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Next week</span>
+<span class="text-xs text-slate-400">Oct 24, 2023</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">CS-501</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-success/10 text-success">
+                                Submitted
+                            </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="text-slate-400 font-semibold text-sm flex items-center gap-1 justify-end">
+<span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>
+                                Done
+                            </button>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50/50 transition-colors">
+<td class="px-8 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-slate-400" data-icon="architecture">architecture</span>
+</div>
+<span class="font-medium text-slate-900">Structural Integrity Workshop</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">
+<div class="flex flex-col">
+<span class="font-semibold text-slate-900">Next week</span>
+<span class="text-xs text-slate-400">Oct 26, 2023</span>
+</div>
+</td>
+<td class="px-8 py-5 text-sm text-slate-600">ENG-201</td>
+<td class="px-8 py-5">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary-fixed text-on-primary-fixed-variant">
+                                Open
+                            </span>
+</td>
+<td class="px-8 py-5 text-right">
+<button class="text-blue-900 hover:underline font-semibold text-sm">View Prompt</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-8 py-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+<p class="text-xs text-slate-500 font-medium">Showing 5 of 24 assignments</p>
+<div class="flex items-center gap-2">
+<button class="p-1 hover:bg-slate-200 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="p-1 hover:bg-slate-200 rounded transition-colors">
+<span class="material-symbols-outlined text-lg" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quick Actions Floating Bar (Mobile-inspired Bottom Bar for Focused Actions) -->
+<div class="fixed bottom-8 left-1/2 -translate-x-1/2 ml-32 bg-white/90 backdrop-blur-md px-6 py-4 rounded-full border border-outline-variant shadow-lg flex items-center gap-8">
+<button class="flex items-center gap-2 text-primary font-medium text-sm hover:opacity-70 transition-opacity">
+<span class="material-symbols-outlined text-xl" data-icon="cloud_upload">cloud_upload</span>
+                Upload submission
+            </button>
+<div class="w-[1px] h-6 bg-slate-200"></div>
+<button class="flex items-center gap-2 text-slate-600 font-medium text-sm hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="sort">sort</span>
+                Sort
+            </button>
+<button class="flex items-center gap-2 text-slate-600 font-medium text-sm hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-xl" data-icon="archive">archive</span>
+                Archives
+            </button>
+<div class="w-[1px] h-6 bg-slate-200"></div>
+<button class="bg-primary text-white h-10 w-10 rounded-full flex items-center justify-center hover:scale-105 active:scale-95 transition-transform">
+<span class="material-symbols-outlined" data-icon="add">add</span>
+</button>
+</div>
+</main>
+</body></html>

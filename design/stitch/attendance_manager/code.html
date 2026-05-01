@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Academic Core - Attendance Manager</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#442200",
+                        "primary-container": "#1a4173",
+                        "on-tertiary": "#ffffff",
+                        "outline-variant": "#c3c6d0",
+                        "success": "#2e7d32",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#e1e3e5",
+                        "background": "#faf9fd",
+                        "on-primary-fixed-variant": "#264775",
+                        "primary-fixed": "#d5e3ff",
+                        "surface-dim": "#dad9de",
+                        "inverse-primary": "#a8c8fd",
+                        "surface-container-highest": "#e3e2e6",
+                        "info": "#0288d1",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "error": "#ba1a1a",
+                        "on-background": "#1a1c1f",
+                        "primary": "#001733",
+                        "on-primary": "#ffffff",
+                        "on-secondary-fixed-variant": "#444749",
+                        "inverse-surface": "#2f3034",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-primary-fixed": "#001b3b",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "on-secondary-fixed": "#191c1e",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-secondary-container": "#606365",
+                        "on-tertiary-container": "#e39e62",
+                        "surface-container-low": "#f4f3f8",
+                        "tertiary": "#442200",
+                        "on-surface": "#1a1c1f",
+                        "surface-container": "#eeedf2",
+                        "surface-container-high": "#e8e8ec",
+                        "on-error": "#ffffff",
+                        "on-primary-container": "#7493c5",
+                        "surface-variant": "#e3e2e6",
+                        "surface-bright": "#faf9fd",
+                        "secondary-container": "#dee0e2",
+                        "secondary": "#5c5f61",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-on-surface": "#f1f0f5",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-surface-variant": "#43474f",
+                        "surface-tint": "#405f8e",
+                        "outline": "#737780",
+                        "surface": "#faf9fe",
+                        "primary-fixed-dim": "#a8c8fd",
+                        "on-secondary": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xl": "48px",
+                        "base": "4px",
+                        "sidebar_width": "260px",
+                        "container_max": "1440px",
+                        "xs": "8px",
+                        "sidebar-width": "260px",
+                        "gutter": "24px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "sm": "16px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "h2": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "body-md": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "h3": ["Inter"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body { background-color: #faf9fd; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-background selection:bg-primary-container selection:text-white">
+<!-- SideNavBar -->
+<nav class="fixed top-0 left-0 h-screen w-64 z-50 bg-[#002b57] dark:bg-slate-950 border-r border-white/10 flex flex-col h-full py-6 shadow-xl">
+<div class="px-6 mb-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-white/10 rounded flex items-center justify-center">
+<span class="material-symbols-outlined text-white" data-icon="architecture">architecture</span>
+</div>
+<div>
+<h1 class="text-white font-black text-xl tracking-tight leading-none">Academic Core</h1>
+<p class="text-slate-300 text-[10px] uppercase tracking-widest mt-1">Lecturer Portal</p>
+</div>
+</div>
+</div>
+<div class="flex-1 space-y-1">
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="dashboard">dashboard</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Dashboard</span>
+</a>
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="architecture">architecture</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Course Studio</span>
+</a>
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="quiz">quiz</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Question Bank</span>
+</a>
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="bar_chart">bar_chart</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Gradebook</span>
+</a>
+<a class="relative bg-white/10 text-white before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:bg-blue-400 before:rounded-r-full group flex items-center px-6 py-3 my-1 mx-2 rounded-md transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="how_to_reg">how_to_reg</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Attendance</span>
+</a>
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="folder_open">folder_open</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Materials</span>
+</a>
+</div>
+<div class="mt-auto border-t border-white/5 pt-4">
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Settings</span>
+</a>
+<a class="group flex items-center px-6 py-3 my-1 mx-2 rounded-md text-slate-300 hover:text-white hover:bg-white/5 transition-all duration-200" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="help_outline">help_outline</span>
+<span class="font-inter text-xs font-semibold uppercase tracking-widest">Support</span>
+</a>
+</div>
+</nav>
+<!-- TopAppBar -->
+<header class="fixed top-0 right-0 left-64 h-16 z-40 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 flex justify-between items-center px-8 w-full shadow-none">
+<div class="flex items-center gap-4">
+<span class="font-inter text-sm font-medium tracking-tight text-slate-500">Attendance Manager</span>
+<span class="text-slate-300">/</span>
+<span class="font-inter text-sm font-semibold tracking-tight text-[#002b57]">Advanced Quantum Physics - Section B</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative">
+<input class="pl-10 pr-4 py-1.5 rounded-full border border-outline-variant bg-surface-container-lowest text-sm focus:ring-2 focus:ring-primary-container outline-none w-64" placeholder="Search students..." type="text"/>
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg" data-icon="search">search</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary-container" data-icon="notifications">notifications</span>
+<span class="material-symbols-outlined text-slate-500 cursor-pointer hover:text-primary-container" data-icon="apps">apps</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-slate-200">
+<img alt="Lecturer Profile" data-alt="professional portrait of a university professor in a modern office setting, warm natural lighting, academic atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXlOE7WZjGwDY6NcYx6YgMHhJGTs2hasJjR2EF9A4q-Ra6HaRdWzLbtFjHrxuA2x4Oca_JvvbDEWa73i60mdkdlvEi6Qc4Syaj_QVvVcfhIJtn7HlHmjOchbBC2BgxkzRZVwPLB_ZX_ZytNswiXlUBwDAn5nPUpmg8lHzBeY0gPkT3FNl-xaZCOVnYTcG7JayBgvEazmSDfraw-KAx88EFNdomahQqE1oaO5tJzCf4JBCCkNwWPQ_Xu44DDeWbvvkoaBj5kgNC7sg"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="ml-64 pt-24 px-8 pb-12">
+<div class="max-w-[1440px] mx-auto">
+<!-- Summary Bento Grid -->
+<div class="grid grid-cols-12 gap-6 mb-8">
+<!-- Main Controls Card -->
+<div class="col-span-12 lg:col-span-8 bg-white border border-outline-variant p-6 rounded-lg flex items-center justify-between">
+<div class="flex items-center gap-6">
+<div class="space-y-1">
+<label class="font-label-caps text-slate-500 block">SELECT DATE</label>
+<div class="flex items-center gap-2 px-3 py-2 bg-surface-container rounded border border-outline-variant cursor-pointer hover:bg-white transition-colors">
+<span class="material-symbols-outlined text-lg text-primary" data-icon="calendar_today">calendar_today</span>
+<span class="font-body-md font-semibold text-primary">October 24, 2023</span>
+<span class="material-symbols-outlined text-lg text-slate-400" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<div class="h-10 w-px bg-slate-200"></div>
+<div class="flex gap-3">
+<button class="px-5 py-2.5 bg-primary text-white rounded-lg flex items-center gap-2 hover:bg-primary-container transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="check_circle">check_circle</span>
+<span class="font-body-md font-semibold">Mark All Present</span>
+</button>
+<button class="px-5 py-2.5 border border-primary text-primary rounded-lg flex items-center gap-2 hover:bg-slate-50 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg" data-icon="qr_code_2">qr_code_2</span>
+<span class="font-body-md font-semibold">Generate QR</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2.5 rounded-lg border border-outline-variant text-slate-500 hover:text-primary hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="file_download">file_download</span>
+</button>
+<button class="p-2.5 rounded-lg border border-outline-variant text-slate-500 hover:text-primary hover:bg-slate-50">
+<span class="material-symbols-outlined" data-icon="print">print</span>
+</button>
+</div>
+</div>
+<!-- Stats Card -->
+<div class="col-span-12 lg:col-span-4 bg-white border border-outline-variant p-6 rounded-lg relative overflow-hidden">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16"></div>
+<div class="relative z-10 flex justify-between items-center h-full">
+<div class="space-y-1">
+<h3 class="font-label-caps text-slate-500">TODAY'S RATE</h3>
+<div class="flex items-baseline gap-2">
+<span class="font-stats-display text-primary">94.2%</span>
+<span class="text-success text-xs font-bold flex items-center">
+<span class="material-symbols-outlined text-sm" data-icon="arrow_upward">arrow_upward</span> 2.1%
+                                </span>
+</div>
+<p class="text-xs text-slate-400">49 of 52 Students Checked In</p>
+</div>
+<div class="w-16 h-16 relative">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-slate-100" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="6"></circle>
+<circle class="text-primary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="175.9" stroke-dashoffset="10.2" stroke-width="6"></circle>
+</svg>
+</div>
+</div>
+</div>
+</div>
+<!-- Attendance Table Container -->
+<div class="bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<div class="px-6 py-4 border-b border-outline-variant bg-surface-container-lowest flex justify-between items-center">
+<h2 class="font-h3 text-primary">Student Roster</h2>
+<div class="flex gap-4">
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+<span class="w-3 h-3 rounded-full bg-success"></span> Present
+                        </div>
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+<span class="w-3 h-3 rounded-full bg-error"></span> Absent
+                        </div>
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+<span class="w-3 h-3 rounded-full bg-on-tertiary-container"></span> Late
+                        </div>
+<div class="flex items-center gap-2 text-xs font-semibold text-slate-500">
+<span class="w-3 h-3 rounded-full bg-info"></span> Excused
+                        </div>
+</div>
+</div>
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-slate-50 border-b border-outline-variant">
+<th class="px-6 py-3 text-left font-label-caps text-slate-500 uppercase">Student Name</th>
+<th class="px-6 py-3 text-left font-label-caps text-slate-500 uppercase">Student ID</th>
+<th class="px-6 py-3 text-left font-label-caps text-slate-500 uppercase">Major</th>
+<th class="px-6 py-3 text-center font-label-caps text-slate-500 uppercase">Attendance Status</th>
+<th class="px-6 py-3 text-right font-label-caps text-slate-500 uppercase">Notes</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed text-xs">AA</div>
+<span class="font-body-md font-semibold text-on-background">Alexander Arnault</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">ST-2023-0842</td>
+<td class="px-6 py-4 text-xs text-slate-500">Theoretical Physics</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-1 p-1 bg-surface-container rounded-lg w-fit mx-auto">
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all bg-success text-white shadow-sm">P</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">A</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">L</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">E</button>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-300 hover:text-primary cursor-pointer" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-fixed flex items-center justify-center font-bold text-on-tertiary-fixed text-xs">BC</div>
+<span class="font-body-md font-semibold text-on-background">Beatrix Chen</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">ST-2023-1104</td>
+<td class="px-6 py-4 text-xs text-slate-500">Astrophysics</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-1 p-1 bg-surface-container rounded-lg w-fit mx-auto">
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">P</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all bg-error text-white shadow-sm">A</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">L</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">E</button>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-error cursor-pointer" data-icon="priority_high">priority_high</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-fixed flex items-center justify-center font-bold text-on-secondary-fixed text-xs">DK</div>
+<span class="font-body-md font-semibold text-on-background">David Kalu</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">ST-2023-0492</td>
+<td class="px-6 py-4 text-xs text-slate-500">Mathematics</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-1 p-1 bg-surface-container rounded-lg w-fit mx-auto">
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">P</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">A</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all bg-on-tertiary-container text-white shadow-sm">L</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">E</button>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="text-[10px] text-slate-400 italic">Arrived +15min</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-blue-100 flex items-center justify-center font-bold text-info text-xs">EL</div>
+<span class="font-body-md font-semibold text-on-background">Elena Lopez</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">ST-2023-0755</td>
+<td class="px-6 py-4 text-xs text-slate-500">Nuclear Engineering</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-1 p-1 bg-surface-container rounded-lg w-fit mx-auto">
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">P</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">A</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">L</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all bg-info text-white shadow-sm">E</button>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-info cursor-pointer" data-icon="receipt_long">receipt_long</span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-fixed flex items-center justify-center font-bold text-on-primary-fixed text-xs">FW</div>
+<span class="font-body-md font-semibold text-on-background">Finn Walker</span>
+</div>
+</td>
+<td class="px-6 py-4 font-mono text-xs text-slate-500">ST-2023-0911</td>
+<td class="px-6 py-4 text-xs text-slate-500">Theoretical Physics</td>
+<td class="px-6 py-4">
+<div class="flex justify-center gap-1 p-1 bg-surface-container rounded-lg w-fit mx-auto">
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all bg-success text-white shadow-sm">P</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">A</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">L</button>
+<button class="px-3 py-1 rounded-md text-[10px] font-bold transition-all hover:bg-white text-slate-400">E</button>
+</div>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-slate-300 hover:text-primary cursor-pointer" data-icon="chat_bubble_outline">chat_bubble_outline</span>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 bg-slate-50 border-t border-outline-variant flex justify-between items-center">
+<span class="text-xs text-slate-500">Showing 5 of 52 students</span>
+<div class="flex gap-2">
+<button class="px-3 py-1.5 rounded border border-outline-variant bg-white text-xs font-semibold text-slate-500 hover:bg-slate-50">Previous</button>
+<button class="px-3 py-1.5 rounded border border-outline-variant bg-white text-xs font-semibold text-slate-500 hover:bg-slate-50">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Floating QR Action Button -->
+<div class="fixed bottom-8 right-8 flex flex-col items-end gap-3 group">
+<div class="bg-primary-container text-white px-4 py-2 rounded-lg text-xs font-bold shadow-lg opacity-0 group-hover:opacity-100 transition-opacity translate-y-2 group-hover:translate-y-0">
+            Open QR Attendance System
+        </div>
+<button class="w-14 h-14 bg-primary text-white rounded-full flex items-center justify-center shadow-xl hover:scale-110 active:scale-95 transition-all">
+<span class="material-symbols-outlined" data-icon="qr_code_scanner" style="font-variation-settings: 'FILL' 1;">qr_code_scanner</span>
+</button>
+</div>
+</body></html>

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e2e2e7",
+                        "on-tertiary-container": "#e39e62",
+                        "primary-fixed": "#d5e3ff",
+                        "outline-variant": "#c3c6d0",
+                        "surface": "#faf9fe",
+                        "on-secondary-fixed-variant": "#444749",
+                        "on-secondary-container": "#606365",
+                        "on-surface-variant": "#43474f",
+                        "surface-container": "#eeedf2",
+                        "background": "#faf9fd",
+                        "surface-bright": "#faf9fe",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-surface": "#1a1c1f",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "inverse-primary": "#a8c8fd",
+                        "success": "#2e7d32",
+                        "surface-dim": "#dad9de",
+                        "outline": "#737780",
+                        "on-primary-container": "#7493c5",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#002b57",
+                        "surface-tint": "#405f8e",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e8e8ec",
+                        "tertiary-container": "#442200",
+                        "surface-container-low": "#f4f3f8",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-primary-fixed": "#001b3b",
+                        "inverse-on-surface": "#f1f0f5",
+                        "tertiary": "#442200",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "secondary": "#5c5f61",
+                        "surface-container-lowest": "#ffffff",
+                        "info": "#0288d1",
+                        "on-primary-fixed-variant": "#264775",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dee0e2",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#191c1e",
+                        "primary": "#001733",
+                        "inverse-surface": "#2f3034",
+                        "primary-fixed-dim": "#a8c8fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "8px",
+                        "container_max": "1440px",
+                        "xl": "48px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            background-color: #faf9fd;
+        }
+    </style>
+</head>
+<body class="font-body-md text-on-surface antialiased">
+<!-- SideNavBar (Shared Component) -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-slate-200 dark:border-slate-800 bg-[#002b57] dark:bg-slate-950 font-inter text-sm flex flex-col h-full z-20">
+<div class="p-6 flex flex-col gap-1">
+<h1 class="text-lg font-bold tracking-tight text-white">Advisor Portal</h1>
+<p class="text-xs text-blue-200 opacity-80 uppercase tracking-widest font-semibold">Academic Core System</p>
+</div>
+<nav class="flex-1 mt-4">
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="person_search">person_search</span>
+                Student Data
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="analytics">analytics</span>
+                Analytical Dashboards
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="inventory_2">inventory_2</span>
+                Resource Management
+            </a>
+<!-- Active Tab: Audit Tools -->
+<a class="relative flex items-center px-4 py-3 text-white bg-white/10 before:absolute before:left-0 before:w-1 before:h-8 before:bg-blue-400 before:rounded-r-full" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="policy">policy</span>
+                Audit Tools
+            </a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined mr-3" data-icon="settings">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="p-4 border-t border-white/10">
+<button class="w-full py-2.5 px-4 bg-blue-500 hover:bg-blue-400 text-white font-bold rounded-lg transition-all duration-200 ease-in-out active:scale-95">
+                New Report
+            </button>
+</div>
+<div class="p-4 flex items-center gap-3 border-t border-white/10">
+<div class="w-8 h-8 rounded-full bg-blue-200 overflow-hidden">
+<img alt="University Advisor Profile" data-alt="close-up portrait of a professional academic advisor in a modern office setting with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbPUQC--oKIkEGN8xSk50D4of9_ugqiopKEkC5G3ELMMXoBt_go-sRaQGK84NQUj1CJK6eTPTJpkpmmZrb3cAGKnPFQMovuci17d8rfddIgRED-EPht6HddIC8ey9hp5lHLva2x5hoXzYXppo2nwra4Ol7pf-x1iiGJuD3E2zDuYeniPcR81wuKr5RPX5lPw36BykurQAirDSINgu-ljucAuUfmimhXXdlX9tLa4pcUvSj0RZSM7VaYKe21MC7Rl2GrFOuDIPZyd4"/>
+</div>
+<div class="flex flex-col">
+<span class="text-xs font-bold text-white">Dr. Sarah Chen</span>
+<span class="text-[10px] text-slate-400">Senior Academic Advisor</span>
+</div>
+</div>
+</aside>
+<!-- TopAppBar (Shared Component) -->
+<header class="h-16 fixed top-0 right-0 left-64 z-10 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 flex items-center justify-between px-8 w-full font-inter text-sm font-medium">
+<div class="flex items-center gap-8">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 bg-surface-container border-none rounded-full w-64 focus:ring-2 focus:ring-primary-container text-xs" placeholder="Quick Search" type="text"/>
+</div>
+<nav class="flex gap-6">
+<a class="text-slate-500 hover:text-[#002b57] transition-all" href="#">Overview</a>
+<a class="text-slate-500 hover:text-[#002b57] transition-all" href="#">Calendar</a>
+<a class="text-[#002b57] border-b-2 border-[#002b57] pb-5" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 hover:bg-slate-50 rounded-full transition-all text-slate-500">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="p-2 hover:bg-slate-50 rounded-full transition-all text-slate-500">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-24 pb-12 px-8 max-w-screen-container_max mx-auto">
+<!-- Header & Action Row -->
+<div class="flex items-end justify-between mb-lg">
+<div>
+<h2 class="font-h1 text-h1 text-primary mb-xs">Caseload Audit &amp; Verification</h2>
+<p class="text-on-surface-variant font-body-md">Verify academic records and certify compliance for the Fall 2024 cohort.</p>
+</div>
+<div class="flex gap-sm">
+<button class="px-sm py-xs border border-outline text-on-surface rounded font-label-caps uppercase flex items-center gap-xs hover:bg-surface-container transition-all">
+<span class="material-symbols-outlined text-[18px]" data-icon="download">download</span> Export List
+                </button>
+<button class="px-sm py-xs bg-primary-container text-white rounded font-label-caps uppercase flex items-center gap-xs hover:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified_user">verified_user</span> Bulk Certify Selected
+                </button>
+</div>
+</div>
+<!-- Filter Rail -->
+<section class="bg-surface-container-lowest border border-outline-variant p-md rounded mb-lg flex flex-wrap items-center gap-md">
+<div class="flex flex-col gap-base min-w-[200px]">
+<label class="font-label-caps text-on-surface-variant uppercase">Academic Cohort</label>
+<select class="form-select border-outline-variant rounded-lg text-sm bg-surface-container-low focus:ring-primary-container">
+<option>Fall 2024</option>
+<option>Spring 2024</option>
+<option>Fall 2023</option>
+</select>
+</div>
+<div class="flex flex-col gap-base min-w-[240px]">
+<label class="font-label-caps text-on-surface-variant uppercase">Degree Program</label>
+<select class="form-select border-outline-variant rounded-lg text-sm bg-surface-container-low focus:ring-primary-container">
+<option>All Programs</option>
+<option>Computer Science (B.S.)</option>
+<option>Data Science (B.S.)</option>
+<option>Information Systems (B.A.)</option>
+</select>
+</div>
+<div class="flex flex-col gap-base min-w-[180px]">
+<label class="font-label-caps text-on-surface-variant uppercase">Audit Status</label>
+<div class="flex gap-xs">
+<button class="px-3 py-1.5 rounded-full bg-primary-container text-white text-xs font-semibold">All</button>
+<button class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-semibold">Pending</button>
+<button class="px-3 py-1.5 rounded-full bg-surface-container-highest text-on-surface-variant text-xs font-semibold">Error</button>
+</div>
+</div>
+<div class="ml-auto self-end">
+<button class="text-primary font-label-caps uppercase hover:underline decoration-2 underline-offset-4">Clear All Filters</button>
+</div>
+</section>
+<!-- Stats Overview (Asymmetric Layout) -->
+<div class="grid grid-cols-12 gap-gutter mb-lg">
+<div class="col-span-8 bg-white border border-outline-variant p-lg rounded relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary"></div>
+<div class="flex justify-between items-start">
+<div>
+<h3 class="font-h3 text-h3 text-on-surface mb-xs">Verification Progress</h3>
+<p class="text-sm text-on-surface-variant">84% of assigned caseload reviewed for compliance.</p>
+</div>
+<div class="text-right">
+<span class="font-stats-display text-stats-display text-primary">142</span>
+<span class="text-sm font-label-caps text-on-surface-variant uppercase block">Total Students</span>
+</div>
+</div>
+<div class="mt-lg h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-success w-[84%]"></div>
+</div>
+<div class="mt-sm flex gap-md">
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-success"></div>
+<span class="text-xs font-medium">119 Verified</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-tertiary-fixed-dim"></div>
+<span class="text-xs font-medium">15 Pending</span>
+</div>
+<div class="flex items-center gap-xs">
+<div class="w-3 h-3 rounded-full bg-error"></div>
+<span class="text-xs font-medium">8 Errors</span>
+</div>
+</div>
+</div>
+<div class="col-span-4 bg-[#002b57] p-lg rounded flex flex-col justify-between text-white shadow-xl relative">
+<div class="absolute top-4 right-4 opacity-10">
+<span class="material-symbols-outlined text-6xl" data-icon="verified">verified</span>
+</div>
+<div>
+<h3 class="font-h3 text-h3 mb-xs leading-tight">Certification Deadline</h3>
+<p class="text-sm text-blue-200">The semester final audit window closes in:</p>
+</div>
+<div class="mt-4">
+<span class="text-3xl font-bold tracking-tight">04d : 12h : 38m</span>
+</div>
+<button class="mt-lg w-full py-2 bg-white text-[#002b57] font-bold rounded hover:bg-blue-50 transition-colors">
+                    Review Compliance Manual
+                </button>
+</div>
+</div>
+<!-- High-Density Data Table -->
+<div class="bg-white border border-outline-variant rounded shadow-sm overflow-hidden">
+<table class="w-full border-collapse">
+<thead>
+<tr class="bg-surface-container-low border-b border-outline-variant">
+<th class="px-md py-sm text-left w-10">
+<input class="rounded text-primary focus:ring-primary-container" type="checkbox"/>
+</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">Student ID</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">Full Name</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">Credits</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">GPA</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">Audit Status</th>
+<th class="px-md py-sm text-left font-label-caps text-on-surface-variant uppercase text-xs">Flags</th>
+<th class="px-md py-sm text-right font-label-caps text-on-surface-variant uppercase text-xs">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-md py-sm"><input class="rounded text-primary" type="checkbox"/></td>
+<td class="px-md py-sm font-mono text-xs text-primary font-semibold">2024-8842</td>
+<td class="px-md py-sm">
+<div class="font-semibold text-on-surface">Alex Rivera</div>
+<div class="text-[11px] text-on-surface-variant">Computer Science (B.S.)</div>
+</td>
+<td class="px-md py-sm text-sm">112 / 120</td>
+<td class="px-md py-sm text-sm font-medium">3.82</td>
+<td class="px-md py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-tighter">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="check_circle">check_circle</span> Verified
+                            </span>
+</td>
+<td class="px-md py-sm">—</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors bg-surface-container-lowest">
+<td class="px-md py-sm"><input class="rounded text-primary" type="checkbox"/></td>
+<td class="px-md py-sm font-mono text-xs text-primary font-semibold">2024-1193</td>
+<td class="px-md py-sm">
+<div class="font-semibold text-on-surface">Elena Soros</div>
+<div class="text-[11px] text-on-surface-variant">Information Systems (B.A.)</div>
+</td>
+<td class="px-md py-sm text-sm">94 / 120</td>
+<td class="px-md py-sm text-sm font-medium">2.95</td>
+<td class="px-md py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-error-container text-on-error-container border border-error/20 uppercase tracking-tighter">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="report">report</span> Error
+                            </span>
+</td>
+<td class="px-md py-sm">
+<span class="text-[11px] text-error font-medium underline cursor-help">Missing Prerequisite</span>
+</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="edit">edit</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-md py-sm"><input class="rounded text-primary" type="checkbox"/></td>
+<td class="px-md py-sm font-mono text-xs text-primary font-semibold">2024-5501</td>
+<td class="px-md py-sm">
+<div class="font-semibold text-on-surface">Julian Thorne</div>
+<div class="text-[11px] text-on-surface-variant">Data Science (B.S.)</div>
+</td>
+<td class="px-md py-sm text-sm">118 / 120</td>
+<td class="px-md py-sm text-sm font-medium">3.44</td>
+<td class="px-md py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-tertiary-fixed text-on-tertiary-fixed-variant border border-tertiary-fixed-dim uppercase tracking-tighter">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="schedule">schedule</span> Pending
+                            </span>
+</td>
+<td class="px-md py-sm">
+<span class="text-[11px] text-on-surface-variant italic">Final Transfer Credit Review</span>
+</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-md py-sm"><input class="rounded text-primary" type="checkbox"/></td>
+<td class="px-md py-sm font-mono text-xs text-primary font-semibold">2024-9902</td>
+<td class="px-md py-sm">
+<div class="font-semibold text-on-surface">Maya Patel</div>
+<div class="text-[11px] text-on-surface-variant">Computer Science (B.S.)</div>
+</td>
+<td class="px-md py-sm text-sm">122 / 120</td>
+<td class="px-md py-sm text-sm font-medium">3.98</td>
+<td class="px-md py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-success/10 text-success border border-success/20 uppercase tracking-tighter">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="check_circle">check_circle</span> Verified
+                            </span>
+</td>
+<td class="px-md py-sm">—</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors">
+<td class="px-md py-sm"><input class="rounded text-primary" type="checkbox"/></td>
+<td class="px-md py-sm font-mono text-xs text-primary font-semibold">2024-3310</td>
+<td class="px-md py-sm">
+<div class="font-semibold text-on-surface">Derek Vance</div>
+<div class="text-[11px] text-on-surface-variant">Information Systems (B.A.)</div>
+</td>
+<td class="px-md py-sm text-sm">105 / 120</td>
+<td class="px-md py-sm text-sm font-medium">2.10</td>
+<td class="px-md py-sm">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-error-container text-on-error-container border border-error/20 uppercase tracking-tighter">
+<span class="material-symbols-outlined text-[12px] mr-1" data-icon="report">report</span> Error
+                            </span>
+</td>
+<td class="px-md py-sm">
+<span class="text-[11px] text-error font-medium underline cursor-help">Academic Probation</span>
+</td>
+<td class="px-md py-sm text-right">
+<button class="p-1 hover:bg-surface-container rounded text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px]" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="bg-surface-container-low px-md py-sm border-t border-outline-variant flex items-center justify-between">
+<span class="text-xs text-on-surface-variant">Showing 1-5 of 142 students</span>
+<div class="flex items-center gap-xs">
+<button class="p-1 hover:bg-surface-container-highest rounded transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex gap-1">
+<button class="w-7 h-7 bg-primary-container text-white rounded text-xs font-bold">1</button>
+<button class="w-7 h-7 hover:bg-surface-container-highest text-on-surface rounded text-xs font-bold transition-all">2</button>
+<button class="w-7 h-7 hover:bg-surface-container-highest text-on-surface rounded text-xs font-bold transition-all">3</button>
+<span class="text-xs self-center px-1">...</span>
+<button class="w-7 h-7 hover:bg-surface-container-highest text-on-surface rounded text-xs font-bold transition-all">29</button>
+</div>
+<button class="p-1 hover:bg-surface-container-highest rounded transition-all text-on-surface-variant">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Compliance Context Footer -->
+<div class="mt-lg grid grid-cols-3 gap-gutter">
+<div class="bg-surface-container-low p-md border-t-4 border-primary rounded shadow-sm">
+<h4 class="font-label-caps text-on-surface-variant uppercase mb-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="info">info</span> Registrar Note
+                </h4>
+<p class="text-xs leading-relaxed text-on-surface">Final certification for Fall 2024 requires double-verification of all transfer credits from partner community colleges. Errors must be resolved before Friday's close of business.</p>
+</div>
+<div class="bg-surface-container-low p-md border-t-4 border-info rounded shadow-sm">
+<h4 class="font-label-caps text-on-surface-variant uppercase mb-xs flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-icon="help">help</span> Audit Key
+                </h4>
+<div class="flex flex-col gap-1 mt-xs">
+<div class="flex items-center justify-between text-[11px]">
+<span>Verified</span>
+<span class="text-success font-bold">Certified &amp; Safe</span>
+</div>
+<div class="flex items-center justify-between text-[11px]">
+<span>Error</span>
+<span class="text-error font-bold">Action Required</span>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-center p-md bg-white border border-dashed border-outline-variant rounded">
+<div class="text-center">
+<span class="material-symbols-outlined text-outline-variant text-4xl block mb-2" data-icon="upload_file">upload_file</span>
+<span class="text-xs font-label-caps text-on-surface-variant uppercase">Drop Cohort Update (CSV)</span>
+</div>
+</div>
+</div>
+</main>
+</body></html>

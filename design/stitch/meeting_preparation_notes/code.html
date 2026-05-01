@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Meeting Workspace | Academic Core</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-container-highest": "#e2e2e7",
+                        "on-tertiary-container": "#e39e62",
+                        "primary-fixed": "#d5e3ff",
+                        "outline-variant": "#c3c6d0",
+                        "surface": "#faf9fe",
+                        "on-secondary-fixed-variant": "#444749",
+                        "on-secondary-container": "#606365",
+                        "on-surface-variant": "#43474f",
+                        "surface-container": "#eeedf2",
+                        "background": "#faf9fd",
+                        "surface-bright": "#faf9fe",
+                        "secondary-fixed": "#e1e3e5",
+                        "on-tertiary-fixed": "#2e1500",
+                        "on-surface": "#1a1c1f",
+                        "tertiary-fixed-dim": "#f6bb8a",
+                        "inverse-primary": "#a8c8fd",
+                        "success": "#2e7d32",
+                        "surface-dim": "#dad9de",
+                        "outline": "#737780",
+                        "on-primary-container": "#7493c5",
+                        "error-container": "#ffdad6",
+                        "primary-container": "#002b57",
+                        "surface-tint": "#405f8e",
+                        "surface-variant": "#e3e2e6",
+                        "on-tertiary": "#ffffff",
+                        "surface-container-high": "#e8e8ec",
+                        "tertiary-container": "#442200",
+                        "surface-container-low": "#f4f3f8",
+                        "on-tertiary-fixed-variant": "#663d17",
+                        "on-error": "#ffffff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed": "#ffdcc2",
+                        "on-primary-fixed": "#001b3b",
+                        "inverse-on-surface": "#f1f0f5",
+                        "tertiary": "#442200",
+                        "on-primary": "#ffffff",
+                        "on-background": "#1a1c1f",
+                        "secondary": "#5c5f61",
+                        "surface-container-lowest": "#ffffff",
+                        "info": "#0288d1",
+                        "on-primary-fixed-variant": "#264775",
+                        "on-error-container": "#93000a",
+                        "secondary-container": "#dee0e2",
+                        "secondary-fixed-dim": "#c4c7c9",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed": "#191c1e",
+                        "primary": "#001733",
+                        "inverse-surface": "#2f3034",
+                        "primary-fixed-dim": "#a8c8fd"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "xs": "8px",
+                        "container_max": "1440px",
+                        "xl": "48px",
+                        "sm": "16px",
+                        "sidebar_width": "260px",
+                        "gutter": "24px",
+                        "sidebar-width": "260px",
+                        "base": "4px",
+                        "lg": "32px",
+                        "md": "24px",
+                        "container-max": "1440px"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "stats-display": ["Inter"],
+                        "h1": ["Inter"],
+                        "h3": ["Inter"],
+                        "h2": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "letterSpacing": "0", "fontWeight": "400"}],
+                        "stats-display": ["40px", {"lineHeight": "1", "letterSpacing": "-0.03em", "fontWeight": "700"}],
+                        "h1": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "letterSpacing": "0", "fontWeight": "600"}],
+                        "h2": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface antialiased overflow-hidden">
+<!-- Global Navigation: SideNavBar -->
+<aside class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-primary-container z-20 flex flex-col">
+<div class="p-lg">
+<h1 class="text-lg font-bold tracking-tight text-white font-h1">Advisor Portal</h1>
+<p class="text-xs text-on-primary-container mt-1 font-body-md">Academic Core System</p>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<!-- Active State for Student Data -->
+<a class="relative flex items-center px-4 py-3 text-white bg-white/10 before:absolute before:left-0 before:w-1 before:h-8 before:bg-inverse-primary before:rounded-r-full transition-all duration-200 ease-in-out active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3">person_search</span>
+<span class="font-label-caps text-label-caps">Student Data</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined mr-3">analytics</span>
+<span class="font-label-caps text-label-caps">Analytical Dashboards</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined mr-3">inventory_2</span>
+<span class="font-label-caps text-label-caps">Resource Management</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined mr-3">policy</span>
+<span class="font-label-caps text-label-caps">Audit Tools</span>
+</a>
+<a class="flex items-center px-4 py-3 text-slate-300 hover:text-white hover:bg-white/5 transition-colors cursor-pointer" href="#">
+<span class="material-symbols-outlined mr-3">settings</span>
+<span class="font-label-caps text-label-caps">Settings</span>
+</a>
+</nav>
+<div class="p-lg mt-auto">
+<button class="w-full bg-inverse-primary text-primary-container font-semibold py-3 px-4 rounded-lg flex items-center justify-center hover:bg-white transition-colors">
+<span class="material-symbols-outlined mr-2">add</span>
+                New Report
+            </button>
+<div class="mt-lg flex items-center space-x-3 opacity-80">
+<img alt="University Advisor Profile" class="w-8 h-8 rounded-full bg-white/20" data-alt="Close up professional portrait of a university advisor with a friendly and supportive expression in a clean office environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRF3VLf_9Z2DLFqbGnbZW6mWbN9owkcN6nAZyHfVc4J_1clPiX9q7Y_fKbAaXl26SVrzSHLqZeGgnAL25Gt0FvwQdOVYSMHxdgrZEas6N-fwE_uRn-btoC8WeLg_tpHlDgx_8IX2o-hWyBBfTCQ-iexoYu69Ct3bqK5-1iMMvEDVyUXNcMTzkWOL24E4zBO679PlYGdTWeCQyD2qhtl3WIP9hG2ka3Tlcwq8AbfqxV4VhHfQPfSriUu3NqSsSmhMt7oZRHGWQV0ro"/>
+<div>
+<p class="text-white text-xs font-bold">Dr. Sarah Miller</p>
+<p class="text-[10px] text-on-primary-container">Senior Advisor</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar -->
+<header class="h-16 fixed top-0 right-0 left-64 z-10 border-b border-outline-variant bg-white flex items-center justify-between px-8">
+<div class="flex items-center space-x-8">
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="bg-surface-container-low border-none rounded-full pl-10 pr-4 py-2 text-sm w-64 focus:ring-2 focus:ring-primary-container transition-all" placeholder="Quick Search" type="text"/>
+</div>
+<nav class="flex space-x-6 items-center h-full">
+<a class="font-body-md text-on-surface-variant hover:text-primary-container transition-all" href="#">Overview</a>
+<a class="font-body-md text-on-surface-variant hover:text-primary-container transition-all" href="#">Calendar</a>
+<a class="font-body-md text-primary-container border-b-2 border-primary-container py-5" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center space-x-4">
+<button class="p-2 text-outline hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-outline hover:text-primary-container transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-8 rounded-full bg-surface-container-highest flex items-center justify-center overflow-hidden border border-outline-variant">
+<img alt="Advisor Avatar" data-alt="Abstract minimalist representation of a professional profile icon with a clean soft focus background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDW8ZLU6LS7wYXegQ85O7uvK0DXvfsrkKu2wGXzJA4PRE5fPD9SJk-vfamWIqbaveSsqrDh3RhIHwkn5_UxGNwhnGBY7A5O5DDNc4lO0WzIBx1qNHbQUr3oB4MnDslE4pGTw7yV04I4ZN1uw9iAtojUJ7s2Ah4mppcCpM0hk72gGXfIZVW2PMzlKnGFN2dd0ranyLXTa-YNcxmAzcl4kUn6FYb5uQvT8nyiwDF_ZDpOzYYpfkf83LgCdf9O_WXGmX1mfOGRCkcnT8A"/>
+</div>
+</div>
+</header>
+<!-- Main Workspace Canvas -->
+<main class="ml-64 mt-16 h-[calc(100vh-64px)] grid grid-cols-12 overflow-hidden">
+<!-- Left Pane: Student Progress Summary (Column Span 4) -->
+<section class="col-span-4 bg-surface-container-low border-r border-outline-variant p-lg overflow-y-auto">
+<div class="mb-lg">
+<div class="flex items-center space-x-4 mb-sm">
+<img alt="Student Portrait" class="w-16 h-16 rounded-full border-2 border-white shadow-sm" data-alt="Portrait of a male university student, confident smile, casual campus attire, outdoors with soft university building in background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCsBUd35amLJX_gc6SFZc0wfMGNxfAYSbHqTdxB3bqyTl2xUj-InE3QdqD3awQGp5Ya6vSZBQMW9hbz4vaGOJm82kf-oVzql3Whctz86_nAKW4qHp77n6P4GYbr9zDnfk9c3J0ZAXMfBaDZGI6Sci_Wmq2thZSUIihFzX1OBkulveSbjIxwQyrF9ChtgXNvbBrsm-4FW84Dsbk8Rk0bRhZV_CYaNHNtfov1wo6bYs_tvbFy8vmzlCsxJe8MRZHXQjNMyscYHGRBm_I"/>
+<div>
+<h2 class="font-h2 text-h2 text-primary">Julian Daniels</h2>
+<p class="text-on-surface-variant font-body-md">Junior • Computer Science • ID: 882910</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-2">
+<span class="bg-primary-fixed text-on-primary-fixed px-3 py-1 rounded-full text-label-caps font-label-caps">In Good Standing</span>
+<span class="bg-error-container text-on-error-container px-3 py-1 rounded-full text-label-caps font-label-caps">Risk: High</span>
+</div>
+</div>
+<!-- Bento Metrics Grid -->
+<div class="grid grid-cols-2 gap-4 mb-lg">
+<div class="bg-white p-md border border-outline-variant rounded-xl border-t-4 border-t-blue-500">
+<p class="text-label-caps font-label-caps text-outline uppercase mb-2">Current GPA</p>
+<p class="text-stats-display font-stats-display text-primary">3.82</p>
+<p class="text-[10px] text-success font-medium mt-1">↑ 0.12 from last term</p>
+</div>
+<div class="bg-white p-md border border-outline-variant rounded-xl border-t-4 border-t-error">
+<p class="text-label-caps font-label-caps text-outline uppercase mb-2">Credit Hours</p>
+<p class="text-stats-display font-stats-display text-primary">72<span class="text-lg text-outline">/120</span></p>
+<div class="w-full bg-surface-container-highest h-1.5 mt-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[60%]"></div>
+</div>
+</div>
+</div>
+<!-- Detailed Stats & Alerts -->
+<div class="space-y-4">
+<div class="bg-white p-md border border-outline-variant rounded-xl">
+<h3 class="font-h3 text-h3 mb-3 text-primary">Academic Alerts</h3>
+<div class="space-y-3">
+<div class="flex items-start space-x-3 p-3 bg-error-container/30 rounded-lg">
+<span class="material-symbols-outlined text-error" data-weight="fill">warning</span>
+<div>
+<p class="text-body-md font-semibold text-on-error-container">Low Attendance: CS301</p>
+<p class="text-xs text-on-error-container/80">Student missed 3 consecutive labs in Advanced Algorithms.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white p-md border border-outline-variant rounded-xl">
+<h3 class="font-h3 text-h3 mb-3 text-primary">Previous Notes</h3>
+<div class="space-y-4">
+<div class="border-l-2 border-outline-variant pl-4 py-1">
+<p class="text-label-caps font-label-caps text-outline">OCT 14, 2023</p>
+<p class="text-body-md font-medium text-on-surface">Career Path Discussion</p>
+<p class="text-xs text-on-surface-variant italic mt-1 line-clamp-2">"Discussed internship opportunities at TechCorp. Julian expressed interest in Backend roles..."</p>
+</div>
+<div class="border-l-2 border-outline-variant pl-4 py-1">
+<p class="text-label-caps font-label-caps text-outline">AUG 28, 2023</p>
+<p class="text-body-md font-medium text-on-surface">Fall Course Selection</p>
+<p class="text-xs text-on-surface-variant italic mt-1 line-clamp-2">"Confirmed enrollment in CS301 and elective SOC102. Prerequisites verified."</p>
+</div>
+</div>
+<button class="mt-4 text-primary text-xs font-bold hover:underline">View All 12 Entries</button>
+</div>
+</div>
+</section>
+<!-- Right Pane: Meeting Notes Workspace (Column Span 8) -->
+<section class="col-span-8 bg-white flex flex-col overflow-hidden">
+<!-- Workspace Header -->
+<div class="p-8 border-b border-outline-variant flex justify-between items-end">
+<div>
+<p class="text-label-caps font-label-caps text-outline uppercase tracking-widest mb-1">Active Session</p>
+<h2 class="font-h1 text-h1 text-primary">Mid-Term Academic Review</h2>
+<p class="font-body-md text-on-surface-variant mt-1 flex items-center">
+<span class="material-symbols-outlined text-sm mr-1">event</span>
+                        October 24, 2023 • 2:00 PM - 2:45 PM
+                    </p>
+</div>
+<div class="flex space-x-3">
+<button class="px-6 py-2 border border-primary text-primary font-semibold rounded-lg hover:bg-surface-container transition-all flex items-center">
+<span class="material-symbols-outlined mr-2">save</span>
+                        Draft
+                    </button>
+<button class="px-6 py-2 bg-primary text-white font-semibold rounded-lg hover:opacity-90 shadow-sm transition-all flex items-center">
+<span class="material-symbols-outlined mr-2">check_circle</span>
+                        Finalize Note
+                    </button>
+</div>
+</div>
+<!-- Rich Text Editor Placeholder -->
+<div class="flex-1 p-8 overflow-y-auto">
+<div class="max-w-4xl mx-auto space-y-8">
+<!-- Editor Toolbar -->
+<div class="flex items-center space-x-1 border-b border-outline-variant pb-2 sticky top-0 bg-white z-10">
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">format_bold</span></button>
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">format_italic</span></button>
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">format_list_bulleted</span></button>
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">format_list_numbered</span></button>
+<div class="w-[1px] h-6 bg-outline-variant mx-2"></div>
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">link</span></button>
+<button class="p-2 hover:bg-surface-container rounded transition-colors"><span class="material-symbols-outlined text-on-surface-variant">attach_file</span></button>
+</div>
+<!-- Meeting Notes Content -->
+<div class="space-y-6">
+<div>
+<label class="block font-label-caps text-label-caps text-outline uppercase mb-2">Executive Summary</label>
+<textarea class="w-full border-none focus:ring-0 p-0 text-body-lg text-on-surface placeholder:text-outline/40 resize-none font-body-lg" placeholder="Click to start typing session overview..." rows="3"></textarea>
+</div>
+<div>
+<label class="block font-label-caps text-label-caps text-outline uppercase mb-2">Discussion Points &amp; Concerns</label>
+<div class="min-h-[200px] text-body-lg text-on-surface focus:outline-none leading-relaxed" contenteditable="true">
+<p class="text-outline/40">Student noted increasing difficulty in CS301 lab assignments...</p>
+</div>
+</div>
+<!-- Action Items / Scheduling Section -->
+<div class="grid grid-cols-2 gap-8 pt-8 border-t border-outline-variant">
+<div>
+<h4 class="font-h3 text-h3 text-primary mb-4 flex items-center">
+<span class="material-symbols-outlined mr-2">task_alt</span>
+                                    Follow-up Tasks
+                                </h4>
+<div class="space-y-3">
+<div class="flex items-center space-x-3 group">
+<div class="w-5 h-5 border-2 border-outline-variant rounded hover:border-primary cursor-pointer"></div>
+<span class="text-body-md text-on-surface">Connect Julian with Tutoring Center</span>
+</div>
+<div class="flex items-center space-x-3 group">
+<div class="w-5 h-5 border-2 border-outline-variant rounded hover:border-primary cursor-pointer"></div>
+<span class="text-body-md text-on-surface">Email Registrar regarding credit transfer</span>
+</div>
+<button class="text-xs font-bold text-primary flex items-center mt-4">
+<span class="material-symbols-outlined text-sm mr-1">add</span>
+                                        Add task
+                                    </button>
+</div>
+</div>
+<div>
+<h4 class="font-h3 text-h3 text-primary mb-4 flex items-center">
+<span class="material-symbols-outlined mr-2">calendar_today</span>
+                                    Next Meeting
+                                </h4>
+<div class="p-4 bg-surface-container rounded-xl border border-outline-variant border-dashed">
+<div class="flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="bg-white p-2 rounded-lg shadow-sm">
+<p class="text-[10px] text-center font-bold text-error uppercase">Nov</p>
+<p class="text-lg text-center font-stats-display text-primary leading-none">08</p>
+</div>
+<div>
+<p class="text-sm font-semibold text-primary">Progress Check-in</p>
+<p class="text-xs text-on-surface-variant">2:30 PM • 30 mins</p>
+</div>
+</div>
+<button class="text-outline hover:text-primary transition-colors">
+<span class="material-symbols-outlined">edit</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- File Attachments -->
+<div class="pt-4">
+<h4 class="font-h3 text-h3 text-primary mb-4 flex items-center">
+<span class="material-symbols-outlined mr-2">folder_open</span>
+                                Attachments
+                            </h4>
+<div class="flex flex-wrap gap-3">
+<div class="flex items-center bg-white border border-outline-variant px-3 py-2 rounded-lg group hover:border-primary cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-info mr-2">description</span>
+<span class="text-xs font-medium text-on-surface">Transcript_V3.pdf</span>
+<span class="material-symbols-outlined text-sm text-outline ml-4 group-hover:text-error transition-colors">close</span>
+</div>
+<div class="flex items-center bg-surface-container-high border border-outline-variant border-dashed px-4 py-2 rounded-lg hover:border-primary cursor-pointer transition-colors">
+<span class="material-symbols-outlined text-outline mr-2">upload_file</span>
+<span class="text-xs font-semibold text-outline">Upload File</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

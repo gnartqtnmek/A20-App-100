@@ -22,13 +22,16 @@ from app.models import (
     Department,
     Enrollment,
     ExamApproval,
+    ForumTopic,
     Grade,
     GradeApproval,
     LecturerAssignment,
+    LiveClassSession,
     Notification,
     Permission,
     Program,
     Quiz,
+    QualitySurvey,
     RiskAlert,
     Role,
     RolePermission,
@@ -57,11 +60,18 @@ from app.schemas.sprint67 import (
     ExamApprovalAction,
     ExamApprovalCreate,
     ExamApprovalOut,
+    EnrollmentActionRequest,
+    EnrollmentActionResult,
+    ForumTopicCreate,
+    ForumTopicModeration,
+    ForumTopicOut,
     GradeApprovalAction,
     GradeApprovalCreate,
     GradeApprovalOut,
     LecturerAssignmentCreate,
     LecturerAssignmentOut,
+    LiveClassSessionCreate,
+    LiveClassSessionOut,
     NotificationCreate,
     NotificationOut,
     PaginationMeta,
@@ -69,6 +79,8 @@ from app.schemas.sprint67 import (
     ProgramCreate,
     ProgramOut,
     ProgramUpdate,
+    QualitySurveyCreate,
+    QualitySurveyOut,
     RiskAlertCreate,
     RiskAlertOut,
     RiskAlertUpdate,
@@ -531,6 +543,293 @@ async def get_system_report(db: AsyncSession) -> list[dict[str, str]]:
     ]
 
 
+async def _ensure_student_section_access(section_id: str, student_id: str, db: AsyncSession) -> None:
+    enrollment = await db.scalar(
+        select(Enrollment).where(
+            Enrollment.section_id == section_id,
+            Enrollment.student_id == student_id,
+            Enrollment.enrollment_status == "active",
+        )
+    )
+    if not enrollment:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Student is not enrolled in this section")
+
+
+async def _ensure_lecturer_section_access(section_id: str, lecturer_id: str, db: AsyncSession) -> None:
+    section = await db.scalar(select(CourseSection).where(CourseSection.id == section_id))
+    if not section:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+    if section.lecturer_id != lecturer_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Section is not assigned to this lecturer")
+
+
+def map_forum_topic(item: ForumTopic) -> ForumTopicOut:
+    return ForumTopicOut(
+        id=item.id,
+        section_id=item.section_id,
+        created_by=item.created_by,
+        title=item.title,
+        content=item.content,
+        status=item.status,
+        is_pinned=item.is_pinned,
+        replies_count=item.replies_count,
+        created_at=item.created_at,
+    )
+
+
+async def create_forum_topic(payload: ForumTopicCreate, current_user: User, db: AsyncSession) -> ForumTopicOut:
+    if current_user.role == UserRole.STUDENT.value:
+        await _ensure_student_section_access(payload.section_id, current_user.id, db)
+    elif current_user.role == UserRole.LECTURER.value:
+        await _ensure_lecturer_section_access(payload.section_id, current_user.id, db)
+    else:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Not allowed to create forum topics")
+    item = ForumTopic(
+        section_id=payload.section_id,
+        created_by=current_user.id,
+        title=payload.title,
+        content=payload.content,
+        status="open",
+        is_pinned=False,
+        replies_count=0,
+    )
+    db.add(item)
+    await log_audit(db, current_user.id, "forum_topic_created", "forum_topic", item.id)
+    await db.commit()
+    await db.refresh(item)
+    return map_forum_topic(item)
+
+
+async def list_student_forum_topics(section_id: str, student_id: str, db: AsyncSession) -> list[ForumTopicOut]:
+    await _ensure_student_section_access(section_id, student_id, db)
+    rows = await db.scalars(
+        select(ForumTopic)
+        .where(ForumTopic.section_id == section_id)
+        .order_by(ForumTopic.is_pinned.desc(), ForumTopic.created_at.desc())
+    )
+    return [map_forum_topic(item) for item in rows.all()]
+
+
+async def list_lecturer_forum_topics(section_id: str, lecturer_id: str, db: AsyncSession) -> list[ForumTopicOut]:
+    await _ensure_lecturer_section_access(section_id, lecturer_id, db)
+    rows = await db.scalars(
+        select(ForumTopic)
+        .where(ForumTopic.section_id == section_id)
+        .order_by(ForumTopic.is_pinned.desc(), ForumTopic.created_at.desc())
+    )
+    return [map_forum_topic(item) for item in rows.all()]
+
+
+async def moderate_forum_topic(
+    topic_id: str,
+    payload: ForumTopicModeration,
+    lecturer_id: str,
+    db: AsyncSession,
+) -> ForumTopicOut:
+    item = await db.scalar(select(ForumTopic).where(ForumTopic.id == topic_id))
+    if not item:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Forum topic not found")
+    await _ensure_lecturer_section_access(item.section_id, lecturer_id, db)
+    if payload.status is not None:
+        item.status = payload.status
+    if payload.is_pinned is not None:
+        item.is_pinned = payload.is_pinned
+    await log_audit(db, lecturer_id, "forum_topic_moderated", "forum_topic", item.id)
+    await db.commit()
+    await db.refresh(item)
+    return map_forum_topic(item)
+
+
+def map_live_class_session(item: LiveClassSession) -> LiveClassSessionOut:
+    return LiveClassSessionOut(
+        id=item.id,
+        section_id=item.section_id,
+        lecturer_id=item.lecturer_id,
+        title=item.title,
+        scheduled_at=item.scheduled_at,
+        platform=item.platform,
+        meeting_url=item.meeting_url,
+        recording_url=item.recording_url,
+        status=item.status,
+        created_at=item.created_at,
+    )
+
+
+async def create_live_class_session(payload: LiveClassSessionCreate, lecturer_id: str, db: AsyncSession) -> LiveClassSessionOut:
+    await _ensure_lecturer_section_access(payload.section_id, lecturer_id, db)
+    item = LiveClassSession(
+        section_id=payload.section_id,
+        lecturer_id=lecturer_id,
+        title=payload.title,
+        scheduled_at=payload.scheduled_at,
+        platform=payload.platform,
+        meeting_url=payload.meeting_url,
+        recording_url=payload.recording_url,
+        status="scheduled",
+    )
+    db.add(item)
+    await log_audit(db, lecturer_id, "live_class_created", "live_class_session", item.id)
+    await db.commit()
+    await db.refresh(item)
+    return map_live_class_session(item)
+
+
+async def list_live_class_sessions(section_id: str, lecturer_id: str, db: AsyncSession) -> list[LiveClassSessionOut]:
+    await _ensure_lecturer_section_access(section_id, lecturer_id, db)
+    rows = await db.scalars(
+        select(LiveClassSession)
+        .where(LiveClassSession.section_id == section_id, LiveClassSession.lecturer_id == lecturer_id)
+        .order_by(LiveClassSession.scheduled_at.desc())
+    )
+    return [map_live_class_session(item) for item in rows.all()]
+
+
+async def execute_enrollment_action(
+    payload: EnrollmentActionRequest,
+    actor_id: str,
+    db: AsyncSession,
+) -> EnrollmentActionResult:
+    if not payload.student_ids:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_ENTITY, detail="student_ids is required")
+    section = await db.scalar(select(CourseSection).where(CourseSection.id == payload.target_section_id))
+    if not section:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Target section not found")
+
+    requested = len(payload.student_ids)
+    success = 0
+    skipped = 0
+    student_ids = list(dict.fromkeys(payload.student_ids))
+
+    async def _resolve_student_id(identifier: str) -> str | None:
+        if "@" in identifier:
+            student = await db.scalar(select(User).where(User.email == identifier, User.role == UserRole.STUDENT.value))
+            return student.id if student else None
+        return identifier
+
+    if payload.action_type == "drop":
+        for identifier in student_ids:
+            student_id = await _resolve_student_id(identifier)
+            if not student_id:
+                skipped += 1
+                continue
+            enrollment = await db.scalar(
+                select(Enrollment).where(
+                    Enrollment.section_id == payload.target_section_id,
+                    Enrollment.student_id == student_id,
+                )
+            )
+            if not enrollment:
+                skipped += 1
+                continue
+            enrollment.enrollment_status = "dropped"
+            success += 1
+    elif payload.action_type == "enroll":
+        for identifier in student_ids:
+            student_id = await _resolve_student_id(identifier)
+            if not student_id:
+                skipped += 1
+                continue
+            student = await db.scalar(select(User).where(User.id == student_id, User.role == UserRole.STUDENT.value))
+            if not student:
+                skipped += 1
+                continue
+            enrollment = await db.scalar(
+                select(Enrollment).where(
+                    Enrollment.section_id == payload.target_section_id,
+                    Enrollment.student_id == student_id,
+                )
+            )
+            if enrollment:
+                enrollment.enrollment_status = "active"
+            else:
+                db.add(Enrollment(section_id=payload.target_section_id, student_id=student_id, enrollment_status="active"))
+            success += 1
+    else:  # move
+        for identifier in student_ids:
+            student_id = await _resolve_student_id(identifier)
+            if not student_id:
+                skipped += 1
+                continue
+            student = await db.scalar(select(User).where(User.id == student_id, User.role == UserRole.STUDENT.value))
+            if not student:
+                skipped += 1
+                continue
+            active_rows = await db.scalars(
+                select(Enrollment).where(Enrollment.student_id == student_id, Enrollment.enrollment_status == "active")
+            )
+            for row in active_rows.all():
+                row.enrollment_status = "moved"
+            enrollment = await db.scalar(
+                select(Enrollment).where(
+                    Enrollment.section_id == payload.target_section_id,
+                    Enrollment.student_id == student_id,
+                )
+            )
+            if enrollment:
+                enrollment.enrollment_status = "active"
+            else:
+                db.add(Enrollment(section_id=payload.target_section_id, student_id=student_id, enrollment_status="active"))
+            success += 1
+
+    await log_audit(
+        db,
+        actor_id,
+        "enrollment_action_executed",
+        "enrollment",
+        payload.target_section_id,
+        {"action_type": payload.action_type, "reason": payload.reason},
+    )
+    await db.commit()
+    return EnrollmentActionResult(
+        requested=requested,
+        success=success,
+        skipped=skipped,
+        action_type=payload.action_type,
+        target_section_id=payload.target_section_id,
+        reason=payload.reason,
+    )
+
+
+def map_quality_survey(item: QualitySurvey) -> QualitySurveyOut:
+    return QualitySurveyOut(
+        id=item.id,
+        title=item.title,
+        category=item.category,
+        department_id=item.department_id,
+        status=item.status,
+        responses_count=item.responses_count,
+        created_at=item.created_at,
+    )
+
+
+async def create_quality_survey(
+    payload: QualitySurveyCreate,
+    actor_id: str,
+    db: AsyncSession,
+    department_id: str | None = None,
+) -> QualitySurveyOut:
+    item = QualitySurvey(
+        title=payload.title,
+        category=payload.category,
+        department_id=department_id,
+        status=payload.status,
+        responses_count=payload.responses_count,
+    )
+    db.add(item)
+    await log_audit(db, actor_id, "quality_survey_created", "quality_survey", item.id)
+    await db.commit()
+    await db.refresh(item)
+    return map_quality_survey(item)
+
+
+async def list_quality_surveys(db: AsyncSession, department_id: str | None = None) -> list[QualitySurveyOut]:
+    stmt = select(QualitySurvey)
+    if department_id:
+        stmt = stmt.where(QualitySurvey.department_id == department_id)
+    rows = await db.scalars(stmt.order_by(QualitySurvey.created_at.desc()))
+    return [map_quality_survey(item) for item in rows.all()]
+
+
 def map_curriculum(item: CurriculumEntry) -> CurriculumEntryOut:
     return CurriculumEntryOut(
         id=item.id,
@@ -696,11 +995,16 @@ async def create_grade_approval(
     requester_id: str,
     db: AsyncSession,
     scope_department_id: str | None = None,
+    requester_role: str | None = None,
 ) -> GradeApprovalOut:
-    if scope_department_id:
+    section = None
+    if scope_department_id or requester_role == UserRole.LECTURER.value:
         section = await db.scalar(select(CourseSection).where(CourseSection.id == payload.section_id))
         if not section:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+    if requester_role == UserRole.LECTURER.value and section and section.lecturer_id != requester_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Section is not assigned to this lecturer")
+    if scope_department_id and section:
         course = await db.scalar(select(Course).where(Course.id == section.course_id))
         if not course or course.department_id != scope_department_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Section outside academic staff scope")
@@ -712,15 +1016,35 @@ async def create_grade_approval(
     return map_grade_approval(item)
 
 
-async def list_grade_approvals(db: AsyncSession) -> list[GradeApprovalOut]:
-    rows = await db.scalars(select(GradeApproval).order_by(GradeApproval.created_at.desc()))
+async def list_grade_approvals(db: AsyncSession, department_id: str | None = None) -> list[GradeApprovalOut]:
+    stmt = select(GradeApproval)
+    if department_id:
+        stmt = (
+            stmt.join(CourseSection, CourseSection.id == GradeApproval.section_id)
+            .join(Course, Course.id == CourseSection.course_id)
+            .where(Course.department_id == department_id)
+        )
+    rows = await db.scalars(stmt.order_by(GradeApproval.created_at.desc()))
     return [map_grade_approval(item) for item in rows.all()]
 
 
-async def action_grade_approval(approval_id: str, payload: GradeApprovalAction, actor_id: str, db: AsyncSession) -> GradeApprovalOut:
+async def action_grade_approval(
+    approval_id: str,
+    payload: GradeApprovalAction,
+    actor_id: str,
+    db: AsyncSession,
+    scope_department_id: str | None = None,
+) -> GradeApprovalOut:
     item = await db.scalar(select(GradeApproval).where(GradeApproval.id == approval_id))
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Grade approval not found")
+    if scope_department_id:
+        section = await db.scalar(select(CourseSection).where(CourseSection.id == item.section_id))
+        if not section:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+        course = await db.scalar(select(Course).where(Course.id == section.course_id))
+        if not course or course.department_id != scope_department_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Grade approval outside academic staff scope")
     item.status = payload.status
     item.note = payload.note
     item.approved_by = actor_id
@@ -747,14 +1071,20 @@ async def create_exam_approval(
     requester_id: str,
     db: AsyncSession,
     scope_department_id: str | None = None,
+    requester_role: str | None = None,
 ) -> ExamApprovalOut:
-    if scope_department_id:
+    quiz = None
+    section = None
+    if scope_department_id or requester_role == UserRole.LECTURER.value:
         quiz = await db.scalar(select(Quiz).where(Quiz.id == payload.quiz_id))
         if not quiz:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quiz not found")
         section = await db.scalar(select(CourseSection).where(CourseSection.id == quiz.section_id))
         if not section:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+    if requester_role == UserRole.LECTURER.value and section and section.lecturer_id != requester_id:
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Section is not assigned to this lecturer")
+    if scope_department_id and section:
         course = await db.scalar(select(Course).where(Course.id == section.course_id))
         if not course or course.department_id != scope_department_id:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Quiz outside academic staff scope")
@@ -766,15 +1096,39 @@ async def create_exam_approval(
     return map_exam_approval(item)
 
 
-async def list_exam_approvals(db: AsyncSession) -> list[ExamApprovalOut]:
-    rows = await db.scalars(select(ExamApproval).order_by(ExamApproval.created_at.desc()))
+async def list_exam_approvals(db: AsyncSession, department_id: str | None = None) -> list[ExamApprovalOut]:
+    stmt = select(ExamApproval)
+    if department_id:
+        stmt = (
+            stmt.join(Quiz, Quiz.id == ExamApproval.quiz_id)
+            .join(CourseSection, CourseSection.id == Quiz.section_id)
+            .join(Course, Course.id == CourseSection.course_id)
+            .where(Course.department_id == department_id)
+        )
+    rows = await db.scalars(stmt.order_by(ExamApproval.created_at.desc()))
     return [map_exam_approval(item) for item in rows.all()]
 
 
-async def action_exam_approval(approval_id: str, payload: ExamApprovalAction, actor_id: str, db: AsyncSession) -> ExamApprovalOut:
+async def action_exam_approval(
+    approval_id: str,
+    payload: ExamApprovalAction,
+    actor_id: str,
+    db: AsyncSession,
+    scope_department_id: str | None = None,
+) -> ExamApprovalOut:
     item = await db.scalar(select(ExamApproval).where(ExamApproval.id == approval_id))
     if not item:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Exam approval not found")
+    if scope_department_id:
+        quiz = await db.scalar(select(Quiz).where(Quiz.id == item.quiz_id))
+        if not quiz:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Quiz not found")
+        section = await db.scalar(select(CourseSection).where(CourseSection.id == quiz.section_id))
+        if not section:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Section not found")
+        course = await db.scalar(select(Course).where(Course.id == section.course_id))
+        if not course or course.department_id != scope_department_id:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Exam approval outside academic staff scope")
     item.status = payload.status
     item.note = payload.note
     item.approved_by = actor_id
@@ -784,15 +1138,39 @@ async def action_exam_approval(approval_id: str, payload: ExamApprovalAction, ac
     return map_exam_approval(item)
 
 
-async def get_academic_report(db: AsyncSession) -> list[dict[str, str]]:
-    curriculum_count = int((await db.scalar(select(func.count()).select_from(CurriculumEntry))) or 0)
-    pending_grade_approvals = int(
-        (await db.scalar(select(func.count()).select_from(GradeApproval).where(GradeApproval.status == "pending"))) or 0
-    )
-    pending_exam_approvals = int(
-        (await db.scalar(select(func.count()).select_from(ExamApproval).where(ExamApproval.status == "pending"))) or 0
-    )
-    tracked_students = int((await db.scalar(select(func.count()).select_from(Enrollment))) or 0)
+async def get_academic_report(db: AsyncSession, department_id: str | None = None) -> list[dict[str, str]]:
+    curriculum_stmt = select(func.count()).select_from(CurriculumEntry)
+    grade_stmt = select(func.count()).select_from(GradeApproval).where(GradeApproval.status == "pending")
+    exam_stmt = select(func.count()).select_from(ExamApproval).where(ExamApproval.status == "pending")
+    tracked_stmt = select(func.count()).select_from(Enrollment)
+
+    if department_id:
+        curriculum_stmt = (
+            curriculum_stmt.join(Program, Program.id == CurriculumEntry.program_id)
+            .join(Course, Course.id == CurriculumEntry.course_id)
+            .where(Program.department_id == department_id, Course.department_id == department_id)
+        )
+        grade_stmt = (
+            grade_stmt.join(CourseSection, CourseSection.id == GradeApproval.section_id)
+            .join(Course, Course.id == CourseSection.course_id)
+            .where(Course.department_id == department_id)
+        )
+        exam_stmt = (
+            exam_stmt.join(Quiz, Quiz.id == ExamApproval.quiz_id)
+            .join(CourseSection, CourseSection.id == Quiz.section_id)
+            .join(Course, Course.id == CourseSection.course_id)
+            .where(Course.department_id == department_id)
+        )
+        tracked_stmt = (
+            tracked_stmt.join(CourseSection, CourseSection.id == Enrollment.section_id)
+            .join(Course, Course.id == CourseSection.course_id)
+            .where(Course.department_id == department_id)
+        )
+
+    curriculum_count = int((await db.scalar(curriculum_stmt)) or 0)
+    pending_grade_approvals = int((await db.scalar(grade_stmt)) or 0)
+    pending_exam_approvals = int((await db.scalar(exam_stmt)) or 0)
+    tracked_students = int((await db.scalar(tracked_stmt)) or 0)
     return [
         {"key": "curriculum_entries", "value": str(curriculum_count)},
         {"key": "pending_grade_approvals", "value": str(pending_grade_approvals)},
@@ -1302,7 +1680,8 @@ async def build_role_report(role: str, current_user: User, db: AsyncSession) -> 
     if role == UserRole.ADMIN.value:
         return await get_system_report(db)
     if role == UserRole.ACADEMIC_STAFF.value:
-        return await get_academic_report(db)
+        scoped_department_id = current_user.department_id if current_user.role == UserRole.ACADEMIC_STAFF.value else None
+        return await get_academic_report(db, department_id=scoped_department_id)
     if role == UserRole.ADVISOR.value:
         return await get_advisor_report(current_user, db)
     raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Unsupported role report")
